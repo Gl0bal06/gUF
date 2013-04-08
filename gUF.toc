@@ -1,0 +1,19 @@
+## Interface: 50200
+## Title: gUF
+## Author: Global
+## Notes: Unit Frame modification based on the Perl style
+## SavedVariables: gUFDB
+## X-Category: UnitFrame
+## OptionalDeps: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0
+## X-Embeds: Ace3, AceGUI-3.0-SharedMediaWidgets, LibSharedMedia-3.0
+
+embeds.xml
+
+Localizations\enUS.lua
+
+gUF.lua
+Templates.lua
+
+Modules\CastBar.lua
+
+Config.lua
