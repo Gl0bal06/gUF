@@ -182,21 +182,21 @@ function gUF:OnInitialize()																				-- ADDON_LOADED event for gUF
 		[6] = {r = 0, g = 0.6, b = 0.1},
 		[7] = {r = 0, g = 0.6, b = 0.1},
 		[8] = {r = 0, g = 0.6, b = 0.1},
-	};
+	}
 
 	self.RaidClassColors = {
-	["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
-	["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
-	["PRIEST"] = { r = 1.0, g = 1.0, b = 1.0, colorStr = "ffffffff" },
-	["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
-	["MAGE"] = { r = 0.41, g = 0.8, b = 0.94, colorStr = "ff69ccf0" },
-	["ROGUE"] = { r = 1.0, g = 0.96, b = 0.41, colorStr = "fffff569" },
-	["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
-	["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070de" },
-	["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
-	["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
-	["MONK"] = { r = 0.0, g = 1.00 , b = 0.59, colorStr = "ff00ff96" },
-};
+		["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
+		["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
+		["PRIEST"] = { r = 1.0, g = 1.0, b = 1.0, colorStr = "ffffffff" },
+		["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
+		["MAGE"] = { r = 0.41, g = 0.8, b = 0.94, colorStr = "ff69ccf0" },
+		["ROGUE"] = { r = 1.0, g = 0.96, b = 0.41, colorStr = "fffff569" },
+		["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
+		["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070de" },
+		["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
+		["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
+		["MONK"] = { r = 0.0, g = 1.00 , b = 0.59, colorStr = "ff00ff96" },
+	}
 
 	self.LSM = LibStub:GetLibrary("LibSharedMedia-3.0")
 
@@ -228,7 +228,7 @@ function gUF:OnEnable()																		-- PLAYER_LOGIN event for gUF
 
 	--Slash Command stuff
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("gUF", self.options)	-- Initialize AceConfig-3.0
-	self:RegisterChatCommand("pc", function(input)													-- Change pc to perl if this ever goes live
+	self:RegisterChatCommand("guf", function(input)
 		if (input == "version") then
 			self:Print("|cffffff00v"..self.rev)
 		else
@@ -804,9 +804,21 @@ function gUF:UpdateCombatRestIcon(event)
 end
 
 function gUF:UpdateRaidIcon(frame)
-	local index = GetRaidTargetIndex(frame.unit)
-	if (index) then
-		SetRaidTargetIconTexture(frame.raidicon, index)
+	local raidTargetIconIndex = GetRaidTargetIndex(frame.unit)
+	if (raidTargetIconIndex) then
+		local RAID_TARGET_ICON_DIMENSION = 64
+		local RAID_TARGET_TEXTURE_DIMENSION = 256
+		local RAID_TARGET_TEXTURE_COLUMNS = 4
+		local RAID_TARGET_TEXTURE_ROWS = 4
+
+		raidTargetIconIndex = raidTargetIconIndex - 1
+		local coordIncrement = RAID_TARGET_ICON_DIMENSION / RAID_TARGET_TEXTURE_DIMENSION
+		local left = mod(raidTargetIconIndex, RAID_TARGET_TEXTURE_COLUMNS) * coordIncrement
+		local right = left + coordIncrement
+		local top = floor(raidTargetIconIndex / RAID_TARGET_TEXTURE_ROWS) * coordIncrement
+		local bottom = top + coordIncrement
+		frame.raidicon:SetTexCoord(left, right, top, bottom)
+
 		frame.raidicon:Show()
 	else
 		frame.raidicon:Hide()
@@ -814,10 +826,10 @@ function gUF:UpdateRaidIcon(frame)
 end
 
 function gUF:CooldownFrame_SetTimer(self, start, duration, enable, charges, maxCharges)
-	if(enable and enable ~= 0) then
-		self:SetCooldown(start, duration, charges, maxCharges);
+	if (enable and enable ~= 0) then
+		self:SetCooldown(start, duration, charges, maxCharges)
 	else
-		self:SetCooldown(0, 0, charges, maxCharges);
+		self:SetCooldown(0, 0, charges, maxCharges)
 	end
 end
 
