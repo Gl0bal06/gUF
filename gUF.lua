@@ -584,14 +584,14 @@ function gUF:UNIT_AURA(event, unit)
 					if (self.db.profile[unit].buffs[L["Show Cooldown Models"]] == true) then		-- Handle cooldowns
 						if (duration) then
 							if (duration > 0) then
-								CooldownFrame_SetTimer(button[buffnum].cooldown, timeLeft - duration, duration, 1)
+								self:CooldownFrame_SetTimer(button[buffnum].cooldown, timeLeft - duration, duration, 1)
 								button[buffnum].cooldown:Show()
 							else
-								CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
+								self:CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
 								button[buffnum].cooldown:Hide()
 							end
 						else
-							CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
+							self:CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
 							button[buffnum].cooldown:Hide()
 						end
 					end
@@ -638,14 +638,14 @@ function gUF:UNIT_AURA(event, unit)
 					if (self.db.profile[unit].debuffs[L["Show Cooldown Models"]] == true) then		-- Handle cooldowns
 						if (duration) then
 							if (duration > 0) then
-								CooldownFrame_SetTimer(button[debuffnum].cooldown, timeLeft - duration, duration, 1)
+								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, timeLeft - duration, duration, 1)
 								button[debuffnum].cooldown:Show()
 							else
-								CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
+								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
 								button[debuffnum].cooldown:Hide()
 							end
 						else
-							CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
+							self:CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
 							button[debuffnum].cooldown:Hide()
 						end
 					end
@@ -813,7 +813,13 @@ function gUF:UpdateRaidIcon(frame)
 	end
 end
 
-
+function gUF:CooldownFrame_SetTimer(self, start, duration, enable, charges, maxCharges)
+	if(enable and enable ~= 0) then
+		self:SetCooldown(start, duration, charges, maxCharges);
+	else
+		self:SetCooldown(0, 0, charges, maxCharges);
+	end
+end
 
 
 
@@ -1031,14 +1037,14 @@ end
 function gUF:ResetBuffsAndDebuffs(unit)
 	local frame = _G["gUF_"..unit]
 	for i=1,20 do
-		CooldownFrame_SetTimer(frame.buffs[i].cooldown, 0, 0, 0)
+		self:CooldownFrame_SetTimer(frame.buffs[i].cooldown, 0, 0, 0)
 		frame.buffs[i].cooldown:Hide()
 		frame.buffs[i]:Hide()
 	end
 
 	local j = self:GetDebuffNumberForFrame(frame.unit)
 	for i=1,j do
-		CooldownFrame_SetTimer(frame.debuffs[i].cooldown, 0, 0, 0)
+		self:CooldownFrame_SetTimer(frame.debuffs[i].cooldown, 0, 0, 0)
 		frame.debuffs[i].cooldown:Hide()
 		frame.debuffs[i]:Hide()
 	end
