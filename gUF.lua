@@ -164,6 +164,40 @@ function gUF:OnInitialize()																				-- ADDON_LOADED event for gUF
 		["WARRIOR"]		= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 	}
 
+	self.DebuffTypeColor = {
+		["none"]	= {r = 0.80, g = 0, b = 0},
+		["Magic"]	= {r = 0.20, g = 0.60, b = 1.00},
+		["Curse"]	= {r = 0.60, g = 0.00, b = 1.00},
+		["Disease"]	= {r = 0.60, g = 0.40, b = 0},
+		["Poison"]	= {r = 0.00, g = 0.60, b = 0},
+		[""]		= {r = 0.80, g = 0, b = 0},
+	}
+
+	self.FactionBarColors = {
+		[1] = {r = 0.8, g = 0.3, b = 0.22},
+		[2] = {r = 0.8, g = 0.3, b = 0.22},
+		[3] = {r = 0.75, g = 0.27, b = 0},
+		[4] = {r = 0.9, g = 0.7, b = 0},
+		[5] = {r = 0, g = 0.6, b = 0.1},
+		[6] = {r = 0, g = 0.6, b = 0.1},
+		[7] = {r = 0, g = 0.6, b = 0.1},
+		[8] = {r = 0, g = 0.6, b = 0.1},
+	};
+
+	self.RaidClassColors = {
+	["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
+	["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
+	["PRIEST"] = { r = 1.0, g = 1.0, b = 1.0, colorStr = "ffffffff" },
+	["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
+	["MAGE"] = { r = 0.41, g = 0.8, b = 0.94, colorStr = "ff69ccf0" },
+	["ROGUE"] = { r = 1.0, g = 0.96, b = 0.41, colorStr = "fffff569" },
+	["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
+	["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070de" },
+	["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
+	["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
+	["MONK"] = { r = 0.0, g = 1.00 , b = 0.59, colorStr = "ff00ff96" },
+};
+
 	self.LSM = LibStub:GetLibrary("LibSharedMedia-3.0")
 
 	self:Print("|cffffff00v"..self.rev.." Alpha loaded")
@@ -469,7 +503,7 @@ function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
 			if (UnitIsPlayer(unit)) then
 				local _, englishClass = UnitClass(unit)
 				if (englishClass) then
-					frame.nametext:SetTextColor(RAID_CLASS_COLORS[englishClass].r,RAID_CLASS_COLORS[englishClass].g,RAID_CLASS_COLORS[englishClass].b)
+					frame.nametext:SetTextColor(self.RaidClassColors[englishClass].r,self.RaidClassColors[englishClass].g,self.RaidClassColors[englishClass].b)
 					return
 				end
 			end
@@ -499,7 +533,7 @@ function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
 			if (UnitIsVisible(unit)) then
 				local reaction = UnitReaction(unit, "player")
 				if (reaction) then
-					frame.nametext:SetTextColor(FACTION_BAR_COLORS[reaction].r, FACTION_BAR_COLORS[reaction].g, FACTION_BAR_COLORS[reaction].b, self.db.profile.global[L["Hostile PvP Color"]].a)
+					frame.nametext:SetTextColor(self.FactionBarColors[reaction].r, self.FactionBarColors[reaction].g, self.FactionBarColors[reaction].b, self.db.profile.global[L["Hostile PvP Color"]].a)
 				else
 					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
 				end
@@ -578,7 +612,7 @@ function gUF:UNIT_AURA(event, unit)
 				if (buffTexture) then										-- If there is a valid texture, proceed with debuff icon creation
 					button[debuffnum].icon:SetTexture(buffTexture)						-- Set the texture of the icon
 					if (debuffType) then
-						color = DebuffTypeColor[debuffType]
+						color = self.DebuffTypeColor[debuffType]
 						if (self.db.profile.global[L["Color Frame By Debuff"]] == true) then		-- Moved this code into the loop since 3.0 broke the 3rd argument for UnitDebuff
 							if (curableDebuffFound == 0) then
 								if (UnitIsFriend("player", unit)) then
@@ -592,7 +626,7 @@ function gUF:UNIT_AURA(event, unit)
 							end
 						end
 					else
-						color = DebuffTypeColor[L["none"]]
+						color = self.DebuffTypeColor[L["none"]]
 					end
 					button[debuffnum].border:SetVertexColor(color.r, color.g, color.b)			-- Set the debuff border color
 					if (buffApplications > 1) then
