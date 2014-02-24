@@ -1187,12 +1187,11 @@ function gUF:DragStop(frame)
 end
 
 function gUF:Overlay_OnLoad(frame, overlay, unit)
-	local showmenu = function()					-- Right click menu stuff
-		ToggleDropDownMenu(1, nil, frame.dropdown, frame.nameframe, 40, 0)
-	end
-	SecureUnitButton_OnLoad(overlay, unit, showmenu)
-
 	overlay:SetAttribute("unit", unit)				-- Assign the Overlay frame a unit (eg. player, party1, target)
+
+	overlay:SetAttribute("*type1", "target")		-- Any left click will target the unit in the given frame
+	overlay:SetAttribute("*type2", "togglemenu")	-- Any right click will open the unit menu for the unit in the given frame
+	overlay:SetAttribute("type2", "togglemenu")	-- Right click will open the unit menu for the unit in the given frame
 
 	if (not ClickCastFrames) then					-- Clique standard click casting support
 		ClickCastFrames = {}
