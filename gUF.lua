@@ -1191,57 +1191,12 @@ function gUF:Overlay_OnLoad(frame, overlay, unit)
 
 	overlay:SetAttribute("*type1", "target")		-- Any left click will target the unit in the given frame
 	overlay:SetAttribute("*type2", "togglemenu")	-- Any right click will open the unit menu for the unit in the given frame
-	overlay:SetAttribute("type2", "togglemenu")	-- Right click will open the unit menu for the unit in the given frame
+	overlay:SetAttribute("type2", "togglemenu")		-- Right click will open the unit menu for the unit in the given frame
 
 	if (not ClickCastFrames) then					-- Clique standard click casting support
 		ClickCastFrames = {}
 	end
 	ClickCastFrames[overlay] = true
-end
-
-
------------------------
--- Right Click Menus --
------------------------
-local function gUF_player_DropDown_Initialize()
-	UnitPopup_ShowMenu(gUF_player.dropdown, "SELF", "player")			-- Show the menu
-end
-
-local function gUF_target_DropDown_Initialize()
-	local menu
-	local name
-	local id = nil
-	if (UnitIsUnit("target", "player")) then
-		menu = "SELF"
-	elseif (UnitIsUnit("target", "vehicle")) then
-		menu = "VEHICLE"
-	elseif (UnitIsUnit("target", "pet")) then
-		menu = "PET"
-	elseif (UnitIsPlayer("target")) then
-		id = UnitInRaid("target")
-		if (id) then
-			menu = "RAID_PLAYER"
-			name = GetRaidRosterInfo(id)
-		elseif (UnitInParty("target")) then
-			menu = "PARTY"
-		else
-			menu = "PLAYER"
-		end
-	else
-		menu = "TARGET"
-		name = RAID_TARGET_ICON
-	end
-	if (menu) then
-		UnitPopup_ShowMenu(gUF_target_DropDown, menu, "target", name, id)	-- Show the menu
-	end
-end
-
-function gUF:DropDown_OnLoad(frame)
-	if (frame.unit == "player") then
-		UIDropDownMenu_Initialize(frame.dropdown, gUF_player_DropDown_Initialize, "MENU")
-	elseif (frame.unit == "target") then
-		UIDropDownMenu_Initialize(frame.dropdown, gUF_target_DropDown_Initialize, "MENU")
-	end
 end
 
 

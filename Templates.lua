@@ -17,11 +17,6 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	frame.unit = unit
 
 
-	-- Create the Menu Drop Down frame
-	frame.dropdown = CreateFrame("Frame", frame:GetName().."_DropDown", frame, "UIDropDownMenuTemplate")
-	gUF:DropDown_OnLoad(frame)
-
-
 	-- Frames
 	frame.nameframe = CreateFrame("Frame", nil, frame, nil)
 	frame.nameframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)				-- remove this once we have a full option set for customizing this
