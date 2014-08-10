@@ -849,8 +849,9 @@ function gUF:UpdateFrameInfo(unit)
 			self:UNIT_AURA(nil, unit)
 			self:UpdateRaidIcon(frame)
 
-			if (UnitIsPlayer(unit)) then			-- A player's class won't ever change so not using an event is fine
-				local _, englishClass = UnitClass(unit)
+			local _, englishClass = UnitClass(unit)
+
+			if (UnitIsPlayer(unit) and self.ClassIcon[englishClass] ~= nil) then			-- A player's class won't ever change so not using an event is fine
 				frame.classicon:SetTexCoord(self.ClassIcon[englishClass][1], self.ClassIcon[englishClass][2], self.ClassIcon[englishClass][3], self.ClassIcon[englishClass][4])
 				frame.classicon:Show()
 			else
