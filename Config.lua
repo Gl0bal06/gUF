@@ -54,7 +54,7 @@ local function GetTextures()
 	for _, name in pairs(gUF.LSM:List(gUF.LSM.MediaType.STATUSBAR)) do
 		textures[name] = name
 	end
-	
+
 	return textures
 end
 
@@ -257,46 +257,127 @@ gUF.options = {
 									set = setColor,
 									arg = {"global", L["Energy Bar Color"], function() gUF:SetupAllBarColors() end},
 								},
-								runicPowerBarColor = {
-									name = L["Runic Power Bar Color"],
+								chiBarColor = {
+									name = L["Chi Bar Color"],
 									desc = "desc",
 									type = "color",
 									order = 6,
 									hasAlpha = true,
 									get = getColor,
 									set = setColor,
+									arg = {"global", L["Chi Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								runesBarColor = {
+									name = L["Runes Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 7,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Runes Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								runicPowerBarColor = {
+									name = L["Runic Power Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 8,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
 									arg = {"global", L["Runic Power Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								soulShardsBarColor = {
+									name = L["Soul Shards Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 9,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Soul Shards Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								lunarPowerBarColor = {
+									name = L["Lunar Power Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 10,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Lunar Power Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								holyPowerBarColor = {
+									name = L["Holy Power Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 11,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Holy Power Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								maelstromBarColor = {
+									name = L["Maelstrom Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 12,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Maelstrom Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								insanityBarColor = {
+									name = L["Insanity Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 13,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Insanity Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								furyBarColor = {
+									name = L["Fury Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 14,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Fury Bar Color"], function() gUF:SetupAllBarColors() end},
+								},
+								painBarColor = {
+									name = L["Pain Bar Color"],
+									desc = "desc",
+									type = "color",
+									order = 15,
+									hasAlpha = true,
+									get = getColor,
+									set = setColor,
+									arg = {"global", L["Pain Bar Color"], function() gUF:SetupAllBarColors() end},
 								},
 								Reset = {
 									name = L["Reset"],
 									desc = "desc",
 									type = "toggle",
-									order = 7,
+									order = 16,
 									set = function()
-										gUF.db.profile.global[L["Health Bar Color"]].r = gUF.defaults.profile.global[L["Health Bar Color"]].r
-										gUF.db.profile.global[L["Health Bar Color"]].g = gUF.defaults.profile.global[L["Health Bar Color"]].g
-										gUF.db.profile.global[L["Health Bar Color"]].b = gUF.defaults.profile.global[L["Health Bar Color"]].b
-										gUF.db.profile.global[L["Health Bar Color"]].a = gUF.defaults.profile.global[L["Health Bar Color"]].a
-										gUF.db.profile.global[L["Mana Bar Color"]].r = gUF.defaults.profile.global[L["Mana Bar Color"]].r
-										gUF.db.profile.global[L["Mana Bar Color"]].g = gUF.defaults.profile.global[L["Mana Bar Color"]].g
-										gUF.db.profile.global[L["Mana Bar Color"]].b = gUF.defaults.profile.global[L["Mana Bar Color"]].b
-										gUF.db.profile.global[L["Mana Bar Color"]].a = gUF.defaults.profile.global[L["Mana Bar Color"]].a
-										gUF.db.profile.global[L["Rage Bar Color"]].r = gUF.defaults.profile.global[L["Rage Bar Color"]].r
-										gUF.db.profile.global[L["Rage Bar Color"]].g = gUF.defaults.profile.global[L["Rage Bar Color"]].g
-										gUF.db.profile.global[L["Rage Bar Color"]].b = gUF.defaults.profile.global[L["Rage Bar Color"]].b
-										gUF.db.profile.global[L["Rage Bar Color"]].a = gUF.defaults.profile.global[L["Rage Bar Color"]].a
-										gUF.db.profile.global[L["Focus Bar Color"]].r = gUF.defaults.profile.global[L["Focus Bar Color"]].r
-										gUF.db.profile.global[L["Focus Bar Color"]].g = gUF.defaults.profile.global[L["Focus Bar Color"]].g
-										gUF.db.profile.global[L["Focus Bar Color"]].b = gUF.defaults.profile.global[L["Focus Bar Color"]].b
-										gUF.db.profile.global[L["Focus Bar Color"]].a = gUF.defaults.profile.global[L["Focus Bar Color"]].a
-										gUF.db.profile.global[L["Energy Bar Color"]].r = gUF.defaults.profile.global[L["Energy Bar Color"]].r
-										gUF.db.profile.global[L["Energy Bar Color"]].g = gUF.defaults.profile.global[L["Energy Bar Color"]].g
-										gUF.db.profile.global[L["Energy Bar Color"]].b = gUF.defaults.profile.global[L["Energy Bar Color"]].b
-										gUF.db.profile.global[L["Energy Bar Color"]].a = gUF.defaults.profile.global[L["Energy Bar Color"]].a
-										gUF.db.profile.global[L["Runic Power Bar Color"]].r = gUF.defaults.profile.global[L["Runic Power Bar Color"]].r
-										gUF.db.profile.global[L["Runic Power Bar Color"]].g = gUF.defaults.profile.global[L["Runic Power Bar Color"]].g
-										gUF.db.profile.global[L["Runic Power Bar Color"]].b = gUF.defaults.profile.global[L["Runic Power Bar Color"]].b
-										gUF.db.profile.global[L["Runic Power Bar Color"]].a = gUF.defaults.profile.global[L["Runic Power Bar Color"]].a
+										gUF.db.profile.global[L["Health Bar Color"]] = gUF.defaults.profile.global[L["Health Bar Color"]]
+										gUF.db.profile.global[L["Mana Bar Color"]] = gUF.defaults.profile.global[L["Mana Bar Color"]]
+										gUF.db.profile.global[L["Rage Bar Color"]] = gUF.defaults.profile.global[L["Rage Bar Color"]]
+										gUF.db.profile.global[L["Focus Bar Color"]] = gUF.defaults.profile.global[L["Focus Bar Color"]]
+										gUF.db.profile.global[L["Energy Bar Color"]] = gUF.defaults.profile.global[L["Energy Bar Color"]]
+										gUF.db.profile.global[L["Chi Bar Color"]] = gUF.defaults.profile.global[L["Chi Bar Color"]]
+										gUF.db.profile.global[L["Runes Bar Color"]] = gUF.defaults.profile.global[L["Runes Bar Color"]]
+										gUF.db.profile.global[L["Runic Power Bar Color"]] = gUF.defaults.profile.global[L["Runic Power Bar Color"]]
+										gUF.db.profile.global[L["Soul Shards Bar Color"]] = gUF.defaults.profile.global[L["Soul Shards Bar Color"]]
+										gUF.db.profile.global[L["Lunar Power Bar Color"]] = gUF.defaults.profile.global[L["Lunar Power Bar Color"]]
+										gUF.db.profile.global[L["Holy Power Bar Color"]] = gUF.defaults.profile.global[L["Holy Power Bar Color"]]
+										gUF.db.profile.global[L["Maelstrom Bar Color"]] = gUF.defaults.profile.global[L["Maelstrom Bar Color"]]
+										gUF.db.profile.global[L["Insanity Bar Color"]] = gUF.defaults.profile.global[L["Insanity Bar Color"]]
+										gUF.db.profile.global[L["Fury Bar Color"]] = gUF.defaults.profile.global[L["Fury Bar Color"]]
+										gUF.db.profile.global[L["Pain Bar Color"]] = gUF.defaults.profile.global[L["Pain Bar Color"]]
 										gUF:SetupAllBarColors()
 									end,
 								},
@@ -702,7 +783,7 @@ gUF.options = {
 					type = "group",
 					order = 4,
 					args = {
-						
+
 					},
 				},
 			},
@@ -1023,7 +1104,7 @@ gUF.options = {
 					type = "group",
 					order = 4,
 					args = {
-						
+
 					},
 				},
 			},
@@ -1047,7 +1128,7 @@ gUF.options = {
 				--more options go here
 			},
 		},
-		
+
 	},
 }
 

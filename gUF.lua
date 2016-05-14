@@ -64,7 +64,18 @@ function gUF:OnInitialize()																				-- ADDON_LOADED event for gUF
 				[L["Rage Bar Color"]] = {r = 1, g = 0, b = 0, a = 1},
 				[L["Focus Bar Color"]] = {r = 1, g = 0.5, b = 0, a = 1},
 				[L["Energy Bar Color"]] = {r = 1, g = 1, b = 0, a = 1},
+				[L["Combo Points Bar Color"]] = {r = 1, g = 0.96, b = 0.41, a = 1},
+				[L["Runes Bar Color"]] = {r = 0.5, g = 0.5, b = 0.5, a = 1},
 				[L["Runic Power Bar Color"]] = {r = 0, g = 0.82, b = 1, a = 1},
+				[L["Soul Shards Bar Color"]] = {r = 0.5, g = 0.32, b = 0.55, a = 1},
+				[L["Lunar Power Bar Color"]] = {r = 0.3, g = 0.52, b = 0.9, a = 1},
+				[L["Holy Power Bar Color"]] = {r = 0.95, g = 0.9, b = 0.6, a = 1},
+				[L["Maelstrom Bar Color"]] = {r = 0, g = 0.5, b = 1, a = 1},
+				[L["Insanity Bar Color"]] = {r = 0.4, g = 0, b = 0.8, a = 1},
+				[L["Chi Bar Color"]] = {r = 0.71, g = 1, b = 0.92, a = 1},
+				[L["Arcane Charges Bar Color"]] = {r = 0.1, g = 0.1, b = 0.98, a = 1},
+				[L["Fury Bar Color"]] = {r = 0.788, g = 0.259, b = 0.992, a = 1},
+				[L["Pain Bar Color"]] = {r = 1, g = 0, b = 0, a = 1},
 			},
 			player = {
 				[L["Enabled"]] = true,
@@ -244,6 +255,8 @@ function gUF:OnEnable()																		-- PLAYER_LOGIN event for gUF
 		end
 	end)
 
+	self:InitializeBarColorArray()														-- Populate the bar color array with saved values
+
 	self.class = select(2, UnitClass("player"))
 
 	self:CreateRemoveFrames()																		-- Create any frames that are enabled
@@ -375,25 +388,9 @@ function gUF:UNIT_DISPLAYPOWER(event, unit)
 			frame.currentmaxmanatext:SetText()			-- these text field blanks will probably change later once text options are added
 			frame.percentmanatext:SetText()
 			frame.deficitmanatext:SetText()
-		elseif (unitpower == 0) then		-- Mana
-			frame.manabar:SetStatusBarColor(self.db.profile.global[L["Mana Bar Color"]].r, self.db.profile.global[L["Mana Bar Color"]].g, self.db.profile.global[L["Mana Bar Color"]].b, self.db.profile.global[L["Mana Bar Color"]].a)
-			frame.manabarbg:SetStatusBarColor(self.db.profile.global[L["Mana Bar Color"]].r, self.db.profile.global[L["Mana Bar Color"]].g, self.db.profile.global[L["Mana Bar Color"]].b, self.db.profile.global[L["Mana Bar Color"]].a * 0.25)
-			self:UNIT_MAXPOWER(nil, unit)
-		elseif (unitpower == 1) then		-- Rage
-			frame.manabar:SetStatusBarColor(self.db.profile.global[L["Rage Bar Color"]].r, self.db.profile.global[L["Rage Bar Color"]].g, self.db.profile.global[L["Rage Bar Color"]].b, self.db.profile.global[L["Rage Bar Color"]].a)
-			frame.manabarbg:SetStatusBarColor(self.db.profile.global[L["Rage Bar Color"]].r, self.db.profile.global[L["Rage Bar Color"]].g, self.db.profile.global[L["Rage Bar Color"]].b, self.db.profile.global[L["Rage Bar Color"]].a * 0.25)
-			self:UNIT_MAXPOWER(nil, unit)
-		elseif (unitpower == 2) then		-- Focus
-			frame.manabar:SetStatusBarColor(self.db.profile.global[L["Focus Bar Color"]].r, self.db.profile.global[L["Focus Bar Color"]].g, self.db.profile.global[L["Focus Bar Color"]].b, self.db.profile.global[L["Focus Bar Color"]].a)
-			frame.manabarbg:SetStatusBarColor(self.db.profile.global[L["Focus Bar Color"]].r, self.db.profile.global[L["Focus Bar Color"]].g, self.db.profile.global[L["Focus Bar Color"]].b, self.db.profile.global[L["Focus Bar Color"]].a * 0.25)
-			self:UNIT_MAXPOWER(nil, unit)
-		elseif (unitpower == 3) then		-- Energy
-			frame.manabar:SetStatusBarColor(self.db.profile.global[L["Energy Bar Color"]].r, self.db.profile.global[L["Energy Bar Color"]].g, self.db.profile.global[L["Energy Bar Color"]].b, self.db.profile.global[L["Energy Bar Color"]].a)
-			frame.manabarbg:SetStatusBarColor(self.db.profile.global[L["Energy Bar Color"]].r, self.db.profile.global[L["Energy Bar Color"]].g, self.db.profile.global[L["Energy Bar Color"]].b, self.db.profile.global[L["Energy Bar Color"]].a * 0.25)
-			self:UNIT_MAXPOWER(nil, unit)
-		elseif (unitpower == 6) then		-- Runic Power
-			frame.manabar:SetStatusBarColor(self.db.profile.global[L["Runic Power Bar Color"]].r, self.db.profile.global[L["Runic Power Bar Color"]].g, self.db.profile.global[L["Runic Power Bar Color"]].b, self.db.profile.global[L["Runic Power Bar Color"]].a)
-			frame.manabarbg:SetStatusBarColor(self.db.profile.global[L["Runic Power Bar Color"]].r, self.db.profile.global[L["Runic Power Bar Color"]].g, self.db.profile.global[L["Runic Power Bar Color"]].b, self.db.profile.global[L["Runic Power Bar Color"]].a * 0.25)
+		elseif (unitpower) then
+			frame.manabar:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a)
+			frame.manabarbg:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a * 0.25)
 			self:UNIT_MAXPOWER(nil, unit)
 		end
 	end
@@ -1162,7 +1159,28 @@ function gUF:SetupStatusBarBackgroundTextures(frame)
 	end
 end
 
+function gUF:InitializeBarColorArray()
+	self.BarColor = {
+		[0] = self.db.profile.global[L["Mana Bar Color"]],
+		[1] = self.db.profile.global[L["Rage Bar Color"]],
+		[2] = self.db.profile.global[L["Focus Bar Color"]],
+		[3] = self.db.profile.global[L["Energy Bar Color"]],
+		[4] = self.db.profile.global[L["Chi Bar Color"]],
+		[5] = self.db.profile.global[L["Runes Bar Color"]],
+		[6] = self.db.profile.global[L["Runic Power Bar Color"]],
+		[7] = self.db.profile.global[L["Soul Shards Bar Color"]],
+		[8] = self.db.profile.global[L["Lunar Power Bar Color"]],
+		[9] = self.db.profile.global[L["Holy Power Bar Color"]],
+		[11] = self.db.profile.global[L["Maelstrom Bar Color"]],
+		[13] = self.db.profile.global[L["Insanity Bar Color"]],
+		[17] = self.db.profile.global[L["Fury Bar Color"]],
+		[18] = self.db.profile.global[L["Pain Bar Color"]],
+	}
+end
+
 function gUF:SetupAllBarColors()
+	self:InitializeBarColorArray()
+
 	for i,v in pairs(frames) do
 		for frame in pairs(v) do
 			self:SetupBarColors(frame)

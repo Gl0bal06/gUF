@@ -38,11 +38,14 @@ if (L) then
 	L["Text"] = true
 
 	-- Saved Variable Localizations
+	L["Arcane Charges Bar Color"] = true
 	L["Background Color"] = true
 	L["Bar Texture"] = true
 	L["Border Color"] = true
 	L["Buffs Per Row"] = true
+	L["Chi Bar Color"] = true
 	L["Classic Buff & Debuff Mode"] = true
+	L["Combo Points Bar Color"] = true
 	L["Color Frame By Debuff"] = true
 	L["Color Names By Class"] = true
 	L["Config Mode"] = true
@@ -52,24 +55,32 @@ if (L) then
 	L["Focus Bar Color"] = true
 	L["Friendly PvE Color"] = true
 	L["Friendly PvP Color"] = true
+	L["Fury Bar Color"] = true
 	L["Grow Upwards"] = true
 	L["Healer Mode"] = true
 	L["Health Bar Color"] = true
+	L["Holy Power Bar Color"] = true
 	L["Horizontal Spacing"] = true
 	L["Hostile PvE Color"] = true
 	L["Hostile PvP Color"] = true
 	L["Hostile PvP In PvE Color"] = true
+	L["Insanity Bar Color"] = true
 	L["Invert Bar Values"] = true
 	L["Lock Frames"] = true
+	L["Lunar Power Bar Color"] = true
+	L["Maelstrom Bar Color"] = true
 	L["Mana Bar Color"] = true
 	L["Number of Buffs"] = true
 	L["Number of Debuffs"] = true
+	L["Pain Bar Color"] = true
 	L["Position"] = true
 	L["Rage Bar Color"] = true
+	L["Runes Bar Color"] = true
 	L["Runic Power Bar Color"] = true
 	L["Scale"] = true
 	L["Show Cooldown Models"] = true
 	L["Show PvP Status Icon"] = true
+	L["Soul Shards Bar Color"] = true
 	L["Status Bar Texture"] = true
 	L["Status Bar Background Texture"] = true
 	L["Tapped NPC Color"] = true
