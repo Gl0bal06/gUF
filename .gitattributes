@@ -5,7 +5,7 @@
 
 ## SOURCE CODE
 *.lua       text
-*.lua       ident
+## *.lua       ident
 *.toc       text
 *.xml       text
 
