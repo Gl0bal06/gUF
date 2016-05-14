@@ -35,7 +35,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)									-- Localizations
 local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceConsole-3.0", "AceEvent-3.0")	-- Create the main addon object
 --gUF.rev = "5.5."..tonumber(string.match("$Rev: 114 $", "(%d+)") or 1)
-gUF.rev = "5.5.@project-revision@"
+gUF.rev = "7.0.1-$Id$"
 --local isPTR = select(4, GetBuildInfo()) >= 40000																-- Code for only getting a game toc to code for PTRs
 
 local frames = {}																								-- Table for units we are currently listening for
