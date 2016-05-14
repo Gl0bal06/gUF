@@ -143,19 +143,22 @@ function gUF:OnInitialize()																				-- ADDON_LOADED event for gUF
 		["ROGUE"]		= {0.49609375, 0.7421875, 0, 0.25},
 		["DRUID"]		= {0.7421875, 0.98828125, 0, 0.25},
 		["HUNTER"]		= {0, 0.25, 0.25, 0.5},
-		["SHAMAN"]		= {0.25, 0.49609375, 0.25, 0.5},
+		["SHAMAN"]	 	= {0.25, 0.49609375, 0.25, 0.5},
 		["PRIEST"]		= {0.49609375, 0.7421875, 0.25, 0.5},
 		["WARLOCK"]		= {0.7421875, 0.98828125, 0.25, 0.5},
 		["PALADIN"]		= {0, 0.25, 0.5, 0.75},
-		["DEATHKNIGHT"]	= {0.25, 0.49609375, 0.5, 0.75},
-		["MONK"]		= {0.49609375, 0.7421875, 0.5, 0.75},
+		["DEATHKNIGHT"]	= {0.25, .5, 0.5, .75},
+		["MONK"]		= {0.5, 0.73828125, 0.5, .75},
+		["DEMONHUNTER"]	= {0.7421875, 0.98828125, 0.5, 0.75},
 	}
 
 	self.CurableDebuff = {
 		["DEATHKNIGHT"]	= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
+		["DEMONHUNTER"]	= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 		["DRUID"]		= {[L["Curse"]] = 1, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 1},
 		["HUNTER"]		= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 		["MAGE"]		= {[L["Curse"]] = 1, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
+		["MONK"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 1, [L["Poison"]] = 1},
 		["PALADIN"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 1, [L["Poison"]] = 1},
 		["PRIEST"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 1, [L["Poison"]] = 0},
 		["ROGUE"]		= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
@@ -186,16 +189,17 @@ function gUF:OnInitialize()																				-- ADDON_LOADED event for gUF
 
 	self.RaidClassColors = {
 		["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
-		["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
+		["WARLOCK"] = { r = 0.53, g = 0.53, b = 0.93, colorStr = "ff8788ee" },
 		["PRIEST"] = { r = 1.0, g = 1.0, b = 1.0, colorStr = "ffffffff" },
 		["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
-		["MAGE"] = { r = 0.41, g = 0.8, b = 0.94, colorStr = "ff69ccf0" },
+		["MAGE"] = { r = 0.25, g = 0.78, b = 0.92, colorStr = "ff3fc7eb" },
 		["ROGUE"] = { r = 1.0, g = 0.96, b = 0.41, colorStr = "fffff569" },
 		["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
 		["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070de" },
 		["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
 		["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
 		["MONK"] = { r = 0.0, g = 1.00 , b = 0.59, colorStr = "ff00ff96" },
+		["DEMONHUNTER"] = { r = 0.64, g = 0.19, b = 0.79, colorStr = "ffa330c9" },
 	}
 
 	self.LSM = LibStub:GetLibrary("LibSharedMedia-3.0")
@@ -527,7 +531,8 @@ function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
 				-- All other players are blue (the usual state on the "blue" server)
 				frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
 			end
-		elseif (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then			-- not our tap
+		--elseif (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then			-- not our tap (Pre 7.0)
+		elseif (not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then			-- not our tap (Post 7.0)
 			frame.nametext:SetTextColor(self.db.profile.global[L["Tapped NPC Color"]].r, self.db.profile.global[L["Tapped NPC Color"]].g, self.db.profile.global[L["Tapped NPC Color"]].b, self.db.profile.global[L["Tapped NPC Color"]].a)
 		else
 			if (UnitIsVisible(unit)) then
@@ -556,7 +561,7 @@ function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
 					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
 				end
 			end
-			
+
 		end
 	end
 end
@@ -988,9 +993,9 @@ function gUF:CreateFrame(frametemplate, framename, unit)
 		frame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", self.db.profile[frame.unit][L["Position"]].x, self.db.profile[frame.unit][L["Position"]].y)
 		frame:Show()						-- Remove this once we have a few frames ready to go, it's handled by the frame's secureheader unit stuff anyway
 	elseif (frametemplate == "oftarget") then
-		
+
 	elseif (frametemplate == "pet") then
-		
+
 	end
 
 	self:RegisterFrame(frame, unit)
@@ -1118,7 +1123,7 @@ function gUF:SetupStatusBarTextures(frame)
 	local texture = self.LSM:Fetch(self.LSM.MediaType.STATUSBAR, self.db.profile.global[L["Status Bar Texture"]])
 	--local texture = self.LSM:Fetch("statusbar", self.db.profile.global[L["Status Bar Texture"]])
 	--texture:SetPoint("TOPLEFT", frame.healthbar, "TOPLEFT", -1,1)
-	--texture:SetPoint("BOTTOMRIGHT", frame.healthbar, "BOTTOMRIGHT", 1, -1) 
+	--texture:SetPoint("BOTTOMRIGHT", frame.healthbar, "BOTTOMRIGHT", 1, -1)
 	--texture:SetHeight(10)
 	--texture:SetWidth(150)
 	--frame.bartextures[1] = self.LSM:Fetch("statusbar", self.db.profile.global[L["Status Bar Texture"]])

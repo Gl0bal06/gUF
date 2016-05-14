@@ -1,4 +1,4 @@
-## Interface: 50400
+## Interface: 70000
 ## Title: gUF
 ## Author: Global
 ## Notes: Unit Frame modification based on the Perl style
