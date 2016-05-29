@@ -29,20 +29,15 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------]]
 
---gUF
---Perl Classic Unit Frames
-
-local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)									-- Localizations
-local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceConsole-3.0", "AceEvent-3.0")	-- Create the main addon object
---gUF.rev = "5.5."..tonumber(string.match("$Rev: 114 $", "(%d+)") or 1)
---gUF.rev = "7.0.1-$Id$"
+local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)				-- Localizations
+local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceEvent-3.0")		-- Create the main addon object
 gUF.rev = "7.0.1 Alpha"
-local isPTR = select(4, GetBuildInfo()) >= 70000																-- Code for only getting a game toc to code for PTRs
+local isPTR = select(4, GetBuildInfo()) >= 70000						-- Code for only getting a game toc to code for PTRs
 
-local frames = {}																								-- Table for units we are currently listening for
+local frames = {}														-- Table for units we are currently listening for
 
-function gUF:OnInitialize()																				-- ADDON_LOADED event for gUF
-	self.defaults = {																							-- Defaults for the entire mod
+function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
+	self.defaults = {													-- Defaults for the entire mod
 		profile = {
 			global = {
 				[L["Config Mode"]] = false,
@@ -243,24 +238,36 @@ function gUF:OnEnable()																		-- PLAYER_LOGIN event for gUF
 	self.db = LibStub("AceDB-3.0"):New("gUFDB", self.defaults)								-- Initialize the saved variables database with the default settings
 
 	--Slash Command stuff
-	LibStub("AceConfig-3.0"):RegisterOptionsTable("gUF", self.options)	-- Initialize AceConfig-3.0
-	self:RegisterChatCommand("guf", function(input)
-		if (input == "version") then
+	SLASH_gUF1 = "/guf"
+	SlashCmdList["gUF"] = function(msg)
+		msg = msg and string.lower(msg)
+		if (msg == "version") then
 			self:Print("|cffffff00v"..self.rev)
 		else
 			if (InCombatLockdown()) then
 				self:Print(L["Options cannot be changed in combat."])
 			else
-				LibStub("AceConfigDialog-3.0"):Open("gUF")
+				local loaded, reason = LoadAddOn("gUF_Options")
+				if (loaded) then
+					LibStub("AceConfig-3.0"):RegisterOptionsTable("gUF", gUF.options)	-- Initialize AceConfig-3.0
+					LibStub("AceConfigDialog-3.0"):Open("gUF")
+				else
+					self:Print(L["Failed to load gUF_Options.  The options menu failed to load because: "]..reason)
+					return
+				end
 			end
 		end
-	end)
+	end
 
 	self:InitializeBarColorArray()														-- Populate the bar color array with saved values
 
 	self.class = select(2, UnitClass("player"))
 
 	self:CreateRemoveFrames()																		-- Create any frames that are enabled
+end
+
+function gUF:Print(msg)
+	DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99gUF|r: "..msg)
 end
 
 
@@ -383,10 +390,10 @@ function gUF:UNIT_DISPLAYPOWER(event, unit)
 	for frame in pairs(frames[unit]) do
 		local unitpower = UnitPowerType(unit)
 
-		if (UnitPowerMax(unit) == 0) then	-- No Power Bar
+		if (UnitPowerMax(unit) == 0) then					-- No Power Bar
 			frame.manabar:SetStatusBarColor(0, 0, 0, 0)
 			frame.manabarbg:SetStatusBarColor(0, 0, 0, 0)
-			frame.currentmaxmanatext:SetText()			-- these text field blanks will probably change later once text options are added
+			frame.currentmaxmanatext:SetText()				-- these text field blanks will probably change later once text options are added
 			frame.percentmanatext:SetText()
 			frame.deficitmanatext:SetText()
 		elseif (unitpower) then
@@ -483,16 +490,16 @@ function gUF:UNIT_FACTION(event, unit)
 			--end
 
 			if (UnitIsPVPFreeForAll(unit)) then
-				frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")		-- Set the FFA PvP icon
-				frame.pvpicon:Show()								-- Show the icon
+				frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")				-- Set the FFA PvP icon
+				frame.pvpicon:Show()															-- Show the icon
 			elseif (englishFaction and UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit)) then
 				frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-"..englishFaction)	-- Set the correct team icon
-				frame.pvpicon:Show()								-- Show the icon
+				frame.pvpicon:Show()															-- Show the icon
 			else
-				frame.pvpicon:Hide()								-- Hide the icon
+				frame.pvpicon:Hide()															-- Hide the icon
 			end
-		else																		-- move this hide check to the style function?
-				frame.pvpicon:Hide()								-- Hide the icon
+		else																					-- move this hide check to the style function?
+				frame.pvpicon:Hide()															-- Hide the icon
 		end
 	end
 end
@@ -886,9 +893,6 @@ function gUF:CooldownFrame_SetTimer(self, start, duration, enable, charges, maxC
 	end
 end
 
-
-
-
 function gUF:UpdateFrameInfo(unit)
 	if not frames[unit] then return end
 
@@ -923,10 +927,6 @@ function gUF:UpdateFrameInfo(unit)
 		end
 	end
 end
-
-
-
-
 
 function gUF:SetStyleAllFrames()
 	if (gUF_player) then
@@ -969,17 +969,6 @@ function gUF:SetStyle(frame, unit)
 	end
 end
 
-
-
-
-
-
-
-
-
-
-
-
 function gUF:CreateRemoveFrames()
 	if (self.db.profile.player[L["Enabled"]] == true) then			-- Create the Player frame
 		if (not gUF_player) then
@@ -987,8 +976,8 @@ function gUF:CreateRemoveFrames()
 		else
 			self:RegisterFrame(gUF_player, "player")
 		end
-		self:SetStyle(gUF_player, "player")			-- Apply any option changes
-		self:UpdateFrameInfo("player")					-- Update the frame's information
+		self:SetStyle(gUF_player, "player")							-- Apply any option changes
+		self:UpdateFrameInfo("player")								-- Update the frame's information
 	else
 		if (gUF_player) then
 			self:RemoveFrame(gUF_player)
@@ -1001,8 +990,8 @@ function gUF:CreateRemoveFrames()
 		else
 			self:RegisterFrame(gUF_target, "target")
 		end
-		self:SetStyle(gUF_target, "target")			-- Apply any option changes
-		self:UpdateFrameInfo("target")					-- Update the frame's information
+		self:SetStyle(gUF_target, "target")							-- Apply any option changes
+		self:UpdateFrameInfo("target")								-- Update the frame's information
 	else
 		if (gUF_target) then
 			self:RemoveFrame(gUF_target)
@@ -1035,11 +1024,11 @@ function gUF:CreateFrame(frametemplate, framename, unit)
 
 		self:LayoutBuffs(frame, nil, "buffs")			-- move this to someplace else later
 		self:LayoutBuffs(frame, nil, "debuffs")			-- move this to someplace else later
---
-		self:SetupOverlays(frame)				-- Set up the overlay buttons so clicking works (can move this most liekly too)
+
+		self:SetupOverlays(frame)						-- Set up the overlay buttons so clicking works (can move this most liekly too)
 
 		frame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", self.db.profile[frame.unit][L["Position"]].x, self.db.profile[frame.unit][L["Position"]].y)
-		frame:Show()						-- Remove this once we have a few frames ready to go, it's handled by the frame's secureheader unit stuff anyway
+		frame:Show()									-- Remove this once we have a few frames ready to go, it's handled by the frame's secureheader unit stuff anyway
 	elseif (frametemplate == "oftarget") then
 
 	elseif (frametemplate == "pet") then

@@ -1,9 +1,9 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("gUF", "enUS", true)
 
 if (L) then
-	L["gUF"] = true
+	--L["gUF"] = true
 
-	-- Runtime Localizations (Perl Classic will not function correctly unless this section is fully translated in your locale)
+	-- Runtime Localizations (gUF will not function correctly unless this section is fully translated in your locale)
 	L["Curse"] = true
 	L["Dead"] = true
 	L["Disease"] = true
@@ -15,6 +15,9 @@ if (L) then
 	L["Poison"] = true
 	L["Prowl"] = true
 	L["Stealth"] = true
+
+	-- General Addon Localizations
+	L["Failed to load gUF_Options.  The options menu failed to load because: "] = true
 
 	-- Option Categories
 	L["CombatDisplay"] = true
