@@ -131,7 +131,7 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	frame.raidicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", 12, -10)			-- remove this once we have a full option set for customizing this
 	frame.raidicon:SetHeight(26)								-- remove this once we have a full option set for customizing this
 	frame.raidicon:SetWidth(26)								-- remove this once we have a full option set for customizing this
-	
+
 
 	frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
@@ -175,7 +175,7 @@ function gUF:CreateBaseFrameObject(framename, unit)
 end
 
 function gUF:CreateBaseOfTargetFrameObject()
-	
+
 end
 
 function gUF:CreateOverlay(frame, parent, name)
@@ -186,7 +186,7 @@ function gUF:CreateOverlay(frame, parent, name)
 	overlay:SetScript("OnDragStart", function () gUF:DragStart(frame) end)
 	overlay:SetScript("OnDragStop", function () gUF:DragStop(frame) end)
 	overlay:SetScript("OnEnter", function () UnitFrame_OnEnter(frame) end)
-	overlay:SetScript("OnLeave", function () UnitFrame_OnLeave() end)
+	overlay:SetScript("OnLeave", function () UnitFrame_OnLeave(frame) end)
 	overlay:SetHeight(parent:GetHeight())
 	overlay:SetWidth(parent:GetWidth())
 	gUF:Overlay_OnLoad(frame, overlay, frame.unit)
