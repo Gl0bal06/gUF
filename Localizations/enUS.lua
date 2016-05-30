@@ -24,6 +24,7 @@ if (L) then
 	L["Focus"] = true
 	L["Focus' Target"] = true
 	L["Global Options"] = true
+	L["Modules"] = true
 	L["Party"] = true
 	L["Party Pets"] = true
 	L["Party Targets"] = true
@@ -39,6 +40,9 @@ if (L) then
 	L["Debuffs"] = true
 	L["Frame Attributes"] = true
 	L["Text"] = true
+
+	-- Module Tab Names
+	L["CastBar"] = true
 
 	-- Saved Variable Localizations
 	L["Arcane Charges Bar Color"] = true

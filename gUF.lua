@@ -73,6 +73,11 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 				[L["Fury Bar Color"]] = {r = 0.788, g = 0.259, b = 0.992, a = 1},
 				[L["Pain Bar Color"]] = {r = 1, g = 0, b = 0, a = 1},
 			},
+			module = {
+				castbar = {
+					
+				},
+			},
 			player = {
 				[L["Enabled"]] = true,
 				[L["Position"]] = {x = -2, y = -43}, -- adjust these some more and make a reset gui
