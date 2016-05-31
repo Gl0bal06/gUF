@@ -75,7 +75,7 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 			},
 			module = {
 				castbar = {
-					
+
 				},
 			},
 			player = {
@@ -219,7 +219,7 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 	self:Print("|cffffff00v"..self.rev.." loaded")
 end
 
-function gUF:OnEnable()																		-- PLAYER_LOGIN event for gUF
+function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_FLAGS_CHANGED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -240,7 +240,7 @@ function gUF:OnEnable()																		-- PLAYER_LOGIN event for gUF
 	self:RegisterEvent("VOICE_START")
 	self:RegisterEvent("VOICE_STOP")
 
-	self.db = LibStub("AceDB-3.0"):New("gUFDB", self.defaults)								-- Initialize the saved variables database with the default settings
+	self.db = LibStub("AceDB-3.0"):New("gUFDB", self.defaults)							-- Initialize the saved variables database with the default settings
 
 	--Slash Command stuff
 	SLASH_gUF1 = "/guf"
@@ -268,7 +268,9 @@ function gUF:OnEnable()																		-- PLAYER_LOGIN event for gUF
 
 	self.class = select(2, UnitClass("player"))
 
-	self:CreateRemoveFrames()																		-- Create any frames that are enabled
+	self:CreateRemoveFrames()															-- Create any frames that are enabled
+
+	self:EnableDisableModules()															-- Enable or disable any modules that should be enabled or disabled
 end
 
 function gUF:Print(msg)
@@ -896,6 +898,11 @@ function gUF:CooldownFrame_SetTimer(self, start, duration, enable, charges, maxC
 	else
 		self:SetCooldown(0, 0, charges, maxCharges)
 	end
+end
+
+function gUF:EnableDisableModules()
+	-- Wrap in an if statement to see if it really is enabled once options are built
+	self:EnableModule("CastBar")
 end
 
 function gUF:UpdateFrameInfo(unit)
