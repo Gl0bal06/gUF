@@ -1122,6 +1122,22 @@ function perltestthree()
 	for i,v in ipairs(gUF_player.buffs) do gUF:Print(i,v) end
 end
 
+-- function gUF:GetActiveUnitFrameNames()
+-- 	local framenames = {}
+-- 	for i,v in pairs(frames) do
+-- 		for frame in pairs(v) do
+-- 			table.insert(framenames, tostring(frame:GetName()))
+-- 			--table.insert(framenames, tostring(frame.nameframeoverlay:GetName()))
+-- 			--table.insert(framenames, frame)
+-- 		end
+-- 	end
+-- 	return framenames
+-- end
+
+function gUF:GetActiveUnitFrames()					-- Used in modules
+	return frames
+end
+
 function gUF:RegisterFrame(frame, unit)
 	frame:SetAttribute("unit", unit)				-- Next 4 lines probably needs moving later
 	RegisterUnitWatch(frame)

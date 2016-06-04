@@ -3,6 +3,8 @@ local CastBar = gUF:NewModule("CastBar", "AceEvent-3.0")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)
 
+local bars = {}
+
 function CastBar:OnInitialize()
 	gUF:Print("CastBar Module - OnInitialize")
 
@@ -104,5 +106,35 @@ function CastBar:Reload()
 end
 
 function CastBar:CreateRemoveFrames()
+	-- local frames = gUF:GetActiveUnitFrameNames()
+	-- for i in pairs(frames) do
+	-- 	--gUF:Print(frames[i].."_NameFrameOverlay")
+	-- 	gUF:Print(frames[i])
+	-- end
 
+	local frames = gUF:GetActiveUnitFrames()
+	for i,v in pairs(frames) do
+		for frame in pairs(v) do
+			--gUF:Print(tostring(frame.unit))
+			--gUF:Print(tostring(frame.nameframeoverlay:GetName()))
+
+			-- local unit = frame.unit
+			-- 
+			--
+			-- frame.arcanebar = CreateFrame("StatusBar", nil, frame, nil)
+			-- frame.arcanebar:SetPoint("TOPLEFT", frame.nameframeoverlay, "TOPLEFT", 10, -10)
+			-- frame.arcanebar:SetHeight(10)
+			-- frame.arcanebar:SetWidth(150)
+
+
+
+
+
+
+
+
+
+
+		end
+	end
 end
