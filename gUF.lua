@@ -1122,6 +1122,12 @@ function perltestthree()
 	for i,v in ipairs(gUF_player.buffs) do gUF:Print(i,v) end
 end
 
+--/script guftest2()
+function guftest2()
+	--CastBar:CreateRemoveFrames()
+	gUF:Print( gUF_player.arcanebar:GetValue() )
+end
+
 -- function gUF:GetActiveUnitFrameNames()
 -- 	local framenames = {}
 -- 	for i,v in pairs(frames) do
