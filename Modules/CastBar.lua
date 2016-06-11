@@ -15,14 +15,18 @@ end
 function CastBar:OnEnable()
 	gUF:Print("CastBar Module - OnEnable")
 
+	--self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_INTERRUPTED")
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
-	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
+	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", "EventStopCast")
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
 	self:RegisterEvent("UNIT_SPELLCAST_DELAYED")
-	self:RegisterEvent("UNIT_SPELLCAST_FAILED")
+	self:RegisterEvent("UNIT_SPELLCAST_FAILED", "EventStopCast")
 	self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+	--self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTIBLE")
+	--self:RegisterEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
 	self:RegisterEvent("UNIT_SPELLCAST_START")
-	self:RegisterEvent("UNIT_SPELLCAST_STOP")
+	self:RegisterEvent("UNIT_SPELLCAST_STOP", "EventStopCast")
+	--self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
 	--if (frame == Perl_ArcaneBar_target) then
 		self:RegisterEvent("PLAYER_TARGET_CHANGED")
@@ -66,9 +70,9 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START()
 
 end
 
-function CastBar:UNIT_SPELLCAST_CHANNEL_STOP()
-
-end
+-- function CastBar:UNIT_SPELLCAST_CHANNEL_STOP()
+--
+-- end
 
 function CastBar:UNIT_SPELLCAST_CHANNEL_UPDATE()
 
@@ -160,8 +164,10 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 
 end
 
-function CastBar:UNIT_SPELLCAST_STOP(event, unit)
-	gUF:Print("CastBar Module - UNIT_SPELLCAST_STOP")
+--function CastBar:UNIT_SPELLCAST_STOP(event, unit)
+function CastBar:EventStopCast(event, unit)
+	--gUF:Print("CastBar Module - UNIT_SPELLCAST_STOP")
+	gUF:Print("CastBar Module - "..event)
 
 	if not frames[unit] then return end
 
