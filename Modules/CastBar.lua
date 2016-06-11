@@ -29,9 +29,9 @@ function CastBar:OnEnable()
 	--self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
 	--if (frame == Perl_ArcaneBar_target) then
-		self:RegisterEvent("PLAYER_TARGET_CHANGED")
+		self:RegisterEvent("PLAYER_TARGET_CHANGED", "EventUnitChanged")
 	--elseif (frame == Perl_ArcaneBar_focus) then
-		self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+		self:RegisterEvent("PLAYER_FOCUS_CHANGED", "EventUnitChanged")
 	--end
 
 	self.db = gUF.db:RegisterNamespace("gUFDB", self.defaults)
@@ -66,28 +66,142 @@ end
 -- 	gUF:Print("CastBar Module - DisableModule")
 -- end
 
-function CastBar:UNIT_SPELLCAST_CHANNEL_START()
+function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 
+	if not frames[unit] then return end
+
+	for frame in pairs(frames[unit]) do
+
+		--local _
+		local text, _, _, _, startTime, endTime, _, notInterruptible = UnitChannelInfo(unit)
+
+		if (startTime ~= nil) then
+			--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.channel.r, Perl_ArcaneBar_Colors.channel.g, Perl_ArcaneBar_Colors.channel.b, transparency)
+			--frame.arcanebar.barSpark:Show()
+
+			frame.arcanebar.startTime = startTime / 1000
+			frame.arcanebar.endTime = endTime / 1000
+			frame.arcanebar.duration = frame.arcanebar.endTime - frame.arcanebar.startTime
+			frame.arcanebar.maxValue = frame.arcanebar.startTime
+			frame.arcanebar:SetMinMaxValues(frame.arcanebar.startTime, frame.arcanebar.endTime)
+			frame.arcanebar:SetValue(frame.arcanebar.endTime)
+
+			--if (notInterruptible) then
+				--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.notInterruptible.r, Perl_ArcaneBar_Colors.notInterruptible.g, Perl_ArcaneBar_Colors.notInterruptible.b, transparency)
+			--end
+
+			frame.arcanebar:SetAlpha(0.8)
+			frame.arcanebar.holdTime = 0
+			frame.arcanebar.casting = nil
+			frame.arcanebar.channeling = 1
+			frame.arcanebar.fadeOut = nil
+			frame.arcanebar.delaySum = 0
+			frame.arcanebar:Show()
+
+			-- if (frame.arcanebar.namereplace == 1) then
+			-- 	if (frame.arcanebar.nameframetext == nil) then
+			-- 		if (frame.arcanebar.unit == "player") then
+			-- 			frame.arcanebar.nameframetext = Perl_Player_NameBarText
+			-- 			frame.arcanebar.parentframe = Perl_Player_Frame
+			-- 		elseif (frame.arcanebar.unit == "target") then
+			-- 			frame.arcanebar.nameframetext = Perl_Target_NameBarText
+			-- 		elseif (frame.arcanebar.unit == "focus") then
+			-- 			frame.arcanebar.nameframetext = Perl_Focus_NameBarText
+			-- 		elseif (frame.arcanebar.unit == "party1") then
+			-- 			frame.arcanebar.nameframetext = Perl_Party_MemberFrame1_Name_NameBarText
+			-- 			frame.arcanebar.parentframe = Perl_Party_MemberFrame1
+			-- 		elseif (frame.arcanebar.unit == "party2") then
+			-- 			frame.arcanebar.nameframetext = Perl_Party_MemberFrame2_Name_NameBarText
+			-- 			frame.arcanebar.parentframe = Perl_Party_MemberFrame2
+			-- 		elseif (frame.arcanebar.unit == "party3") then
+			-- 			frame.arcanebar.nameframetext = Perl_Party_MemberFrame3_Name_NameBarText
+			-- 			frame.arcanebar.parentframe = Perl_Party_MemberFrame3
+			-- 		elseif (frame.arcanebar.unit == "party4") then
+			-- 			frame.arcanebar.nameframetext = Perl_Party_MemberFrame4_Name_NameBarText
+			-- 			frame.arcanebar.parentframe = Perl_Party_MemberFrame4
+			-- 		end
+			-- 	end
+			-- 	if (text == nil) then
+			-- 		frame.arcanebar.nameframetext:SetText(PERL_LOCALIZED_ARCANEBAR_CHANNELING)
+			-- 	else
+			-- 		frame.arcanebar.nameframetext:SetText(text)
+			-- 	end
+			-- end
+			--
+			-- if (frame.arcanebar.showtimer == 1) then
+			-- 	frame.arcanebar.castTimeText:Show()
+			-- else
+			-- 	frame.arcanebar.castTimeText:Hide()
+			-- end
+		end
+	end
 end
 
 -- function CastBar:UNIT_SPELLCAST_CHANNEL_STOP()
 --
 -- end
 
-function CastBar:UNIT_SPELLCAST_CHANNEL_UPDATE()
+function CastBar:UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
+	if not frames[unit] then return end
 
+	for frame in pairs(frames[unit]) do
+
+		if (frame.arcanebar:IsShown()) then
+			--local _
+			local _, _, _, _, startTime, endTime, _ = UnitChannelInfo(unit)
+
+			frame.arcanebar.delaySum = frame.arcanebar.delaySum + (endTime - frame.arcanebar.maxValue * 1000)
+			frame.arcanebar.startTime = startTime / 1000
+			frame.arcanebar.endTime = endTime / 1000
+			frame.arcanebar.maxValue = frame.arcanebar.startTime
+			frame.arcanebar:SetMinMaxValues(frame.arcanebar.startTime, frame.arcanebar.endTime)
+		end
+
+	end
 end
 
-function CastBar:UNIT_SPELLCAST_DELAYED()
+function CastBar:UNIT_SPELLCAST_DELAYED(event, unit)
+	if not frames[unit] then return end
 
+	for frame in pairs(frames[unit]) do
+
+		if(frame.arcanebar:IsShown()) then
+			--local _
+			local _, _, _, _, startTime, endTime, _, _, _ = UnitCastingInfo(unit)
+
+			if (endTime ~= nil) then
+				frame.arcanebar.delaySum = frame.arcanebar.delaySum + (endTime - frame.arcanebar.maxValue * 1000)
+				frame.arcanebar.startTime = startTime / 1000
+				frame.arcanebar.maxValue = endTime / 1000
+
+				frame.arcanebar:SetMinMaxValues(frame.arcanebar.startTime, frame.arcanebar.maxValue)
+			end
+		end
+
+	end
 end
 
-function CastBar:UNIT_SPELLCAST_FAILED()
+--function CastBar:UNIT_SPELLCAST_FAILED()
 
-end
+--end
 
 function CastBar:UNIT_SPELLCAST_INTERRUPTED()
 
+	if not frames[unit] then return end
+
+	for frame in pairs(frames[unit]) do
+
+		if (frame.arcanebar:IsShown() and not frame.arcanebar.channeling) then
+			frame.arcanebar:SetValue(frame.arcanebar.maxValue)
+			--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.failure.r, Perl_ArcaneBar_Colors.failure.g, Perl_ArcaneBar_Colors.failure.b, transparency)
+			frame.arcanebar.barSpark:Hide()
+			frame.arcanebar.casting = nil
+			frame.arcanebar.channeling = nil
+			frame.arcanebar.fadeOut = 1
+			frame.arcanebar.holdTime = GetTime() + CASTING_BAR_HOLD_TIME
+		end
+
+	end
 end
 
 function CastBar:UNIT_SPELLCAST_START(event, unit)
@@ -185,7 +299,7 @@ function CastBar:EventStopCast(event, unit)
 			--if (event == "UNIT_SPELLCAST_STOP") then
 				frame.arcanebar.casting = nil
 			--else
-				--frame.arcanebar.channeling = nil
+				frame.arcanebar.channeling = nil
 			--end
 			frame.arcanebar.delaySum = 0
 			frame.arcanebar.flash = 1
@@ -195,6 +309,10 @@ function CastBar:EventStopCast(event, unit)
 			-- if (frame.arcanebar.showtimer == 1) then
 			-- 	frame.arcanebar.castTimeText:Show()
 			-- end
+
+			if (event == "PLAYER_FOCUS_CHANGED" or event == "PLAYER_TARGET_CHANGED") then
+				frame.arcanebar:Hide()
+			end
 		end
 
 		-- if (frame.arcanebar.namereplace == 1) then
@@ -229,11 +347,42 @@ function CastBar:EventStopCast(event, unit)
 	end
 end
 
-function CastBar:PLAYER_TARGET_CHANGED()
+--function CastBar:PLAYER_TARGET_CHANGED()
 
-end
+--end
 
-function CastBar:PLAYER_FOCUS_CHANGED()
+--function CastBar:PLAYER_FOCUS_CHANGED()
+
+--end
+
+function CastBar:EventUnitChanged(event)
+	local unit
+
+	if (event == "PLAYER_TARGET_CHANGED") then
+		unit = "target"
+	elseif (event == "PLAYER_FOCUS_CHANGED") then
+		unit = "focus"
+	end
+		--self.unitname = UnitName(self.unit)
+		if (UnitChannelInfo(unit)) then
+			--event = "UNIT_SPELLCAST_CHANNEL_START"
+			self:UNIT_SPELLCAST_CHANNEL_START("UNIT_SPELLCAST_CHANNEL_START", unit)
+
+		elseif (UnitCastingInfo(unit)) then
+			--event = "UNIT_SPELLCAST_START"
+			self:UNIT_SPELLCAST_START("UNIT_SPELLCAST_START", unit)
+
+		else
+			--self.casting = nil
+			--self.channeling = nil
+			--self:Hide()
+
+			self:EventStopCast(event, unit)
+
+			return
+		end
+		--arg1 = self.unit
+	--end
 
 end
 
@@ -249,7 +398,7 @@ function CastBar:OnUpdate(elapsed)
 
 	-- if (self.showtimer == 1) then
 	-- 	local current_time = self.maxValue - getTime
-	-- 	if (self.channeling) then
+ -- 		if (self.channeling) then
 	-- 		current_time = self.endTime - getTime
 	-- 	end
 	-- 	if (current_time < 0) then
@@ -334,9 +483,9 @@ function CastBar:OnUpdate(elapsed)
 		end
 		if (time == self.endTime) then
 			self:SetStatusBarColor(0.0, 1.0, 0.0)
-			if (notInterruptible) then
+			--if (notInterruptible) then
 				--self:SetStatusBarColor(Perl_ArcaneBar_Colors.notInterruptible.r, Perl_ArcaneBar_Colors.notInterruptible.g, Perl_ArcaneBar_Colors.notInterruptible.b)
-			end
+			--end
 			--self.barSpark:Hide()
 			--self.barFlash:SetAlpha(0.0)
 			--self.barFlash:Show()
