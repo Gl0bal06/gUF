@@ -28,11 +28,8 @@ function CastBar:OnEnable()
 	self:RegisterEvent("UNIT_SPELLCAST_STOP", "EventStopCast")
 	--self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
-	--if (frame == Perl_ArcaneBar_target) then
-		self:RegisterEvent("PLAYER_TARGET_CHANGED", "EventUnitChanged")
-	--elseif (frame == Perl_ArcaneBar_focus) then
-		self:RegisterEvent("PLAYER_FOCUS_CHANGED", "EventUnitChanged")
-	--end
+	self:RegisterEvent("PLAYER_TARGET_CHANGED", "EventUnitChanged")
+	self:RegisterEvent("PLAYER_FOCUS_CHANGED", "EventUnitChanged")
 
 	self.db = gUF.db:RegisterNamespace("gUFDB", self.defaults)
 
@@ -45,28 +42,8 @@ function CastBar:OnDisable()
 	self:UnregisterAllEvents()
 end
 
--- function CastBar:EnableModule()
--- --	if( self.db.profile.combat ) then
--- --		frame:RegisterEvent("PLAYER_FOCUS_CHANGED")
--- --		frame:RegisterEvent("PLAYER_TARGET_CHANGED")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_DELAYED")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_FAILED")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_START")
--- --		frame:RegisterEvent("UNIT_SPELLCAST_STOP")
--- --	end
--- 	gUF:Print("CastBar Module - EnableModule")
--- end
---
--- function CastBar:DisableModule()
--- 	self:UnregisterAllEvents()
--- 	gUF:Print("CastBar Module - DisableModule")
--- end
-
 function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
+	gUF:Print("CastBar Module - "..event.." - "..unit)
 
 	if not frames[unit] then return end
 
@@ -76,7 +53,6 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 		local text, _, _, _, startTime, endTime, _, notInterruptible = UnitChannelInfo(unit)
 
 		if (startTime ~= nil) then
-			--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.channel.r, Perl_ArcaneBar_Colors.channel.g, Perl_ArcaneBar_Colors.channel.b, transparency)
 			--frame.arcanebar.barSpark:Show()
 
 			frame.arcanebar.startTime = startTime / 1000
@@ -86,9 +62,11 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 			frame.arcanebar:SetMinMaxValues(frame.arcanebar.startTime, frame.arcanebar.endTime)
 			frame.arcanebar:SetValue(frame.arcanebar.endTime)
 
-			--if (notInterruptible) then
-				--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.notInterruptible.r, Perl_ArcaneBar_Colors.notInterruptible.g, Perl_ArcaneBar_Colors.notInterruptible.b, transparency)
-			--end
+			if (notInterruptible) then
+				frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].a)
+			else
+				frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Channelling Color"]].r, gUF.db.profile.module.castbar[L["Channelling Color"]].g, gUF.db.profile.module.castbar[L["Channelling Color"]].b, gUF.db.profile.module.castbar[L["Channelling Color"]].a)
+			end
 
 			frame.arcanebar:SetAlpha(0.8)
 			frame.arcanebar.holdTime = 0
@@ -142,6 +120,8 @@ end
 -- end
 
 function CastBar:UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
+	gUF:Print("CastBar Module - "..event.." - "..unit)
+
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
@@ -161,6 +141,8 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
 end
 
 function CastBar:UNIT_SPELLCAST_DELAYED(event, unit)
+	gUF:Print("CastBar Module - "..event.." - "..unit)
+
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
@@ -185,7 +167,8 @@ end
 
 --end
 
-function CastBar:UNIT_SPELLCAST_INTERRUPTED()
+function CastBar:UNIT_SPELLCAST_INTERRUPTED(event, unit)
+	gUF:Print("CastBar Module - "..event.." - "..unit)
 
 	if not frames[unit] then return end
 
@@ -193,8 +176,8 @@ function CastBar:UNIT_SPELLCAST_INTERRUPTED()
 
 		if (frame.arcanebar:IsShown() and not frame.arcanebar.channeling) then
 			frame.arcanebar:SetValue(frame.arcanebar.maxValue)
-			--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.failure.r, Perl_ArcaneBar_Colors.failure.g, Perl_ArcaneBar_Colors.failure.b, transparency)
-			frame.arcanebar.barSpark:Hide()
+			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Failed Cast Color"]].r, gUF.db.profile.module.castbar[L["Failed Cast Color"]].g, gUF.db.profile.module.castbar[L["Failed Cast Color"]].b, gUF.db.profile.module.castbar[L["Failed Cast Color"]].a)
+			--frame.arcanebar.barSpark:Hide()
 			frame.arcanebar.casting = nil
 			frame.arcanebar.channeling = nil
 			frame.arcanebar.fadeOut = 1
@@ -205,7 +188,8 @@ function CastBar:UNIT_SPELLCAST_INTERRUPTED()
 end
 
 function CastBar:UNIT_SPELLCAST_START(event, unit)
-	gUF:Print("CastBar Module - UNIT_SPELLCAST_START")
+	gUF:Print("CastBar Module - "..event.." - "..unit)
+	--gUF:Print("CastBar Module - UNIT_SPELLCAST_START")
 
 	if not frames[unit] then return end
 
@@ -222,7 +206,6 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		--local _
 		local text, _, _, _, startTime, endTime, _, _, notInterruptible = UnitCastingInfo(unit)
 
-		--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.main.r, Perl_ArcaneBar_Colors.main.g, Perl_ArcaneBar_Colors.main.b, transparency)
 		--frame.arcanebar.barSpark:Show()
 		frame.arcanebar.startTime = startTime / 1000
 		frame.arcanebar.maxValue = endTime / 1000
@@ -230,7 +213,9 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		frame.arcanebar:SetValue(frame.arcanebar.startTime)
 
 		if (notInterruptible) then
-			--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.notInterruptible.r, Perl_ArcaneBar_Colors.notInterruptible.g, Perl_ArcaneBar_Colors.notInterruptible.b, transparency)
+			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].a)
+		else
+			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Casting Color"]].r, gUF.db.profile.module.castbar[L["Casting Color"]].g, gUF.db.profile.module.castbar[L["Casting Color"]].b, gUF.db.profile.module.castbar[L["Casting Color"]].a)
 		end
 
 		-- if (frame.arcanebar.namereplace == 1) then
@@ -281,7 +266,7 @@ end
 --function CastBar:UNIT_SPELLCAST_STOP(event, unit)
 function CastBar:EventStopCast(event, unit)
 	--gUF:Print("CastBar Module - UNIT_SPELLCAST_STOP")
-	gUF:Print("CastBar Module - "..event)
+	gUF:Print("CastBar Module - "..event.." - "..unit)
 
 	if not frames[unit] then return end
 
@@ -295,7 +280,7 @@ function CastBar:EventStopCast(event, unit)
 			--frame.arcanebar.barFlash:SetAlpha(0.0)
 			--frame.arcanebar.barFlash:Show()
 			frame.arcanebar:SetValue(frame.arcanebar.maxValue)
-			--frame.arcanebar:SetStatusBarColor(Perl_ArcaneBar_Colors.success.r, Perl_ArcaneBar_Colors.success.g, Perl_ArcaneBar_Colors.success.b, transparency)
+			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Success Cast Color"]].r, gUF.db.profile.module.castbar[L["Success Cast Color"]].g, gUF.db.profile.module.castbar[L["Success Cast Color"]].b, gUF.db.profile.module.castbar[L["Success Cast Color"]].a)
 			--if (event == "UNIT_SPELLCAST_STOP") then
 				frame.arcanebar.casting = nil
 			--else
@@ -430,10 +415,11 @@ function CastBar:OnUpdate(elapsed)
 		end
 		if (status == self.maxValue) then
 			self:SetValue(status)
-			self:SetStatusBarColor(0.0, 1.0, 0.0)
-			--if (notInterruptible) then
-				--self:SetStatusBarColor(Perl_ArcaneBar_Colors.notInterruptible.r, Perl_ArcaneBar_Colors.notInterruptible.g, Perl_ArcaneBar_Colors.notInterruptible.b)
-			--end
+			if (notInterruptible) then
+				self:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].a)
+			else
+				self:SetStatusBarColor(gUF.db.profile.module.castbar[L["Casting Color"]].r, gUF.db.profile.module.castbar[L["Casting Color"]].g, gUF.db.profile.module.castbar[L["Casting Color"]].b, gUF.db.profile.module.castbar[L["Casting Color"]].a)
+			end
 			--self.barSpark:Hide()
 			--self.barFlash:SetAlpha(0.0)
 			--self.barFlash:Show()
@@ -482,10 +468,11 @@ function CastBar:OnUpdate(elapsed)
 			time = self.endTime
 		end
 		if (time == self.endTime) then
-			self:SetStatusBarColor(0.0, 1.0, 0.0)
-			--if (notInterruptible) then
-				--self:SetStatusBarColor(Perl_ArcaneBar_Colors.notInterruptible.r, Perl_ArcaneBar_Colors.notInterruptible.g, Perl_ArcaneBar_Colors.notInterruptible.b)
-			--end
+			if (notInterruptible) then
+				self:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].a)
+			else
+				self:SetStatusBarColor(gUF.db.profile.module.castbar[L["Channelling Color"]].r, gUF.db.profile.module.castbar[L["Channelling Color"]].g, gUF.db.profile.module.castbar[L["Channelling Color"]].b, gUF.db.profile.module.castbar[L["Channelling Color"]].a)
+			end
 			--self.barSpark:Hide()
 			--self.barFlash:SetAlpha(0.0)
 			--self.barFlash:Show()

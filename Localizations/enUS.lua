@@ -115,4 +115,11 @@ if (L) then
 	L["Options cannot be changed in combat."] = true
 	L["Easily position normally hidden frames and options."] = true
 	L["Locks the unit frames."] = true
+
+	-- CastBar Module Options
+	L["Casting Color"] = true
+	L["Channelling Color"] = true
+	L["Success Cast Color"] = true
+	L["Failed Cast Color"] = true
+	L["Uninterruptible Cast Color"] = true
 end
