@@ -32,7 +32,7 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)				-- Localizations
 local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceEvent-3.0")		-- Create the main addon object
 gUF.rev = "7.0.1 Alpha"
-local isPTR = select(4, GetBuildInfo()) >= 70000						-- Code for only getting a game toc to code for PTRs
+--local isPTR = select(4, GetBuildInfo()) >= 70000						-- Code for only getting a game toc to code for PTRs
 
 local frames = {}														-- Table for units we are currently listening for
 
@@ -530,102 +530,51 @@ function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
 			end
 		end
 
-		if (isPTR) then
-			if (UnitPlayerControlled(unit)) then							-- is it a player
-				if (UnitCanAttack(unit, "player")) then						-- are we in an enemy controlled zone
-					-- Hostile players are red
-					if (not UnitCanAttack("player", unit)) then				-- enemy is not pvp enabled
-						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
-					else									-- enemy is pvp enabled
-						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
-					end
-				elseif (UnitCanAttack("player", unit)) then					-- enemy in a zone controlled by friendlies or when we're a ghost
-					-- Players we can attack but which are not hostile are yellow
-					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
-				elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary(unit)) then	-- friendly pvp enabled character
-					-- Players we can assist but are PvP flagged are green
-					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
-				else										-- friendly non pvp enabled character
-					-- All other players are blue (the usual state on the "blue" server)
-					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
+		if (UnitPlayerControlled(unit)) then							-- is it a player
+			if (UnitCanAttack(unit, "player")) then						-- are we in an enemy controlled zone
+				-- Hostile players are red
+				if (not UnitCanAttack("player", unit)) then				-- enemy is not pvp enabled
+					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
+				else									-- enemy is pvp enabled
+					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
 				end
-			elseif (not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then			-- not our tap (Post 7.0)
-				frame.nametext:SetTextColor(self.db.profile.global[L["Tapped NPC Color"]].r, self.db.profile.global[L["Tapped NPC Color"]].g, self.db.profile.global[L["Tapped NPC Color"]].b, self.db.profile.global[L["Tapped NPC Color"]].a)
-			else
-				if (UnitIsVisible(unit)) then
-					local reaction = UnitReaction(unit, "player")
-					if (reaction) then
-						frame.nametext:SetTextColor(self.FactionBarColors[reaction].r, self.FactionBarColors[reaction].g, self.FactionBarColors[reaction].b, self.db.profile.global[L["Hostile PvP Color"]].a)
-					else
-						frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
-					end
-				else
-					if (UnitCanAttack(unit, "player")) then				-- are we in an enemy controlled zone
-						-- Hostile players are red
-						if (not UnitCanAttack("player", unit)) then			-- enemy is not pvp enabled
-							frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
-						else								-- enemy is pvp enabled
-							frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
-						end
-					elseif (UnitCanAttack("player", unit)) then				-- enemy in a zone controlled by friendlies or when we're a ghost
-						-- Players we can attack but which are not hostile are yellow
-						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
-					elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary("player")) then	-- friendly pvp enabled character
-						-- Players we can assist but are PvP flagged are green
-						frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
-					else									-- friendly non pvp enabled character
-						-- All other players are blue (the usual state on the "blue" server)
-						frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
-					end
-				end
+			elseif (UnitCanAttack("player", unit)) then					-- enemy in a zone controlled by friendlies or when we're a ghost
+				-- Players we can attack but which are not hostile are yellow
+				frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
+			elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary(unit)) then	-- friendly pvp enabled character
+				-- Players we can assist but are PvP flagged are green
+				frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
+			else										-- friendly non pvp enabled character
+				-- All other players are blue (the usual state on the "blue" server)
+				frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
 			end
+		elseif (not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then			-- not our tap (Post 7.0)
+			frame.nametext:SetTextColor(self.db.profile.global[L["Tapped NPC Color"]].r, self.db.profile.global[L["Tapped NPC Color"]].g, self.db.profile.global[L["Tapped NPC Color"]].b, self.db.profile.global[L["Tapped NPC Color"]].a)
 		else
-			if (UnitPlayerControlled(unit)) then							-- is it a player
-				if (UnitCanAttack(unit, "player")) then						-- are we in an enemy controlled zone
-					-- Hostile players are red
-					if (not UnitCanAttack("player", unit)) then				-- enemy is not pvp enabled
-						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
-					else									-- enemy is pvp enabled
-						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
-					end
-				elseif (UnitCanAttack("player", unit)) then					-- enemy in a zone controlled by friendlies or when we're a ghost
-					-- Players we can attack but which are not hostile are yellow
-					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
-				elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary(unit)) then	-- friendly pvp enabled character
-					-- Players we can assist but are PvP flagged are green
-					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
-				else										-- friendly non pvp enabled character
-					-- All other players are blue (the usual state on the "blue" server)
+			if (UnitIsVisible(unit)) then
+				local reaction = UnitReaction(unit, "player")
+				if (reaction) then
+					frame.nametext:SetTextColor(self.FactionBarColors[reaction].r, self.FactionBarColors[reaction].g, self.FactionBarColors[reaction].b, self.db.profile.global[L["Hostile PvP Color"]].a)
+				else
 					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
 				end
-			elseif (UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then			-- not our tap (Pre 7.0)
-				frame.nametext:SetTextColor(self.db.profile.global[L["Tapped NPC Color"]].r, self.db.profile.global[L["Tapped NPC Color"]].g, self.db.profile.global[L["Tapped NPC Color"]].b, self.db.profile.global[L["Tapped NPC Color"]].a)
 			else
-				if (UnitIsVisible(unit)) then
-					local reaction = UnitReaction(unit, "player")
-					if (reaction) then
-						frame.nametext:SetTextColor(self.FactionBarColors[reaction].r, self.FactionBarColors[reaction].g, self.FactionBarColors[reaction].b, self.db.profile.global[L["Hostile PvP Color"]].a)
-					else
-						frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
+				if (UnitCanAttack(unit, "player")) then				-- are we in an enemy controlled zone
+					-- Hostile players are red
+					if (not UnitCanAttack("player", unit)) then			-- enemy is not pvp enabled
+						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
+					else								-- enemy is pvp enabled
+						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
 					end
-				else
-					if (UnitCanAttack(unit, "player")) then				-- are we in an enemy controlled zone
-						-- Hostile players are red
-						if (not UnitCanAttack("player", unit)) then			-- enemy is not pvp enabled
-							frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
-						else								-- enemy is pvp enabled
-							frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
-						end
-					elseif (UnitCanAttack("player", unit)) then				-- enemy in a zone controlled by friendlies or when we're a ghost
-						-- Players we can attack but which are not hostile are yellow
-						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
-					elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary("player")) then	-- friendly pvp enabled character
-						-- Players we can assist but are PvP flagged are green
-						frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
-					else									-- friendly non pvp enabled character
-						-- All other players are blue (the usual state on the "blue" server)
-						frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
-					end
+				elseif (UnitCanAttack("player", unit)) then				-- enemy in a zone controlled by friendlies or when we're a ghost
+					-- Players we can attack but which are not hostile are yellow
+					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
+				elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary("player")) then	-- friendly pvp enabled character
+					-- Players we can assist but are PvP flagged are green
+					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
+				else									-- friendly non pvp enabled character
+					-- All other players are blue (the usual state on the "blue" server)
+					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
 				end
 			end
 		end
