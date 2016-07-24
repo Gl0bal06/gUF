@@ -53,7 +53,7 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 		local text, _, _, _, startTime, endTime, _, notInterruptible = UnitChannelInfo(unit)
 
 		if (startTime ~= nil) then
-			--frame.arcanebar.barSpark:Show()
+			frame.arcanebar.spark:Show()
 
 			frame.arcanebar.startTime = startTime / 1000
 			frame.arcanebar.endTime = endTime / 1000
@@ -177,7 +177,7 @@ function CastBar:UNIT_SPELLCAST_INTERRUPTED(event, unit)
 		if (frame.arcanebar:IsShown() and not frame.arcanebar.channeling) then
 			frame.arcanebar:SetValue(frame.arcanebar.maxValue)
 			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Failed Cast Color"]].r, gUF.db.profile.module.castbar[L["Failed Cast Color"]].g, gUF.db.profile.module.castbar[L["Failed Cast Color"]].b, gUF.db.profile.module.castbar[L["Failed Cast Color"]].a)
-			--frame.arcanebar.barSpark:Hide()
+			frame.arcanebar.spark:Hide()
 			frame.arcanebar.casting = nil
 			frame.arcanebar.channeling = nil
 			frame.arcanebar.fadeOut = 1
@@ -206,7 +206,7 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		--local _
 		local text, _, _, _, startTime, endTime, _, _, notInterruptible = UnitCastingInfo(unit)
 
-		--frame.arcanebar.barSpark:Show()
+		frame.arcanebar.spark:Show()
 		frame.arcanebar.startTime = startTime / 1000
 		frame.arcanebar.maxValue = endTime / 1000
 		frame.arcanebar:SetMinMaxValues(frame.arcanebar.startTime, frame.arcanebar.maxValue)
@@ -274,9 +274,9 @@ function CastBar:EventStopCast(event, unit)
 		--frame.arcanebar:Hide()
 
 		if (frame.arcanebar:IsShown()) then
-			--if (frame.arcanebar.channeling == nil) then
-				--frame.arcanebar.barSpark:Hide()
-			--end
+			if (frame.arcanebar.channeling == nil) then
+				frame.arcanebar.spark:Hide()
+			end
 			--frame.arcanebar.barFlash:SetAlpha(0.0)
 			--frame.arcanebar.barFlash:Show()
 			frame.arcanebar:SetValue(frame.arcanebar.maxValue)
@@ -420,7 +420,7 @@ function CastBar:OnUpdate(elapsed)
 			else
 				self:SetStatusBarColor(gUF.db.profile.module.castbar[L["Casting Color"]].r, gUF.db.profile.module.castbar[L["Casting Color"]].g, gUF.db.profile.module.castbar[L["Casting Color"]].b, gUF.db.profile.module.castbar[L["Casting Color"]].a)
 			end
-			--self.barSpark:Hide()
+			self.spark:Hide()
 			--self.barFlash:SetAlpha(0.0)
 			--self.barFlash:Show()
 			self.flash = 1
@@ -457,11 +457,11 @@ function CastBar:OnUpdate(elapsed)
 		end
 		self:SetValue(status)
 		--self.barFlash:Hide()
-		--local sparkPosition = ((status - self.startTime) / (self.maxValue - self.startTime)) * (self.nameframewidth - 10)
-		--if (sparkPosition < 0) then
-			--sparkPosition = 0
-		--end
-		--self.barSpark:SetPoint("CENTER", self, "LEFT", sparkPosition, 0)
+		local sparkPosition = ((status - self.startTime) / (self.maxValue - self.startTime)) * (self:GetWidth())
+		if (sparkPosition < 0) then
+			sparkPosition = 0
+		end
+		self.spark:SetPoint("CENTER", self, "LEFT", sparkPosition, 0)
 	elseif (self.channeling) then
 		local time = getTime
 		if (time > self.endTime) then
@@ -473,7 +473,7 @@ function CastBar:OnUpdate(elapsed)
 			else
 				self:SetStatusBarColor(gUF.db.profile.module.castbar[L["Channelling Color"]].r, gUF.db.profile.module.castbar[L["Channelling Color"]].g, gUF.db.profile.module.castbar[L["Channelling Color"]].b, gUF.db.profile.module.castbar[L["Channelling Color"]].a)
 			end
-			--self.barSpark:Hide()
+			self.spark:Hide()
 			--self.barFlash:SetAlpha(0.0)
 			--self.barFlash:Show()
 			self.flash = 1
@@ -509,8 +509,8 @@ function CastBar:OnUpdate(elapsed)
 		local barValue = self.startTime + (self.endTime - time)
 		self:SetValue(barValue)
 		--self.barFlash:Hide()
-		--local sparkPosition = ((barValue - self.startTime) / (self.endTime - self.startTime)) * (self.nameframewidth - 10)
-		--self.barSpark:SetPoint("CENTER", self, "LEFT", sparkPosition, 0)
+		local sparkPosition = ((barValue - self.startTime) / (self.endTime - self.startTime)) * (self:GetWidth())
+		self.spark:SetPoint("CENTER", self, "LEFT", sparkPosition, 0)
 	elseif (getTime < self.holdTime) then
 		return
 	-- elseif (self.flash) then
@@ -545,45 +545,51 @@ function CastBar:CreateRemoveFrames()
 	for i,v in pairs(frames) do
 		for frame in pairs(v) do
 			if (frame.arcanebar == nil) then
-			--gUF:Print(tostring(frame.unit))
-			--gUF:Print(tostring(frame.nameframeoverlay:GetName()))
-			--gUF:Print(tostring(frame:GetName()))
+				--gUF:Print(tostring(frame.unit))
+				--gUF:Print(tostring(frame.nameframeoverlay:GetName()))
+				--gUF:Print(tostring(frame:GetName()))
 
-			--local frame = CreateFrame("Frame", framename, UIParent, nil)
-			--frame:SetFrameStrata("LOW")
-			--frame:SetMovable(1)
-			--frame:SetHeight(1)
-			--frame:SetWidth(1)
+				--local frame = CreateFrame("Frame", framename, UIParent, nil)
+				--frame:SetFrameStrata("LOW")
+				--frame:SetMovable(1)
+				--frame:SetHeight(1)
+				--frame:SetWidth(1)
 
-			--local unit = frame.unit
+				--local unit = frame.unit
 
 
-			frame.arcanebar = CreateFrame("StatusBar", nil, frame, nil)
-			frame.arcanebar:Hide()
-			frame.arcanebar:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 4, -4)
-			frame.arcanebar:SetHeight(frame.nameframe:GetHeight()-8)
-			frame.arcanebar:SetWidth(frame.nameframe:GetWidth()-8)
-			--frame.arcanebar:SetHeight(24)
-			--frame.arcanebar:SetWidth(200)
-			frame.arcanebar:SetScript("OnUpdate", CastBar.OnUpdate)
+				frame.arcanebar = CreateFrame("StatusBar", nil, frame, nil)
+				frame.arcanebar:Hide()
+				frame.arcanebar:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 4, -4)
+				frame.arcanebar:SetHeight(frame.nameframe:GetHeight()-8)
+				frame.arcanebar:SetWidth(frame.nameframe:GetWidth()-8)
+				--frame.arcanebar:SetHeight(24)
+				--frame.arcanebar:SetWidth(200)
+				frame.arcanebar:SetScript("OnUpdate", CastBar.OnUpdate)
 
-			frame.arcanebar:SetStatusBarTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
-			frame.arcanebar:GetStatusBarTexture():SetHorizTile(false)
-			frame.arcanebar:GetStatusBarTexture():SetVertTile(false)
-			--frame.arcanebar:SetStatusBarColor(0, 0.65, 0)
+				frame.arcanebar:SetStatusBarTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+				frame.arcanebar:GetStatusBarTexture():SetHorizTile(false)
+				frame.arcanebar:GetStatusBarTexture():SetVertTile(false)
+				--frame.arcanebar:SetStatusBarColor(0, 0.65, 0)
 
-			--gUF:Print(frame.nameframe:GetHeight())
+				--gUF:Print(frame.nameframe:GetHeight())
 
-			frame.arcanebar:SetMinMaxValues(0, 100)
-			frame.arcanebar:SetValue(0)
-			--frame.arcanebar:Show()
+				frame.arcanebar:SetMinMaxValues(0, 100)
+				frame.arcanebar:SetValue(0)
+				--frame.arcanebar:Show()
 
-			--gUF:Print( frame.arcanebar:GetValue() )
+				--gUF:Print( frame.arcanebar:GetValue() )
 
-			--frame.healthbar:SetStatusBarColor(self.db.profile.global[L["Health Bar Color"]].r, self.db.profile.global[L["Health Bar Color"]].g, self.db.profile.global[L["Health Bar Color"]].b, self.db.profile.global[L["Health Bar Color"]].a)
-			--frame.bars += frame.arcanebar
-			--gUF:SetupStatusBarTextures(frame)
+				--frame.healthbar:SetStatusBarColor(self.db.profile.global[L["Health Bar Color"]].r, self.db.profile.global[L["Health Bar Color"]].g, self.db.profile.global[L["Health Bar Color"]].b, self.db.profile.global[L["Health Bar Color"]].a)
+				--frame.bars += frame.arcanebar
+				--gUF:SetupStatusBarTextures(frame)
 
+
+				frame.arcanebar.spark = frame.arcanebar:CreateTexture(nil, "OVERLAY", nil)
+				frame.arcanebar.spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark", 0, 0)
+				frame.arcanebar.spark:SetBlendMode("ADD")
+				frame.arcanebar.spark:SetPoint("CENTER")
+				frame.arcanebar.spark:Show()
 
 
 			end
