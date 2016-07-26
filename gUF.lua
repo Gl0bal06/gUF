@@ -76,11 +76,16 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 			module = {
 				castbar = {
 					[L["Enabled"]] = true,
+					[L["Bar Flash"]] = true,
+					[L["Bar Spark"]] = true,
+					[L["Display Cast Timer"]] = true,
+					[L["Replace Unit Names"]] = true,
+					[L["TradeSkills"]] = true,
 					[L["Casting Color"]] = {r = 1, g = 0.7, b = 0, a = 1},
 					[L["Channelling Color"]] = {r = 0, g = 1, b = 0, a = 1},
-					[L["Success Cast Color"]] = {r = 0, g = 1, b = 0, a = 1},
 					[L["Failed Cast Color"]] = {r = 1, g = 0, b = 0, a = 1},
-					[L["Uninterruptible Cast Color"]] = {r = 0.5, g = 0.5, b = 0.5, a = 1},
+					[L["Success Cast Color"]] = {r = 0, g = 1, b = 0, a = 1},
+					[L["Uninterruptible Cast Color"]] = {r = 0.7, g = 0.7, b = 0.7, a = 1},
 				},
 			},
 			player = {

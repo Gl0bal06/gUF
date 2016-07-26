@@ -117,9 +117,17 @@ if (L) then
 	L["Locks the unit frames."] = true
 
 	-- CastBar Module Options
+	L["Bar Flash"] = true
+	L["Bar Spark"] = true
+	L["Display Cast Timer"] = true
+	L["Replace Unit Names"] = true
+	L["TradeSkills"] = true
 	L["Casting Color"] = true
 	L["Channelling Color"] = true
-	L["Success Cast Color"] = true
 	L["Failed Cast Color"] = true
+	L["Success Cast Color"] = true
 	L["Uninterruptible Cast Color"] = true
+
+	-- CastBar Module Runtime
+	L["Channeling"] = true
 end
