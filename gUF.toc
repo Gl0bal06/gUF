@@ -1,8 +1,10 @@
-## Interface: 70000
+## Interface: 70300
 ## Title: gUF
-## Author: Global
 ## Notes: Unit Frame modification based on the Perl style
+## Author: Global
+## Version: 7.0.1 Alpha
 ## SavedVariables: gUFDB
+## X-Website: https://github.com/Gl0bal06/gUF
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, Clique
 
 #@no-lib-strip@

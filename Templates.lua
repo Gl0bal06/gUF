@@ -31,7 +31,7 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	frame.statsframe = CreateFrame("Frame", nil, frame, nil)
 	frame.statsframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 32, -22)				-- remove this once we have a full option set for customizing this
 	frame.statsframe:SetHeight(42)								-- remove this once we have a full option set for customizing this
-	frame.statsframe:SetWidth(270)								-- remove this once we have a full option set for customizing this
+	frame.statsframe:SetWidth(280)								-- remove this once we have a full option set for customizing this
 
 
 	-- Bars
@@ -78,10 +78,10 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	frame.nametext:SetPoint("CENTER", frame.nameframe, "CENTER", 0, 0)			-- remove this once we have a full option set for customizing this
 
 	frame.currentmaxhealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.currentmaxhealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 100, 0)		-- remove this once we have a full option set for customizing this
+	frame.currentmaxhealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
 
 	frame.currentmaxmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.currentmaxmanatext:SetPoint("RIGHT", frame.manabar, "RIGHT", 100, 0)		-- remove this once we have a full option set for customizing this
+	frame.currentmaxmanatext:SetPoint("RIGHT", frame.manabar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
 
 	frame.percenthealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.percenthealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)			-- remove this once we have a full option set for customizing this
@@ -133,17 +133,17 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	frame.raidicon:SetWidth(26)								-- remove this once we have a full option set for customizing this
 
 
-	frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
-	frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
-	frame.speakericon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)		-- remove this once we have a full option set for customizing this
-	frame.speakericon:SetHeight(16)								-- remove this once we have a full option set for customizing this
-	frame.speakericon:SetWidth(16)								-- remove this once we have a full option set for customizing this
+	-- frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	-- frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
+	-- frame.speakericon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)		-- remove this once we have a full option set for customizing this
+	-- frame.speakericon:SetHeight(16)								-- remove this once we have a full option set for customizing this
+	-- frame.speakericon:SetWidth(16)								-- remove this once we have a full option set for customizing this
 
-	frame.speakersoundicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
-	frame.speakersoundicon:SetTexture("Interface\\Common\\VoiceChat-On")
-	frame.speakersoundicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)	-- remove this once we have a full option set for customizing this
-	frame.speakersoundicon:SetHeight(16)							-- remove this once we have a full option set for customizing this
-	frame.speakersoundicon:SetWidth(16)							-- remove this once we have a full option set for customizing this
+	-- frame.speakersoundicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	-- frame.speakersoundicon:SetTexture("Interface\\Common\\VoiceChat-On")
+	-- frame.speakersoundicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)	-- remove this once we have a full option set for customizing this
+	-- frame.speakersoundicon:SetHeight(16)							-- remove this once we have a full option set for customizing this
+	-- frame.speakersoundicon:SetWidth(16)							-- remove this once we have a full option set for customizing this
 
 
 	-- Buffs

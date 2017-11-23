@@ -1,5 +1,5 @@
 --[[-------------------------------------------------------------------------
-  Copyright (c) 2005-2013, Mark T Dragon
+  Copyright (c) 2005-2017, Mark T Dragon
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -124,7 +124,7 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 			},
 			target = {
 				[L["Enabled"]] = true,
-				[L["Position"]] = {x = 295, y = -43}, -- adjust these some more and make a reset gui
+				[L["Position"]] = {x = 305, y = -43}, -- adjust these some more and make a reset gui
 				[L["Scale"]] = 1, -- not implemented yet
 				[L["Transparency"]] = 1, -- not implemented yet
 				[L["Healer Mode"]] = false, -- remove this later once better text options are made
@@ -242,13 +242,15 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	self:RegisterEvent("UNIT_DYNAMIC_FLAGS")
 	self:RegisterEvent("UNIT_FACTION")
 	self:RegisterEvent("UNIT_HEALTH")
+	-- self:RegisterEvent("UNIT_HEALTH_PREDICTION")
 	self:RegisterEvent("UNIT_LEVEL")
 	self:RegisterEvent("UNIT_MAXHEALTH")
 	self:RegisterEvent("UNIT_MAXPOWER")
 	self:RegisterEvent("UNIT_NAME_UPDATE")
-	self:RegisterEvent("UNIT_POWER")
-	self:RegisterEvent("VOICE_START")
-	self:RegisterEvent("VOICE_STOP")
+	-- self:RegisterEvent("UNIT_POWER")
+	self:RegisterEvent("UNIT_POWER_FREQUENT")
+	-- self:RegisterEvent("VOICE_START")
+	-- self:RegisterEvent("VOICE_STOP")
 
 	self.db = LibStub("AceDB-3.0"):New("gUFDB", self.defaults)							-- Initialize the saved variables database with the default settings
 
@@ -376,7 +378,7 @@ function gUF:UNIT_MAXHEALTH(event, unit)
 	end
 end
 
-function gUF:UNIT_POWER(event, unit)
+function gUF:UNIT_POWER_FREQUENT(event, unit)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
@@ -397,7 +399,7 @@ function gUF:UNIT_MAXPOWER(event, unit)
 
 	for frame in pairs(frames[unit]) do
 		frame.manabar:SetMinMaxValues(0, UnitPowerMax(unit))
-		self:UNIT_POWER(nil, unit)
+		self:UNIT_POWER_FREQUENT(nil, unit)
 	end
 end
 
@@ -769,23 +771,23 @@ function gUF:UNIT_AURA(event, unit)
 	end
 end
 
-function gUF:VOICE_START(event, unit)
-	if not frames[unit] then return end
+-- function gUF:VOICE_START(event, unit)
+-- 	if not frames[unit] then return end
 
-	for frame in pairs(frames[unit]) do
-		frame.speakericon:Show()
-		frame.speakersoundicon:Show()
-	end
-end
+-- 	for frame in pairs(frames[unit]) do
+-- 		frame.speakericon:Show()
+-- 		frame.speakersoundicon:Show()
+-- 	end
+-- end
 
-function gUF:VOICE_STOP(event, unit)
-	if not frames[unit] then return end
+-- function gUF:VOICE_STOP(event, unit)
+-- 	if not frames[unit] then return end
 
-	for frame in pairs(frames[unit]) do
-		frame.speakericon:Hide()
-		frame.speakersoundicon:Hide()
-	end
-end
+-- 	for frame in pairs(frames[unit]) do
+-- 		frame.speakericon:Hide()
+-- 		frame.speakersoundicon:Hide()
+-- 	end
+-- end
 
 function gUF:PLAYER_TARGET_CHANGED()
 	if (UnitExists("target")) then
@@ -886,11 +888,11 @@ function gUF:UpdateFrameInfo(unit)
 				frame.classicon:Hide()
 			end
 
-			if (UnitIsTalking(UnitName(unit))) then
-				self:VOICE_START(nil, unit)
-			else
-				self:VOICE_STOP(nil, unit)
-			end
+			-- if (UnitIsTalking(UnitName(unit))) then
+			-- 	self:VOICE_START(nil, unit)
+			-- else
+			-- 	self:VOICE_STOP(nil, unit)
+			-- end
 
 			if (unit == "player") then
 				self:UpdateCombatRestIcon(nil)
