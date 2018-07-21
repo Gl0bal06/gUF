@@ -49,8 +49,8 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 
 	for frame in pairs(frames[unit]) do
 
-			local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(unit)
-			if ( not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
+			local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible = UnitChannelInfo(unit)
+			if (not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
 				-- if there is no name, there is no bar
 				frame.arcanebar:Hide()
 				return
@@ -78,7 +78,7 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 			frame.arcanebar.maxValue = (endTime - startTime) / 1000
 			frame.arcanebar:SetMinMaxValues(0, frame.arcanebar.maxValue)
 			frame.arcanebar:SetValue(frame.arcanebar.value)
-			--if ( frame.arcanebar.spark ) then
+			--if (frame.arcanebar.spark) then
 				--frame.arcanebar.spark:Hide()
 			--end
 			frame.arcanebar:SetAlpha(1.0)
@@ -88,7 +88,7 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 			frame.arcanebar.fadeOut = nil
 			frame.arcanebar.delaySum = 0
 
-			-- if ( self.showCastbar ) then
+			-- if (self.showCastbar) then
 				frame.arcanebar.spark:Show()
 				frame.arcanebar:Show()
 			-- end
@@ -111,8 +111,8 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_UPDATE(event, unit)
 
 		if (frame.arcanebar:IsShown()) then
 
-			local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(unit)
-			if ( not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
+			local name, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(unit)
+			if (not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
 				-- if there is no name, there is no bar
 				frame.arcanebar:Hide()
 				return
@@ -141,8 +141,8 @@ function CastBar:UNIT_SPELLCAST_DELAYED(event, unit)
 
 		if(frame.arcanebar:IsShown()) then
 
-			local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unit)
-			if ( not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
+			local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unit)
+			if (not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
 				-- if there is no name, there is no bar
 				frame.arcanebar:Hide()
 				return
@@ -154,11 +154,11 @@ function CastBar:UNIT_SPELLCAST_DELAYED(event, unit)
 			frame.arcanebar.maxValue = (endTime - startTime) / 1000
 			frame.arcanebar:SetMinMaxValues(0, frame.arcanebar.maxValue)
 
-			if ( not frame.arcanebar.casting ) then
-				--if ( frame.arcanebar.spark ) then
+			if (not frame.arcanebar.casting) then
+				--if (frame.arcanebar.spark) then
 					--frame.arcanebar.spark:Show()
 				--end
-				--if ( frame.arcanebar.Flash ) then
+				--if (frame.arcanebar.Flash) then
 					frame.arcanebar.Flash:SetAlpha(0)
 					frame.arcanebar.Flash:Hide()
 				--end
@@ -181,8 +181,8 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		-- --frame.healthbar:SetMinMaxValues(0, UnitHealthMax(unit))
 		-- --frame.arcanebar:UNIT_HEALTH(nil, unit)
 
-		local name, nameSubtext, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unit)
-		if ( not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
+		local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible = UnitCastingInfo(unit)
+		if (not name or (not gUF.db.profile.module.castbar[L["TradeSkills"]] and isTradeSkill)) then
 			frame.arcanebar:Hide()
 			return
 		end
@@ -218,11 +218,11 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		-- 	frame.arcanebar.castTimeText:Hide()
 		-- end
 
-		--if ( frame.arcanebar.spark ) then
+		--if (frame.arcanebar.spark) then
 			frame.arcanebar.spark:Show()
 		--end
 
-		--if ( frame.arcanebar.showCastbar ) then
+		--if (frame.arcanebar.showCastbar) then
 			frame.arcanebar:Show()
 		--end
 	end
@@ -235,17 +235,17 @@ function CastBar:EventStopCast(event, unit, ...)
 
 	for frame in pairs(frames[unit]) do
 
-		if ( (frame.arcanebar.casting and event == "UNIT_SPELLCAST_STOP" and select(3, ...) == frame.arcanebar.castID) or (frame.arcanebar.channeling and event == "UNIT_SPELLCAST_CHANNEL_STOP") ) then
+		if ( (frame.arcanebar.casting and event == "UNIT_SPELLCAST_STOP" and select(1, ...) == frame.arcanebar.castID) or (frame.arcanebar.channeling and event == "UNIT_SPELLCAST_CHANNEL_STOP") ) then
 
-			--if ( frame.arcanebar.spark ) then
+			--if (frame.arcanebar.spark) then
 				frame.arcanebar.spark:Hide()
 			--end
-			--if ( frame.arcanebar.Flash ) then
+			--if (frame.arcanebar.Flash) then
 				frame.arcanebar.Flash:SetAlpha(0)
 				frame.arcanebar.Flash:Show()
 			--end
 			frame.arcanebar:SetValue(frame.arcanebar.maxValue)
-			if ( event == "UNIT_SPELLCAST_STOP" ) then
+			if (event == "UNIT_SPELLCAST_STOP") then
 				frame.arcanebar.casting = nil
 			else
 				frame.arcanebar.channeling = nil
@@ -271,11 +271,10 @@ function CastBar:EventFailedCast(event, unit, ...)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
-
-		if ( (frame.arcanebar:IsShown() and frame.arcanebar.casting and select(3, ...) == frame.arcanebar.castID) and not frame.arcanebar.fadeOut ) then
+		if ( (frame.arcanebar:IsShown() and frame.arcanebar.casting and select(1, ...) == frame.arcanebar.castID) and not frame.arcanebar.fadeOut ) then
 			frame.arcanebar:SetValue(frame.arcanebar.maxValue)
 			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Failed Cast Color"]].r, gUF.db.profile.module.castbar[L["Failed Cast Color"]].g, gUF.db.profile.module.castbar[L["Failed Cast Color"]].b)
-			--if ( frame.arcanebar.spark ) then
+			--if (frame.arcanebar.spark) then
 				frame.arcanebar.spark:Hide()
 			--end
 			frame.arcanebar.casting = nil
@@ -361,13 +360,13 @@ function CastBar:OnUpdate(elapsed)
 			text = string.sub(text, 1, 4)
 		end
 
-		--gUF:Print( "delaySum = "..self.delaySum )
+		--gUF:Print("delaySum = "..self.delaySum)
 		if (self.delaySum ~= 0) then
 			--local delay = string.sub(math.max(self.delaySum / 1000, 0) + 0.001, 1, 4)
 			--local delay = self.delaySum - self.delaySum - self.delaySum
 			--local delay = string.sub(math.max(self.delaySum - self.delaySum - self.delaySum) + 0.001, 1, 4)
 			local delay = string.sub(math.abs(self.delaySum) + 0.001, 1, 4)
-			--gUF:Print( "delaySum = "..self.delaySum )
+			--gUF:Print("delaySum = "..self.delaySum)
 			if (self.channeling) then
 				self.sign = "-"
 			else
@@ -382,12 +381,12 @@ function CastBar:OnUpdate(elapsed)
 	if (self.casting) then
 
 		self.value = self.value + elapsed
-		if ( self.value >= self.maxValue ) then
+		if (self.value >= self.maxValue) then
 			self:SetValue(self.maxValue)
-			--if ( self.spark ) then
+			--if (self.spark) then
 				self.spark:Hide()
 			--end
-			--if ( self.Flash ) then
+			--if (self.Flash) then
 				self.Flash:SetAlpha(0)
 				self.Flash:Show()
 			--end
@@ -399,22 +398,21 @@ function CastBar:OnUpdate(elapsed)
 			return
 		end
 		self:SetValue(self.value)
-		--if ( self.Flash ) then
+		--if (self.Flash) then
 			self.Flash:Hide()
 		--end
-		--if ( self.spark ) then
+		--if (self.spark) then
 			self.spark:SetPoint("CENTER", self, "LEFT", (self.value / self.maxValue) * self:GetWidth(), 0)
 		--end
-
 
 	elseif (self.channeling) then
 
 		self.value = self.value - elapsed
-		if ( self.value <= 0 ) then
-			--if ( self.spark ) then
+		if (self.value <= 0) then
+			--if (self.spark) then
 				self.spark:Hide()
 			--end
-			--if ( self.Flash ) then
+			--if (self.Flash) then
 				self.Flash:SetAlpha(0)
 				self.Flash:Show()
 			--end
@@ -427,31 +425,28 @@ function CastBar:OnUpdate(elapsed)
 		end
 		self:SetValue(self.value)
 		self.spark:SetPoint("CENTER", self, "LEFT", (self.value / self.maxValue) * self:GetWidth(), 0)
-		--if ( self.Flash ) then
+		--if (self.Flash) then
 			self.Flash:Hide()
 		--end
-
 
 	elseif (getTime < self.holdTime) then
 		return
 
-
-	elseif ( self.flash ) then
+	elseif (self.flash) then
 		local alpha = 0;
-		--if ( self.Flash ) then
+		--if (self.Flash) then
 			alpha = self.Flash:GetAlpha() + CASTING_BAR_FLASH_STEP;
 		--end
-		if ( alpha < 1 ) then
-			--if ( self.Flash ) then
+		if (alpha < 1) then
+			--if (self.Flash) then
 				self.Flash:SetAlpha(alpha);
 			--end
 		else
-			--if ( self.Flash ) then
+			--if (self.Flash) then
 				self.Flash:SetAlpha(1.0);
 			--end
 			self.flash = nil;
 		end
-
 
 	elseif (self.fadeOut) then
 		local alpha = self:GetAlpha() - CASTING_BAR_ALPHA_STEP
@@ -514,7 +509,7 @@ function CastBar:CreateRemoveFrames()
 				frame.arcanebar:SetValue(0)
 				--frame.arcanebar:Show()
 
-				--gUF:Print( frame.arcanebar:GetValue() )
+				--gUF:Print(frame.arcanebar:GetValue())
 
 				--frame.healthbar:SetStatusBarColor(self.db.profile.global[L["Health Bar Color"]].r, self.db.profile.global[L["Health Bar Color"]].g, self.db.profile.global[L["Health Bar Color"]].b, self.db.profile.global[L["Health Bar Color"]].a)
 				--frame.bars += frame.arcanebar

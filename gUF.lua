@@ -239,7 +239,7 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	self:RegisterEvent("RAID_TARGET_UPDATE")
 	self:RegisterEvent("UNIT_AURA")
 	self:RegisterEvent("UNIT_DISPLAYPOWER")
-	self:RegisterEvent("UNIT_DYNAMIC_FLAGS")
+	--self:RegisterEvent("UNIT_DYNAMIC_FLAGS")
 	self:RegisterEvent("UNIT_FACTION")
 	self:RegisterEvent("UNIT_HEALTH")
 	-- self:RegisterEvent("UNIT_HEALTH_PREDICTION")
@@ -312,9 +312,9 @@ function gUF:UNIT_HEALTH(event, unit)
 
 		frame.healthbar:SetValue(unithealth)
 
-		if (unithealthmax > 99999) then
+		--if (unithealthmax > 99999) then
 			-- do some abbreviating here, probably turn this into an option later?
-		end
+		--end
 
 		-- Handle Death Status
 		if (UnitIsDead(unit) or UnitIsGhost(unit)) then
@@ -325,7 +325,8 @@ function gUF:UNIT_HEALTH(event, unit)
 			frame.deathicon:Hide()
 		end
 
-		frame.currentmaxhealthtext:SetText(unithealth.."/"..unithealthmax)
+		--frame.currentmaxhealthtext:SetText(unithealth.."/"..unithealthmax)
+		frame.currentmaxhealthtext:SetText(self:FormatHealthPowerText(unithealth).."/"..self:FormatHealthPowerText(unithealthmax))
 		frame.percenthealthtext:SetText(unithealthpercent.."%")
 		frame.deficithealthtext:SetText("-"..unithealthmax - unithealth)
 
@@ -500,7 +501,7 @@ function gUF:UNIT_FACTION(event, unit)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
-		self:UNIT_DYNAMIC_FLAGS(nil, unit)
+		--self:UNIT_DYNAMIC_FLAGS(nil, unit)
 
 		if (self.db.profile[unit][L["Show PvP Status Icon"]] == true) then
 			local englishFaction, _ = UnitFactionGroup(unit)
@@ -520,13 +521,7 @@ function gUF:UNIT_FACTION(event, unit)
 		else																					-- move this hide check to the style function?
 				frame.pvpicon:Hide()															-- Hide the icon
 		end
-	end
-end
 
-function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
-	if not frames[unit] then return end
-
-	for frame in pairs(frames[unit]) do
 		if (self.db.profile[unit][L["Color Names By Class"]] == true) then
 			if (UnitIsPlayer(unit)) then
 				local _, englishClass = UnitClass(unit)
@@ -589,6 +584,72 @@ function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
 	end
 end
 
+-- function gUF:UNIT_DYNAMIC_FLAGS(event, unit)
+-- 	if not frames[unit] then return end
+
+-- 	for frame in pairs(frames[unit]) do
+-- 		if (self.db.profile[unit][L["Color Names By Class"]] == true) then
+-- 			if (UnitIsPlayer(unit)) then
+-- 				local _, englishClass = UnitClass(unit)
+-- 				if (englishClass) then
+-- 					frame.nametext:SetTextColor(self.RaidClassColors[englishClass].r,self.RaidClassColors[englishClass].g,self.RaidClassColors[englishClass].b)
+-- 					return
+-- 				end
+-- 			end
+-- 		end
+
+-- 		if (UnitPlayerControlled(unit)) then							-- is it a player
+-- 			if (UnitCanAttack(unit, "player")) then						-- are we in an enemy controlled zone
+-- 				-- Hostile players are red
+-- 				if (not UnitCanAttack("player", unit)) then				-- enemy is not pvp enabled
+-- 					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
+-- 				else									-- enemy is pvp enabled
+-- 					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
+-- 				end
+-- 			elseif (UnitCanAttack("player", unit)) then					-- enemy in a zone controlled by friendlies or when we're a ghost
+-- 				-- Players we can attack but which are not hostile are yellow
+-- 				frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
+-- 			elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary(unit)) then	-- friendly pvp enabled character
+-- 				-- Players we can assist but are PvP flagged are green
+-- 				frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
+-- 			else										-- friendly non pvp enabled character
+-- 				-- All other players are blue (the usual state on the "blue" server)
+-- 				frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
+-- 			end
+-- 		elseif (not UnitPlayerControlled(unit) and UnitIsTapDenied(unit)) then			-- not our tap (Post 7.0)
+-- 			frame.nametext:SetTextColor(self.db.profile.global[L["Tapped NPC Color"]].r, self.db.profile.global[L["Tapped NPC Color"]].g, self.db.profile.global[L["Tapped NPC Color"]].b, self.db.profile.global[L["Tapped NPC Color"]].a)
+-- 		else
+-- 			if (UnitIsVisible(unit)) then
+-- 				local reaction = UnitReaction(unit, "player")
+-- 				if (reaction) then
+-- 					frame.nametext:SetTextColor(self.FactionBarColors[reaction].r, self.FactionBarColors[reaction].g, self.FactionBarColors[reaction].b, self.db.profile.global[L["Hostile PvP Color"]].a)
+-- 				else
+-- 					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
+-- 				end
+-- 			else
+-- 				if (UnitCanAttack(unit, "player")) then				-- are we in an enemy controlled zone
+-- 					-- Hostile players are red
+-- 					if (not UnitCanAttack("player", unit)) then			-- enemy is not pvp enabled
+-- 						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvE Color"]].r, self.db.profile.global[L["Hostile PvE Color"]].g, self.db.profile.global[L["Hostile PvE Color"]].b, self.db.profile.global[L["Hostile PvE Color"]].a)
+-- 					else								-- enemy is pvp enabled
+-- 						frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP Color"]].r, self.db.profile.global[L["Hostile PvP Color"]].g, self.db.profile.global[L["Hostile PvP Color"]].b, self.db.profile.global[L["Hostile PvP Color"]].a)
+-- 					end
+-- 				elseif (UnitCanAttack("player", unit)) then				-- enemy in a zone controlled by friendlies or when we're a ghost
+-- 					-- Players we can attack but which are not hostile are yellow
+-- 					frame.nametext:SetTextColor(self.db.profile.global[L["Hostile PvP In PvE Color"]].r, self.db.profile.global[L["Hostile PvP In PvE Color"]].g, self.db.profile.global[L["Hostile PvP In PvE Color"]].b, self.db.profile.global[L["Hostile PvP In PvE Color"]].a)
+-- 				elseif (UnitIsPVP(unit) and not UnitIsPVPSanctuary(unit) and not UnitIsPVPSanctuary("player")) then	-- friendly pvp enabled character
+-- 					-- Players we can assist but are PvP flagged are green
+-- 					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvP Color"]].r, self.db.profile.global[L["Friendly PvP Color"]].g, self.db.profile.global[L["Friendly PvP Color"]].b, self.db.profile.global[L["Friendly PvP Color"]].a)
+-- 				else									-- friendly non pvp enabled character
+-- 					-- All other players are blue (the usual state on the "blue" server)
+-- 					frame.nametext:SetTextColor(self.db.profile.global[L["Friendly PvE Color"]].r, self.db.profile.global[L["Friendly PvE Color"]].g, self.db.profile.global[L["Friendly PvE Color"]].b, self.db.profile.global[L["Friendly PvE Color"]].a)
+-- 				end
+-- 			end
+-- 		end
+
+-- 	end
+-- end
+
 function gUF:UNIT_AURA(event, unit)
 	if not frames[unit] then return end
 
@@ -599,8 +660,8 @@ function gUF:UNIT_AURA(event, unit)
 
 			local numBuffs = 0											-- Buff counter for correct layout
 			for buffnum=1,self.db.profile[unit].buffs[L["Number of Buffs"]] do						-- Start main buff loop
-				_, _, buffTexture, buffApplications, _, duration, timeLeft = UnitBuff(unit, buffnum, displaycastablebuffs)	-- Get the texture, buff stacking, and time information if any
-				--_, _, buffTexture, buffApplications, duration, timeLeft = UnitBuff(unit, 1, displaycastablebuffs)
+				_, buffTexture, buffApplications, _, duration, timeLeft = UnitBuff(unit, buffnum, displaycastablebuffs)	-- Get the texture, buff stacking, and time information if any
+				--_, buffTexture, buffApplications, duration, timeLeft = UnitBuff(unit, 1, displaycastablebuffs)
 				if (buffTexture) then										-- If there is a valid texture, proceed with buff icon creation
 					button[buffnum].icon:SetTexture(buffTexture)						-- Set the texture of the icon
 					if (buffApplications > 1) then
@@ -635,8 +696,8 @@ function gUF:UNIT_AURA(event, unit)
 			local numDebuffs = 0											-- Debuff counter for correct layout
 			local curableDebuffFound = 0										-- Flag to stop running curable debuff checks once one is found
 			for debuffnum=1,self.db.profile[unit].debuffs[L["Number of Debuffs"]] do				-- Start main debuff loop
-				_, _, buffTexture, buffApplications, debuffType, duration, timeLeft = UnitDebuff(unit, debuffnum, displaycastabledebuffs)	-- Get the texture, debuff stacking, and time information if any
-				--_, _, buffTexture, buffApplications, debuffType, duration, timeLeft = UnitDebuff(unit, 1, displaycastabledebuffs)
+				_, buffTexture, buffApplications, debuffType, duration, timeLeft = UnitDebuff(unit, debuffnum, displaycastabledebuffs)	-- Get the texture, debuff stacking, and time information if any
+				--_, buffTexture, buffApplications, debuffType, duration, timeLeft = UnitDebuff(unit, 1, displaycastabledebuffs)
 				if (buffTexture) then										-- If there is a valid texture, proceed with debuff icon creation
 					button[debuffnum].icon:SetTexture(buffTexture)						-- Set the texture of the icon
 					if (debuffType) then
@@ -812,6 +873,18 @@ end
 
 function gUF:PLAYER_UPDATE_RESTING(event)
 	self:UpdateCombatRestIcon(event)
+end
+
+function gUF:FormatHealthPowerText(number)
+	if (number < 9999) then
+		return number
+	elseif (number < 999999) then
+		return string.format("%.1fk", number / 1000)
+	elseif (number < 99999999) then
+		return string.format("%.2fm", number / 1000000)
+	end
+	
+	return string.format("%dm", number / 1000000)
 end
 
 function gUF:UpdateCombatRestIcon(event)
