@@ -15,18 +15,16 @@ end
 function CastBar:OnEnable()
 	gUF:Print("CastBar Module - OnEnable")
 
-	--self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_INTERRUPTED")
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START")
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", "EventStopCast")
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_UPDATE")
 	self:RegisterEvent("UNIT_SPELLCAST_DELAYED")
 	self:RegisterEvent("UNIT_SPELLCAST_FAILED", "EventFailedCast")
 	self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", "EventFailedCast")
-	--self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTIBLE")
-	--self:RegisterEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
+	self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTIBLE", "EventInterruptibleState")
+	self:RegisterEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", "EventInterruptibleState")
 	self:RegisterEvent("UNIT_SPELLCAST_START")
 	self:RegisterEvent("UNIT_SPELLCAST_STOP", "EventStopCast")
-	--self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 
 	self:RegisterEvent("PLAYER_TARGET_CHANGED", "EventUnitChanged")
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED", "EventUnitChanged")
@@ -225,6 +223,24 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 		--if (frame.arcanebar.showCastbar) then
 			frame.arcanebar:Show()
 		--end
+	end
+end
+
+function CastBar:EventInterruptibleState(event, unit)
+	gUF:Print("CastBar Module - "..event.." - "..unit)
+
+	if not frames[unit] then return end
+
+	for frame in pairs(frames[unit]) do
+		self:UpdateInterruptibleState(frame)
+	end
+end
+
+function CastBar:UpdateInterruptibleState(frame, notInterruptible)
+	if (event == "UNIT_SPELLCAST_INTERRUPTIBLE") then
+		frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b)
+	else
+		frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Casting Color"]].r, gUF.db.profile.module.castbar[L["Casting Color"]].g, gUF.db.profile.module.castbar[L["Casting Color"]].b)
 	end
 end
 
