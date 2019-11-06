@@ -1,4 +1,4 @@
-## Interface: 80100
+## Interface: 80205
 ## Title: gUF
 ## Notes: Unit Frame modification based on the Perl style
 ## Author: Global
