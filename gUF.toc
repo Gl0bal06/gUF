@@ -1,4 +1,4 @@
-## Interface: 80205
+## Interface: 80300
 ## Title: gUF
 ## Notes: Unit Frame modification based on the Perl style
 ## Author: Global
@@ -9,14 +9,14 @@
 
 #@no-lib-strip@
 Libs\LibStub\LibStub.lua
-Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libs\AceAddon-3.0\AceAddon-3.0.xml
-Libs\AceEvent-3.0\AceEvent-3.0.xml
-Libs\AceTimer-3.0\AceTimer-3.0.xml
-Libs\AceDB-3.0\AceDB-3.0.xml
-Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\AceAddon-3.0\AceAddon-3.0.lua
+Libs\AceEvent-3.0\AceEvent-3.0.lua
+Libs\AceTimer-3.0\AceTimer-3.0.lua
+Libs\AceDB-3.0\AceDB-3.0.lua
+Libs\AceLocale-3.0\AceLocale-3.0.lua
 
-Libs\LibSharedMedia-3.0\lib.xml
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
 #@end-no-lib-strip@
 
 Localizations\enUS.lua
