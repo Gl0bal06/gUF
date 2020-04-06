@@ -60,6 +60,7 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 				--else
 					frame.arcanebar.nametext:SetText(name)
 				--end
+				frame.arcanebar.nametext:SetTextColor(frame.nametext:GetTextColor())
 				frame.arcanebar.nametext:Show()
 				frame.nametext:Hide()
 			end
@@ -187,6 +188,7 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 
 		if (gUF.db.profile.module.castbar[L["Replace Unit Names"]]) then
 			frame.arcanebar.nametext:SetText(name)
+			frame.arcanebar.nametext:SetTextColor(frame.nametext:GetTextColor())
 			frame.arcanebar.nametext:Show()
 			frame.nametext:Hide()
 		end
