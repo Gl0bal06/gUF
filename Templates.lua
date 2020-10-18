@@ -18,42 +18,45 @@ function gUF:CreateBaseFrameObject(framename, unit)
 
 
 	-- Frames
-	frame.nameframe = CreateFrame("Frame", nil, frame, nil)
-	frame.nameframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)				-- remove this once we have a full option set for customizing this
-	frame.nameframe:SetHeight(24)								-- remove this once we have a full option set for customizing this
-	frame.nameframe:SetWidth(200)								-- remove this once we have a full option set for customizing this
+	--frame.nameframe = CreateFrame("Frame", nil, frame, nil)
+	frame.nameframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.nameframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)		-- remove this once we have a full option set for customizing this
+	frame.nameframe:SetHeight(24)									-- remove this once we have a full option set for customizing this
+	frame.nameframe:SetWidth(200)									-- remove this once we have a full option set for customizing this
 
-	frame.levelframe = CreateFrame("Frame", nil, frame, nil)
-	frame.levelframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -22)				-- remove this once we have a full option set for customizing this
-	frame.levelframe:SetHeight(42)								-- remove this once we have a full option set for customizing this
-	frame.levelframe:SetWidth(34)								-- remove this once we have a full option set for customizing this
+	--frame.levelframe = CreateFrame("Frame", nil, frame, nil)
+	frame.levelframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.levelframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -22)	-- remove this once we have a full option set for customizing this
+	frame.levelframe:SetHeight(42)									-- remove this once we have a full option set for customizing this
+	frame.levelframe:SetWidth(34)									-- remove this once we have a full option set for customizing this
 
-	frame.statsframe = CreateFrame("Frame", nil, frame, nil)
-	frame.statsframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 32, -22)				-- remove this once we have a full option set for customizing this
-	frame.statsframe:SetHeight(42)								-- remove this once we have a full option set for customizing this
-	frame.statsframe:SetWidth(280)								-- remove this once we have a full option set for customizing this
+	--frame.statsframe = CreateFrame("Frame", nil, frame, nil)
+	frame.statsframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.statsframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 32, -22)	-- remove this once we have a full option set for customizing this
+	frame.statsframe:SetHeight(42)									-- remove this once we have a full option set for customizing this
+	frame.statsframe:SetWidth(280)									-- remove this once we have a full option set for customizing this
 
 
 	-- Bars
 	frame.healthbar = CreateFrame("StatusBar", nil, frame, nil)
-	frame.healthbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -10)		-- remove this once we have a full option set for customizing this
-	frame.healthbar:SetHeight(10)								-- remove this once we have a full option set for customizing this
-	frame.healthbar:SetWidth(150)								-- remove this once we have a full option set for customizing this
+	frame.healthbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -10)	-- remove this once we have a full option set for customizing this
+	frame.healthbar:SetHeight(10)												-- remove this once we have a full option set for customizing this
+	frame.healthbar:SetWidth(150)												-- remove this once we have a full option set for customizing this
 
 	frame.healthbarbg = CreateFrame("StatusBar", nil, frame, nil)
 	frame.healthbarbg:SetPoint("TOP", frame.healthbar, "TOP", 0, 0)
-	frame.healthbarbg:SetHeight(10)								-- remove this once we have a full option set for customizing this
-	frame.healthbarbg:SetWidth(150)								-- remove this once we have a full option set for customizing this
+	frame.healthbarbg:SetHeight(10)									-- remove this once we have a full option set for customizing this
+	frame.healthbarbg:SetWidth(150)									-- remove this once we have a full option set for customizing this
 
 	frame.manabar = CreateFrame("StatusBar", nil, frame, nil)
-	frame.manabar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -22)			-- remove this once we have a full option set for customizing this
-	frame.manabar:SetHeight(10)								-- remove this once we have a full option set for customizing this
-	frame.manabar:SetWidth(150)								-- remove this once we have a full option set for customizing this
+	frame.manabar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -22)		-- remove this once we have a full option set for customizing this
+	frame.manabar:SetHeight(10)										-- remove this once we have a full option set for customizing this
+	frame.manabar:SetWidth(150)										-- remove this once we have a full option set for customizing this
 
 	frame.manabarbg = CreateFrame("StatusBar", nil, frame, nil)
 	frame.manabarbg:SetPoint("TOP", frame.manabar, "TOP", 0, 0)
-	frame.manabarbg:SetHeight(10)								-- remove this once we have a full option set for customizing this
-	frame.manabarbg:SetWidth(150)								-- remove this once we have a full option set for customizing this
+	frame.manabarbg:SetHeight(10)									-- remove this once we have a full option set for customizing this
+	frame.manabarbg:SetWidth(150)									-- remove this once we have a full option set for customizing this
 
 
 	-- Overlays
@@ -75,10 +78,10 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	frame.nametext:SetWidth(frame.nametext:GetParent():GetWidth() - 10)
 	frame.nametext:SetHeight(frame.nametext:GetParent():GetHeight())
 	frame.nametext:SetNonSpaceWrap(false)
-	frame.nametext:SetPoint("CENTER", frame.nameframe, "CENTER", 0, 0)			-- remove this once we have a full option set for customizing this
+	frame.nametext:SetPoint("CENTER", frame.nameframe, "CENTER", 0, 0)				-- remove this once we have a full option set for customizing this
 
 	frame.currentmaxhealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.currentmaxhealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
+	frame.currentmaxhealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 110, 0)	-- remove this once we have a full option set for customizing this
 
 	frame.currentmaxmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.currentmaxmanatext:SetPoint("RIGHT", frame.manabar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
@@ -87,7 +90,7 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	frame.percenthealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)			-- remove this once we have a full option set for customizing this
 
 	frame.percentmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.percentmanatext:SetPoint("TOP", frame.manabar, "TOP", 0, 1)			-- remove this once we have a full option set for customizing this
+	frame.percentmanatext:SetPoint("TOP", frame.manabar, "TOP", 0, 1)				-- remove this once we have a full option set for customizing this
 
 	frame.deficithealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.deficithealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 100, 0)		-- remove this once we have a full option set for customizing this
@@ -98,52 +101,52 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	-- Art Pieces
 	frame.classicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.classicon:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
-	frame.classicon:SetPoint("TOPLEFT", frame.levelframe, "TOPLEFT", 5, -5)			-- remove this once we have a full option set for customizing this
-	frame.classicon:SetHeight(24)								-- remove this once we have a full option set for customizing this
-	frame.classicon:SetWidth(24)								-- remove this once we have a full option set for customizing this
+	frame.classicon:SetPoint("TOPLEFT", frame.levelframe, "TOPLEFT", 5, -5)		-- remove this once we have a full option set for customizing this
+	frame.classicon:SetHeight(24)												-- remove this once we have a full option set for customizing this
+	frame.classicon:SetWidth(24)												-- remove this once we have a full option set for customizing this
 
 	frame.combatresticon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.combatresticon:SetTexture("Interface\\CharacterFrame\\UI-StateIcon")
-	frame.combatresticon:SetPoint("RIGHT", frame.nameframe, "RIGHT", 0, 0)			-- remove this once we have a full option set for customizing this
-	frame.combatresticon:SetHeight(32)							-- remove this once we have a full option set for customizing this
-	frame.combatresticon:SetWidth(31)							-- remove this once we have a full option set for customizing this
+	frame.combatresticon:SetPoint("RIGHT", frame.nameframe, "RIGHT", 0, 0)		-- remove this once we have a full option set for customizing this
+	frame.combatresticon:SetHeight(32)											-- remove this once we have a full option set for customizing this
+	frame.combatresticon:SetWidth(31)											-- remove this once we have a full option set for customizing this
 
 	frame.deathicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.deathicon:SetTexture("Interface\\TargetingFrame\\TargetDead")
-	frame.deathicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -25, -4)		-- remove this once we have a full option set for customizing this
-	frame.deathicon:SetHeight(16)								-- remove this once we have a full option set for customizing this
-	frame.deathicon:SetWidth(16)								-- remove this once we have a full option set for customizing this
+	frame.deathicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -25, -4)	-- remove this once we have a full option set for customizing this
+	frame.deathicon:SetHeight(16)												-- remove this once we have a full option set for customizing this
+	frame.deathicon:SetWidth(16)												-- remove this once we have a full option set for customizing this
 
 	frame.disconnectedicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.disconnectedicon:SetTexture("Interface\\CharacterFrame\\Disconnect-Icon")
 	frame.disconnectedicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -35, 3)	-- remove this once we have a full option set for customizing this
-	frame.disconnectedicon:SetHeight(32)							-- remove this once we have a full option set for customizing this
-	frame.disconnectedicon:SetWidth(32)							-- remove this once we have a full option set for customizing this
+	frame.disconnectedicon:SetHeight(32)												-- remove this once we have a full option set for customizing this
+	frame.disconnectedicon:SetWidth(32)													-- remove this once we have a full option set for customizing this
 
 	frame.pvpicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
-	frame.pvpicon:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 2, -3)			-- remove this once we have a full option set for customizing this
-	frame.pvpicon:SetHeight(32)								-- remove this once we have a full option set for customizing this
-	frame.pvpicon:SetWidth(32)								-- remove this once we have a full option set for customizing this
+	frame.pvpicon:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 2, -3)	-- remove this once we have a full option set for customizing this
+	frame.pvpicon:SetHeight(32)												-- remove this once we have a full option set for customizing this
+	frame.pvpicon:SetWidth(32)												-- remove this once we have a full option set for customizing this
 
 	frame.raidicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
-	frame.raidicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", 12, -10)			-- remove this once we have a full option set for customizing this
-	frame.raidicon:SetHeight(26)								-- remove this once we have a full option set for customizing this
-	frame.raidicon:SetWidth(26)								-- remove this once we have a full option set for customizing this
+	frame.raidicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", 12, -10)		-- remove this once we have a full option set for customizing this
+	frame.raidicon:SetHeight(26)												-- remove this once we have a full option set for customizing this
+	frame.raidicon:SetWidth(26)													-- remove this once we have a full option set for customizing this
 
 
 	-- frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
-	-- frame.speakericon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)		-- remove this once we have a full option set for customizing this
-	-- frame.speakericon:SetHeight(16)								-- remove this once we have a full option set for customizing this
-	-- frame.speakericon:SetWidth(16)								-- remove this once we have a full option set for customizing this
+	-- frame.speakericon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)	-- remove this once we have a full option set for customizing this
+	-- frame.speakericon:SetHeight(16)												-- remove this once we have a full option set for customizing this
+	-- frame.speakericon:SetWidth(16)												-- remove this once we have a full option set for customizing this
 
 	-- frame.speakersoundicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.speakersoundicon:SetTexture("Interface\\Common\\VoiceChat-On")
 	-- frame.speakersoundicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)	-- remove this once we have a full option set for customizing this
-	-- frame.speakersoundicon:SetHeight(16)							-- remove this once we have a full option set for customizing this
-	-- frame.speakersoundicon:SetWidth(16)							-- remove this once we have a full option set for customizing this
+	-- frame.speakersoundicon:SetHeight(16)												-- remove this once we have a full option set for customizing this
+	-- frame.speakersoundicon:SetWidth(16)												-- remove this once we have a full option set for customizing this
 
 
 	-- Buffs
