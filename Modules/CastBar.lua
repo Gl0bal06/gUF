@@ -1,7 +1,6 @@
 local gUF = LibStub("AceAddon-3.0"):GetAddon("gUF")
-local CastBar = gUF:NewModule("CastBar", "AceEvent-3.0")
-
 local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)
+local CastBar = gUF:NewModule("CastBar", "AceEvent-3.0")
 
 local bars = {}
 local frames = {}

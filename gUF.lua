@@ -1,5 +1,5 @@
 --[[-------------------------------------------------------------------------
-  Copyright (c) 2005-2017, Mark T Dragon
+  Copyright (c) 2005-2020, Mark T Dragon
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,10 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------]]
 
-local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)				-- Localizations
 local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceEvent-3.0")		-- Create the main addon object
-gUF.rev = "7.0.1 Alpha"
---local isPTR = select(4, GetBuildInfo()) >= 70000						-- Code for only getting a game toc to code for PTRs
+local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)				-- Localizations
+gUF.rev = "9.0.1 Alpha"
+--local isPTR = select(4, GetBuildInfo()) >= 90002						-- Code for only getting a game toc to code for PTRs
 
 local frames = {}														-- Table for units we are currently listening for
 
