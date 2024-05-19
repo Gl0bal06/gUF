@@ -29,9 +29,11 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------]]
 
+---@class gUF
+
 local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceEvent-3.0")		-- Create the main addon object
 local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)				-- Localizations
-gUF.rev = "9.0.1 Alpha"
+gUF.rev = "10.0.1 Alpha"
 --local isPTR = select(4, GetBuildInfo()) >= 90002						-- Code for only getting a game toc to code for PTRs
 
 local frames = {}														-- Table for units we are currently listening for
@@ -252,7 +254,7 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	-- self:RegisterEvent("VOICE_START")
 	-- self:RegisterEvent("VOICE_STOP")
 
-	self.db = LibStub("AceDB-3.0"):New("gUFDB", self.defaults)							-- Initialize the saved variables database with the default settings
+	self.db = LibStub:GetLibrary("AceDB-3.0"):New("gUFDB", self.defaults, true)				-- Initialize the saved variables database with the default settings
 
 	--Slash Command stuff
 	SLASH_gUF1 = "/guf"

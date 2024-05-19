@@ -9,6 +9,10 @@ function CastBar:OnInitialize()
 	gUF:Print("CastBar Module - OnInitialize")
 
 	self:SetEnabledState(false)
+
+	self.CASTING_BAR_ALPHA_STEP = 0.01
+	self.CASTING_BAR_FLASH_STEP = 0.2
+	self.CASTING_BAR_HOLD_TIME = 1
 end
 
 function CastBar:OnEnable()
@@ -297,7 +301,7 @@ function CastBar:EventFailedCast(event, unit, ...)
 			frame.arcanebar.casting = nil
 			frame.arcanebar.channeling = nil
 			frame.arcanebar.fadeOut = true
-			frame.arcanebar.holdTime = GetTime() + CASTING_BAR_HOLD_TIME
+			frame.arcanebar.holdTime = GetTime() + CastBar.CASTING_BAR_HOLD_TIME
 		end
 
 	end
@@ -450,23 +454,23 @@ function CastBar:OnUpdate(elapsed)
 		return
 
 	elseif (self.flash) then
-		local alpha = 0;
+		local alpha = 0
 		--if (self.Flash) then
-			alpha = self.Flash:GetAlpha() + CASTING_BAR_FLASH_STEP;
+			alpha = self.Flash:GetAlpha() + CastBar.CASTING_BAR_FLASH_STEP
 		--end
 		if (alpha < 1) then
 			--if (self.Flash) then
-				self.Flash:SetAlpha(alpha);
+				self.Flash:SetAlpha(alpha)
 			--end
 		else
 			--if (self.Flash) then
-				self.Flash:SetAlpha(1.0);
+				self.Flash:SetAlpha(1.0)
 			--end
-			self.flash = nil;
+			self.flash = nil
 		end
 
 	elseif (self.fadeOut) then
-		local alpha = self:GetAlpha() - CASTING_BAR_ALPHA_STEP
+		local alpha = self:GetAlpha() - CastBar.CASTING_BAR_ALPHA_STEP
 		if (alpha > 0) then
 			self:SetAlpha(alpha)
 		else
