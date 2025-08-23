@@ -34,7 +34,7 @@
 local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceEvent-3.0")		-- Create the main addon object
 local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)				-- Localizations
 gUF.rev = "10.0.1 Alpha"
---local isPTR = select(4, GetBuildInfo()) >= 90002						-- Code for only getting a game toc to code for PTRs
+--local isPTR = select(4, GetBuildInfo()) >= 110200						-- Code for only getting a game toc to code for PTRs
 
 local frames = {}														-- Table for units we are currently listening for
 
@@ -254,7 +254,7 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	-- self:RegisterEvent("VOICE_START")
 	-- self:RegisterEvent("VOICE_STOP")
 
-	self.db = LibStub:GetLibrary("AceDB-3.0"):New("gUFDB", self.defaults, true)				-- Initialize the saved variables database with the default settings
+	self.db = LibStub:GetLibrary("AceDB-3.0"):New("gUFDB", self.defaults, true)			-- Initialize the saved variables database with the default settings
 
 	--Slash Command stuff
 	SLASH_gUF1 = "/guf"
@@ -266,7 +266,7 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 			if (InCombatLockdown()) then
 				self:Print(L["Options cannot be changed in combat."])
 			else
-				local loaded, reason = LoadAddOn("gUF_Options")
+				local loaded, reason = C_AddOns.LoadAddOn("gUF_Options")
 				if (loaded) then
 					LibStub("AceConfig-3.0"):RegisterOptionsTable("gUF", gUF.options)	-- Initialize AceConfig-3.0
 					LibStub("AceConfigDialog-3.0"):Open("gUF")
@@ -347,24 +347,15 @@ function gUF:UNIT_HEALTH(event, unit)
 				local _, englishClass = UnitClass(unit)
 				if (englishClass == "HUNTER") then
 					local i = 1
---					local _, _, buffTexture = UnitBuff(unit, i)	-- change this whole mechanism to check for spell name
---					while (buffTexture) do
---						if (buffTexture == "Interface\\Icons\\Ability_Rogue_FeignDeath") then
---							frame.currentmaxhealthtext:SetText(L["Feign Death"])
---							break
---						end
---						i = i + 1
---						_, _, buffTexture = UnitBuff(unit, i)
---					end
 
-					local buffName = UnitBuff(unit, i)
-					while (buffName) do
-						if (buffName == L["Feign Death"]) then
+					local aura = C_UnitAuras.GetBuffDataByIndex(unit, i)	-- Get the buff information if any
+					while (aura) do
+						if (aura.name == L["Feign Death"]) then
 							frame.currentmaxhealthtext:SetText(L["Feign Death"])
 							break
 						end
 						i = i + 1
-						buffName = UnitBuff(unit, i)
+						aura = C_UnitAuras.GetBuffDataByIndex(unit, i)
 					end
 				end
 			end
@@ -656,26 +647,25 @@ function gUF:UNIT_AURA(event, unit)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
-		if (UnitName(unit)) then											-- "target" needed this check in the past, haven't checked recently
-			local _, buffTexture, buffApplications, color, debuffType, duration, timeLeft, cooldown, startCooldownTime	-- Variables for both buffs and debuffs (yes, I'm using buff names for debuffs, wanna fight about it?)
-			local button = _G["gUF_"..unit].buffs							-- Reference the main icon for the buff
+		if (UnitName(unit)) then														-- "target" needed this check in the past, haven't checked recently
+			local _, color																-- Variables for both buffs and debuffs
+			local button = _G["gUF_"..unit].buffs										-- Reference the main icon for the buff
 
-			local numBuffs = 0											-- Buff counter for correct layout
-			for buffnum=1,self.db.profile[unit].buffs[L["Number of Buffs"]] do						-- Start main buff loop
-				_, buffTexture, buffApplications, _, duration, timeLeft = UnitBuff(unit, buffnum, displaycastablebuffs)	-- Get the texture, buff stacking, and time information if any
-				--_, buffTexture, buffApplications, duration, timeLeft = UnitBuff(unit, 1, displaycastablebuffs)
-				if (buffTexture) then										-- If there is a valid texture, proceed with buff icon creation
-					button[buffnum].icon:SetTexture(buffTexture)						-- Set the texture of the icon
-					if (buffApplications > 1) then
-						button[buffnum].count:SetText(buffApplications)					-- Set the text to the number of applications if greater than 0
-						button[buffnum].count:Show()							-- Show the text
+			local numBuffs = 0															-- Buff counter for correct layout
+			for buffnum=1,self.db.profile[unit].buffs[L["Number of Buffs"]] do			-- Start main buff loop
+				local aura = C_UnitAuras.GetBuffDataByIndex(unit, buffnum, displaycastablebuffs)	-- Get the texture and buff stacking information if any
+				if (aura) then															-- If there is a aura return, proceed with buff icon creation
+					button[buffnum].icon:SetTexture(aura.icon)							-- Set the texture of the icon
+					if (aura.applications > 1) then
+						button[buffnum].count:SetText(aura.applications)				-- Set the text to the number of applications if greater than 0
+						button[buffnum].count:Show()									-- Show the text
 					else
-						button[buffnum].count:Hide()							-- Hide the text if equal to 0
+						button[buffnum].count:Hide()									-- Hide the text if equal to 0
 					end
 					if (self.db.profile[unit].buffs[L["Show Cooldown Models"]] == true) then		-- Handle cooldowns
-						if (duration) then
-							if (duration > 0) then
-								self:CooldownFrame_SetTimer(button[buffnum].cooldown, timeLeft - duration, duration, 1)
+						if (aura.duration) then
+							if (aura.duration > 0) then
+								self:CooldownFrame_SetTimer(button[buffnum].cooldown, aura.expirationTime - aura.duration, aura.duration, 1)
 								button[buffnum].cooldown:Show()
 							else
 								self:CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
@@ -686,28 +676,26 @@ function gUF:UNIT_AURA(event, unit)
 							button[buffnum].cooldown:Hide()
 						end
 					end
-					numBuffs = numBuffs + 1									-- Increment the buff counter
-					button[buffnum]:Show()									-- Show the final buff icon
+					numBuffs = numBuffs + 1													-- Increment the buff counter
+					button[buffnum]:Show()													-- Show the final buff icon
 				else
-					button[buffnum]:Hide()									-- Hide the icon since there isn't a buff in this position
+					button[buffnum]:Hide()													-- Hide the icon since there isn't a buff in this position
 				end
-			end													-- End main buff loop
+			end																				-- End main buff loop
 
-
-			button = _G["gUF_"..unit].debuffs							-- Reference the main icon for the buff
-			local numDebuffs = 0											-- Debuff counter for correct layout
-			local curableDebuffFound = 0										-- Flag to stop running curable debuff checks once one is found
-			for debuffnum=1,self.db.profile[unit].debuffs[L["Number of Debuffs"]] do				-- Start main debuff loop
-				_, buffTexture, buffApplications, debuffType, duration, timeLeft = UnitDebuff(unit, debuffnum, displaycastabledebuffs)	-- Get the texture, debuff stacking, and time information if any
-				--_, buffTexture, buffApplications, debuffType, duration, timeLeft = UnitDebuff(unit, 1, displaycastabledebuffs)
-				if (buffTexture) then										-- If there is a valid texture, proceed with debuff icon creation
-					button[debuffnum].icon:SetTexture(buffTexture)						-- Set the texture of the icon
-					if (debuffType) then
-						color = self.DebuffTypeColor[debuffType]
-						if (self.db.profile.global[L["Color Frame By Debuff"]] == true) then		-- Moved this code into the loop since 3.0 broke the 3rd argument for UnitDebuff
+			button = _G["gUF_"..unit].debuffs												-- Reference the main icon for the buff
+			local numDebuffs = 0															-- Debuff counter for correct layout
+			local curableDebuffFound = 0													-- Flag to stop running curable debuff checks once one is found
+			for debuffnum=1,self.db.profile[unit].debuffs[L["Number of Debuffs"]] do		-- Start main debuff loop
+				local aura = C_UnitAuras.GetDebuffDataByIndex(unit, debuffnum, displaycastabledebuffs)	-- Get the texture and buff stacking information if any
+				if (aura) then																-- If there is a aura return, proceed with debuff icon creation
+					button[debuffnum].icon:SetTexture(aura.icon)							-- Set the texture of the icon
+					if (aura.dispelName) then
+						color = self.DebuffTypeColor[aura.dispelName]
+						if (self.db.profile.global[L["Color Frame By Debuff"]] == true) then			-- Moved this code into the loop since 3.0 broke the 3rd argument for UnitDebuff
 							if (curableDebuffFound == 0) then
 								if (UnitIsFriend("player", unit)) then
-									if (self.CurableDebuff[self.class][debuffType] == 1) then
+									if (self.CurableDebuff[self.class][aura.dispelName] == 1) then
 										for i=1,table.getn(frame.frames),1 do
 											frame.frames[i]:SetBackdropBorderColor(color.r, color.g, color.b)
 										end
@@ -719,17 +707,17 @@ function gUF:UNIT_AURA(event, unit)
 					else
 						color = self.DebuffTypeColor[L["none"]]
 					end
-					button[debuffnum].border:SetVertexColor(color.r, color.g, color.b)			-- Set the debuff border color
-					if (buffApplications > 1) then
-						button[debuffnum].count:SetText(buffApplications)				-- Set the text to the number of applications if greater than 0
-						button[debuffnum].count:Show()							-- Show the text
+					button[debuffnum].border:SetVertexColor(color.r, color.g, color.b)				-- Set the debuff border color
+					if (aura.applications > 1) then
+						button[debuffnum].count:SetText(aura.applications)							-- Set the text to the number of applications if greater than 0
+						button[debuffnum].count:Show()												-- Show the text
 					else
-						button[debuffnum].count:Hide()							-- Hide the text if equal to 0
+						button[debuffnum].count:Hide()												-- Hide the text if equal to 0
 					end
 					if (self.db.profile[unit].debuffs[L["Show Cooldown Models"]] == true) then		-- Handle cooldowns
-						if (duration) then
-							if (duration > 0) then
-								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, timeLeft - duration, duration, 1)
+						if (aura.duration) then
+							if (aura.duration > 0) then
+								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, aura.expirationTime - aura.duration, aura.duration, 1)
 								button[debuffnum].cooldown:Show()
 							else
 								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
@@ -745,7 +733,7 @@ function gUF:UNIT_AURA(event, unit)
 				else
 					button[debuffnum]:Hide()								-- Hide the icon since there isn't a debuff in this position
 				end
-			end													-- End main debuff loop
+			end																-- End main debuff loop
 
 			if (curableDebuffFound == 0) then
 				for i=1,table.getn(frame.frames),1 do
@@ -1154,15 +1142,15 @@ function gUF:ResetBuffsAndDebuffs(unit)
 end
 
 -- /script perltestthree()
-function perltestthree()
-	for i,v in ipairs(gUF_player.buffs) do gUF:Print(i,v) end
-end
+-- function perltestthree()
+-- 	for i,v in ipairs(gUF_player.buffs) do gUF:Print(i,v) end
+-- end
 
---/script guftest2()
-function guftest2()
-	--CastBar:CreateRemoveFrames()
-	gUF:Print( gUF_player.arcanebar:GetValue() )
-end
+-- --/script guftest2()
+-- function guftest2()
+-- 	--CastBar:CreateRemoveFrames()
+-- 	gUF:Print( gUF_player.arcanebar:GetValue() )
+-- end
 
 -- function gUF:GetActiveUnitFrameNames()
 -- 	local framenames = {}
