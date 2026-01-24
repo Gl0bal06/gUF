@@ -33,8 +33,8 @@
 
 local gUF = LibStub("AceAddon-3.0"):NewAddon("gUF", "AceEvent-3.0")		-- Create the main addon object
 local L = LibStub("AceLocale-3.0"):GetLocale("gUF", true)				-- Localizations
-gUF.rev = "10.0.1 Alpha"
---local isPTR = select(4, GetBuildInfo()) >= 110200						-- Code for only getting a game toc to code for PTRs
+gUF.rev = "12.0.1 Alpha"
+--local isPTR = select(4, GetBuildInfo()) >= 120001						-- Code for only getting a game toc to code for PTRs
 
 local frames = {}														-- Table for units we are currently listening for
 
@@ -226,6 +226,13 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 		["DEMONHUNTER"] = { r = 0.64, g = 0.19, b = 0.79, colorStr = "ffa330c9" },
 	}
 
+	-- self.abbrevTablePercent = {
+	-- 	breakpointData = {
+	-- 		{ breakpoint = 100, fractionDivisor = 1, significandDivisor = 1, abbreviation = "", abbreviationIsGlobal = false },
+	-- 		{ breakpoint = 0, fractionDivisor = 1, significandDivisor = 1, abbreviation = "", abbreviationIsGlobal = false },
+	-- 	}
+	-- }
+
 	self.LSM = LibStub:GetLibrary("LibSharedMedia-3.0")
 
 	self:Print("|cffffff00v"..self.rev.." loaded")
@@ -310,7 +317,9 @@ function gUF:UNIT_HEALTH(event, unit)
 	for frame in pairs(frames[unit]) do
 		local unithealth = UnitHealth(unit)
 		local unithealthmax = UnitHealthMax(unit)
-		local unithealthpercent = floor(unithealth / unithealthmax * 100 + 0.5)
+		local rawunithealthpercent = UnitHealthPercent(unit, "false", CurveConstants.ScaleTo100)
+		--local unithealthpercent = AbbreviateNumbers(rawunithealthpercent, self.abbrevTablePercent)
+		local unithealthpercent = AbbreviateNumbers(rawunithealthpercent)
 
 		frame.healthbar:SetValue(unithealth)
 
@@ -327,10 +336,10 @@ function gUF:UNIT_HEALTH(event, unit)
 			frame.deathicon:Hide()
 		end
 
-		--frame.currentmaxhealthtext:SetText(unithealth.."/"..unithealthmax)
-		frame.currentmaxhealthtext:SetText(self:FormatHealthPowerText(unithealth).."/"..self:FormatHealthPowerText(unithealthmax))
+		frame.currentmaxhealthtext:SetText(unithealth.."/"..unithealthmax)
+		--frame.currentmaxhealthtext:SetText(self:FormatHealthPowerText(unithealth).."/"..self:FormatHealthPowerText(unithealthmax))
 		frame.percenthealthtext:SetText(unithealthpercent.."%")
-		frame.deficithealthtext:SetText("-"..unithealthmax - unithealth)
+		--frame.deficithealthtext:SetText("-"..unithealthmax - unithealth)
 
 		-- Handle Disconnected Status
 		if (UnitIsConnected(unit)) then
@@ -378,13 +387,14 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 	for frame in pairs(frames[unit]) do
 		local unitmana = UnitPower(unit)
 		local unitmanamax = UnitPowerMax(unit)
-		local unitmanapercent = floor(unitmana / unitmanamax * 100 + 0.5)
+		local rawunitmanapercent = UnitPowerPercent(unit, UnitPowerType(unit), "false", CurveConstants.ScaleTo100)
+		local unitmanapercent = AbbreviateNumbers(rawunitmanapercent, self.abbrevTablePercent)
 
 		frame.manabar:SetValue(unitmana)
 
 		frame.currentmaxmanatext:SetText(unitmana.."/"..unitmanamax)
 		frame.percentmanatext:SetText(unitmanapercent.."%")
-		frame.deficitmanatext:SetText("-"..unitmanamax - unitmana)
+		--frame.deficitmanatext:SetText("-"..unitmanamax - unitmana)
 	end
 end
 
@@ -401,9 +411,12 @@ function gUF:UNIT_DISPLAYPOWER(event, unit)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
-		local unitpower = UnitPowerType(unit)
+		local unitpower, unitpowertoken = UnitPowerType(unit)
+		--self:Print(unitpower)
+		local unitpowerinfo = PowerBarColor[unitpowertoken];
 
-		if (UnitPowerMax(unit) == 0) then					-- No Power Bar
+		--if (UnitPowerMax(unit) == 0) then					-- No Power Bar
+		if (unitpowerinfo == 0) then					-- No Power Bar
 			frame.manabar:SetStatusBarColor(0, 0, 0, 0)
 			frame.manabarbg:SetStatusBarColor(0, 0, 0, 0)
 			frame.currentmaxmanatext:SetText()				-- these text field blanks will probably change later once text options are added
@@ -656,21 +669,28 @@ function gUF:UNIT_AURA(event, unit)
 				local aura = C_UnitAuras.GetBuffDataByIndex(unit, buffnum, displaycastablebuffs)	-- Get the texture and buff stacking information if any
 				if (aura) then															-- If there is a aura return, proceed with buff icon creation
 					button[buffnum].icon:SetTexture(aura.icon)							-- Set the texture of the icon
-					if (aura.applications > 1) then
-						button[buffnum].count:SetText(aura.applications)				-- Set the text to the number of applications if greater than 0
+					--local count = C_UnitAuras.GetAuraApplicationDisplayCount(unit, aura.auraInstanceID, 1)
+					--if (count > 1) then
+						--button[buffnum].count:SetText(aura.applications)				-- Set the text to the number of applications if greater than 0
+						button[buffnum].count:SetText(C_UnitAuras.GetAuraApplicationDisplayCount(unit, aura.auraInstanceID, 1))				-- Set the text to the number of applications if greater than 0
 						button[buffnum].count:Show()									-- Show the text
-					else
-						button[buffnum].count:Hide()									-- Hide the text if equal to 0
-					end
+					--else
+						--button[buffnum].count:Hide()									-- Hide the text if equal to 0
+					--end
 					if (self.db.profile[unit].buffs[L["Show Cooldown Models"]] == true) then		-- Handle cooldowns
 						if (aura.duration) then
-							if (aura.duration > 0) then
-								self:CooldownFrame_SetTimer(button[buffnum].cooldown, aura.expirationTime - aura.duration, aura.duration, 1)
+							--if (aura.duration > 0) then
+								--self:CooldownFrame_SetTimer(button[buffnum].cooldown, aura.expirationTime - aura.duration, aura.duration, 1)
+
+								--local duration = C_UnitAuras.GetAuraDuration(unit, aura.auraInstanceID)
+								--self:CooldownFrame_SetTimer(button[buffnum].cooldown, duration, aura.duration, 1)
+
+								self:CooldownFrame_SetTimer(button[buffnum].cooldown, aura.duration, aura.expirationTime, 1)
 								button[buffnum].cooldown:Show()
-							else
-								self:CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
-								button[buffnum].cooldown:Hide()
-							end
+							--else
+							--	self:CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
+							--	button[buffnum].cooldown:Hide()
+							--end
 						else
 							self:CooldownFrame_SetTimer(button[buffnum].cooldown, 0, 0, 0)
 							button[buffnum].cooldown:Hide()
@@ -690,39 +710,41 @@ function gUF:UNIT_AURA(event, unit)
 				local aura = C_UnitAuras.GetDebuffDataByIndex(unit, debuffnum, displaycastabledebuffs)	-- Get the texture and buff stacking information if any
 				if (aura) then																-- If there is a aura return, proceed with debuff icon creation
 					button[debuffnum].icon:SetTexture(aura.icon)							-- Set the texture of the icon
-					if (aura.dispelName) then
-						color = self.DebuffTypeColor[aura.dispelName]
-						if (self.db.profile.global[L["Color Frame By Debuff"]] == true) then			-- Moved this code into the loop since 3.0 broke the 3rd argument for UnitDebuff
-							if (curableDebuffFound == 0) then
-								if (UnitIsFriend("player", unit)) then
-									if (self.CurableDebuff[self.class][aura.dispelName] == 1) then
-										for i=1,table.getn(frame.frames),1 do
-											frame.frames[i]:SetBackdropBorderColor(color.r, color.g, color.b)
-										end
-										curableDebuffFound = 1
-									end
-								end
-							end
-						end
-					else
-						color = self.DebuffTypeColor[L["none"]]
-					end
-					button[debuffnum].border:SetVertexColor(color.r, color.g, color.b)				-- Set the debuff border color
-					if (aura.applications > 1) then
-						button[debuffnum].count:SetText(aura.applications)							-- Set the text to the number of applications if greater than 0
+					-- if (aura.dispelName) then
+					-- 	color = self.DebuffTypeColor[aura.dispelName]
+					-- 	if (self.db.profile.global[L["Color Frame By Debuff"]] == true) then			-- Moved this code into the loop since 3.0 broke the 3rd argument for UnitDebuff
+					-- 		if (curableDebuffFound == 0) then
+					-- 			if (UnitIsFriend("player", unit)) then
+					-- 				if (self.CurableDebuff[self.class][aura.dispelName] == 1) then
+					-- 					for i=1,table.getn(frame.frames),1 do
+					-- 						frame.frames[i]:SetBackdropBorderColor(color.r, color.g, color.b)
+					-- 					end
+					-- 					curableDebuffFound = 1
+					-- 				end
+					-- 			end
+					-- 		end
+					-- 	end
+					-- else
+					-- 	color = self.DebuffTypeColor[L["none"]]
+					-- end
+					-- button[debuffnum].border:SetVertexColor(color.r, color.g, color.b)				-- Set the debuff border color
+					--if (aura.applications > 1) then
+						--button[debuffnum].count:SetText(aura.applications)							-- Set the text to the number of applications if greater than 0
+						button[debuffnum].count:SetText(C_UnitAuras.GetAuraApplicationDisplayCount(unit, aura.auraInstanceID, 1))				-- Set the text to the number of applications if greater than 0
 						button[debuffnum].count:Show()												-- Show the text
-					else
-						button[debuffnum].count:Hide()												-- Hide the text if equal to 0
-					end
+					--else
+					--	button[debuffnum].count:Hide()												-- Hide the text if equal to 0
+					--end
 					if (self.db.profile[unit].debuffs[L["Show Cooldown Models"]] == true) then		-- Handle cooldowns
 						if (aura.duration) then
-							if (aura.duration > 0) then
-								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, aura.expirationTime - aura.duration, aura.duration, 1)
+							--if (aura.duration > 0) then
+								--self:CooldownFrame_SetTimer(button[debuffnum].cooldown, aura.expirationTime - aura.duration, aura.duration, 1)
+								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, aura.duration, aura.expirationTime, 1)
 								button[debuffnum].cooldown:Show()
-							else
-								self:CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
-								button[debuffnum].cooldown:Hide()
-							end
+							--else
+							--	self:CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
+							--	button[debuffnum].cooldown:Hide()
+							--end
 						else
 							self:CooldownFrame_SetTimer(button[debuffnum].cooldown, 0, 0, 0)
 							button[debuffnum].cooldown:Hide()
@@ -919,6 +941,9 @@ end
 function gUF:CooldownFrame_SetTimer(self, start, duration, enable, charges, maxCharges)
 	if (enable and enable ~= 0) then
 		self:SetCooldown(start, duration, charges, maxCharges)
+
+		--self:SetCooldown(Duration, ExpirationTime)
+		self:SetCooldownFromExpirationTime(duration, start)
 	else
 		self:SetCooldown(0, 0, charges, maxCharges)
 	end

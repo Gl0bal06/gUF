@@ -71,11 +71,11 @@ function CastBar:UNIT_SPELLCAST_CHANNEL_START(event, unit)
 			frame.arcanebar.startTime = GetTime() - (startTime / 1000)
 			frame.arcanebar.endTime = (endTime / 1000) - GetTime()
 
-			if (notInterruptible) then
-				frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b)
-			else
+			--if (notInterruptible) then
+			--	frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b)
+			--else
 				frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Channelling Color"]].r, gUF.db.profile.module.castbar[L["Channelling Color"]].g, gUF.db.profile.module.castbar[L["Channelling Color"]].b)
-			end
+			--end
 			frame.arcanebar.value = (endTime / 1000) - GetTime()
 			frame.arcanebar.maxValue = (endTime - startTime) / 1000
 			frame.arcanebar:SetMinMaxValues(0, frame.arcanebar.maxValue)
@@ -196,11 +196,11 @@ function CastBar:UNIT_SPELLCAST_START(event, unit)
 			frame.nametext:Hide()
 		end
 
-		if (notInterruptible) then
-			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b)
-		else
+		--if (notInterruptible) then
+		--	frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].r, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].g, gUF.db.profile.module.castbar[L["Uninterruptible Cast Color"]].b)
+		--else
 			frame.arcanebar:SetStatusBarColor(gUF.db.profile.module.castbar[L["Casting Color"]].r, gUF.db.profile.module.castbar[L["Casting Color"]].g, gUF.db.profile.module.castbar[L["Casting Color"]].b)
-		end
+		--end
 
 		frame.arcanebar.value = (GetTime() - (startTime / 1000))
 		frame.arcanebar.maxValue = (endTime - startTime) / 1000
