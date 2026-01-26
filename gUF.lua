@@ -233,6 +233,13 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 	-- 	}
 	-- }
 
+	self.abbrevTablePercent = {
+		breakpointData = {
+			{ breakpoint = 100, abbreviation = "", significandDivisor = 1, fractionDivisor = 1, abbreviationIsGlobal = false },
+			{ breakpoint = 0, abbreviation = "", significandDivisor = 1, fractionDivisor = 1, abbreviationIsGlobal = false },
+		}
+	}
+
 	self.LSM = LibStub:GetLibrary("LibSharedMedia-3.0")
 
 	self:Print("|cffffff00v"..self.rev.." loaded")
@@ -270,7 +277,7 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 		if (msg == "version") then
 			self:Print("|cffffff00v"..self.rev)
 		else
-			if (InCombatLockdown()) then
+			if (InCombatLockdown() == true) then
 				self:Print(L["Options cannot be changed in combat."])
 			else
 				local loaded, reason = C_AddOns.LoadAddOn("gUF_Options")
@@ -318,8 +325,7 @@ function gUF:UNIT_HEALTH(event, unit)
 		local unithealth = UnitHealth(unit)
 		local unithealthmax = UnitHealthMax(unit)
 		local rawunithealthpercent = UnitHealthPercent(unit, "false", CurveConstants.ScaleTo100)
-		--local unithealthpercent = AbbreviateNumbers(rawunithealthpercent, self.abbrevTablePercent)
-		local unithealthpercent = AbbreviateNumbers(rawunithealthpercent)
+		local unithealthpercent = AbbreviateNumbers(rawunithealthpercent, self.abbrevTablePercent)
 
 		frame.healthbar:SetValue(unithealth)
 
@@ -877,6 +883,12 @@ function gUF:PLAYER_REGEN_DISABLED(event)
 		-- Call stuff to get the frames back to normal
 	end
 	self:UpdateCombatRestIcon(event)
+	if (gUF_player) then
+		self:DragStop(gUF_player)
+	end
+	if (gUF_target) then
+		self:DragStop(gUF_target)
+	end
 end
 
 function gUF:PLAYER_REGEN_ENABLED(event)
@@ -951,7 +963,7 @@ end
 
 function gUF:EnableDisableModules()
 	-- Wrap in an if statement to see if it really is enabled once options are built
-	self:EnableModule("CastBar")
+	--self:EnableModule("CastBar")
 end
 
 function gUF:UpdateFrameInfo(unit)
@@ -1323,14 +1335,18 @@ end
 --------------------
 function gUF:DragStart(frame)
 	if (gUF.db.profile.global[L["Lock Frames"]] == false) then
-		frame:StartMoving()
+		if (InCombatLockdown() == false) then
+			frame:StartMoving()
+		end
 	end
 end
 
 function gUF:DragStop(frame)
-	frame:StopMovingOrSizing()
-	gUF.db.profile[frame.unit][L["Position"]].x = floor(frame:GetLeft() + 0.5)
-	gUF.db.profile[frame.unit][L["Position"]].y = floor(frame:GetTop() - (UIParent:GetTop() / frame:GetScale()) + 0.5)
+	if (InCombatLockdown() == false) then
+		frame:StopMovingOrSizing()
+		gUF.db.profile[frame.unit][L["Position"]].x = floor(frame:GetLeft() + 0.5)
+		gUF.db.profile[frame.unit][L["Position"]].y = floor(frame:GetTop() - (UIParent:GetTop() / frame:GetScale()) + 0.5)
+	end
 end
 
 function gUF:Overlay_OnLoad(frame, overlay, unit)
