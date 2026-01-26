@@ -302,7 +302,7 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 end
 
 function gUF:Print(msg)
-	DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99gUF|r: "..msg)
+	DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99gUF|r: "..tostring(msg))
 end
 
 
@@ -324,7 +324,7 @@ function gUF:UNIT_HEALTH(event, unit)
 	for frame in pairs(frames[unit]) do
 		local unithealth = UnitHealth(unit)
 		local unithealthmax = UnitHealthMax(unit)
-		local rawunithealthpercent = UnitHealthPercent(unit, "false", CurveConstants.ScaleTo100)
+		local rawunithealthpercent = UnitHealthPercent(unit, false, CurveConstants.ScaleTo100)
 		local unithealthpercent = AbbreviateNumbers(rawunithealthpercent, self.abbrevTablePercent)
 
 		frame.healthbar:SetValue(unithealth)
@@ -337,7 +337,7 @@ function gUF:UNIT_HEALTH(event, unit)
 		if (UnitIsDead(unit) or UnitIsGhost(unit)) then
 			frame.deathicon:Show()
 			unithealth = 0
-			unithealthpercent = 0
+			unithealthpercent = "0"
 		else
 			frame.deathicon:Hide()
 		end
@@ -393,7 +393,7 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 	for frame in pairs(frames[unit]) do
 		local unitmana = UnitPower(unit)
 		local unitmanamax = UnitPowerMax(unit)
-		local rawunitmanapercent = UnitPowerPercent(unit, UnitPowerType(unit), "false", CurveConstants.ScaleTo100)
+		local rawunitmanapercent = UnitPowerPercent(unit, UnitPowerType(unit), false, CurveConstants.ScaleTo100)
 		local unitmanapercent = AbbreviateNumbers(rawunitmanapercent, self.abbrevTablePercent)
 
 		frame.manabar:SetValue(unitmana)

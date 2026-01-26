@@ -5,7 +5,7 @@ function gUF:CreateBaseFrameObject(framename, unit)
 	-- Create the unit frame object
 	local frame = CreateFrame("Frame", framename, UIParent, nil)
 	frame:SetFrameStrata("LOW")
-	frame:SetMovable(1)
+	frame:SetMovable(true)
 	frame:SetHeight(1)
 	frame:SetWidth(1)
 
