@@ -347,6 +347,11 @@ function gUF:UNIT_HEALTH(event, unit)
 		frame.percenthealthtext:SetText(unithealthpercent.."%")
 		--frame.deficithealthtext:SetText("-"..unithealthmax - unithealth)
 
+		if (unit == "target") then
+			frame.currentmaxhealthtext:SetText(unithealth.."/"..unithealthmax.." | "..unithealthpercent.."%")
+			frame.percenthealthtext:Hide()
+		end
+
 		-- Handle Disconnected Status
 		if (UnitIsConnected(unit)) then
 			frame.disconnectedicon:Hide()
@@ -401,6 +406,11 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 		frame.currentmaxmanatext:SetText(unitmana.."/"..unitmanamax)
 		frame.percentmanatext:SetText(unitmanapercent.."%")
 		--frame.deficitmanatext:SetText("-"..unitmanamax - unitmana)
+
+		if (unit == "target") then
+			--frame.currentmaxmanatext:SetText(unitmana.."/"..unitmanamax.." | "..unitmanapercent.."%")
+			frame.percentmanatext:Hide()
+		end
 	end
 end
 
@@ -981,11 +991,13 @@ function gUF:UpdateFrameInfo(unit)
 
 			local _, englishClass = UnitClass(unit)
 
-			if (UnitIsPlayer(unit) and self.ClassIcon[englishClass] ~= nil) then			-- A player's class won't ever change so not using an event is fine
-				frame.classicon:SetTexCoord(self.ClassIcon[englishClass][1], self.ClassIcon[englishClass][2], self.ClassIcon[englishClass][3], self.ClassIcon[englishClass][4])
-				frame.classicon:Show()
-			else
-				frame.classicon:Hide()
+			if (frame.classicon) then
+				if (UnitIsPlayer(unit) and self.ClassIcon[englishClass] ~= nil) then			-- A player's class won't ever change so not using an event is fine
+					frame.classicon:SetTexCoord(self.ClassIcon[englishClass][1], self.ClassIcon[englishClass][2], self.ClassIcon[englishClass][3], self.ClassIcon[englishClass][4])
+					frame.classicon:Show()
+				else
+					frame.classicon:Hide()
+				end
 			end
 
 			-- if (UnitIsTalking(UnitName(unit))) then
@@ -1024,7 +1036,6 @@ function gUF:SetStyle(frame, unit)
 		end
 
 		if (unit == "target") then
-			frame.combatresticon:Hide()
 			frame.fkeytext:Hide()
 			if (self.db.profile.target[L["Healer Mode"]] == true) then
 				frame.deficithealthtext:Show()
@@ -1059,7 +1070,7 @@ function gUF:CreateRemoveFrames()
 
 	if (self.db.profile.target[L["Enabled"]] == true) then			-- Create the Target frame
 		if (not gUF_target) then
-			self:CreateFrame("normal", "gUF_target", "target")
+			self:CreateFrame("target", "gUF_target", "target")
 		else
 			self:RegisterFrame(gUF_target, "target")
 		end
@@ -1085,6 +1096,25 @@ function gUF:CreateFrame(frametemplate, framename, unit)
 
 	if (frametemplate == "normal") then
 		frame = self:CreateBaseFrameObject(framename, unit)
+
+		-- remove this once we have a full option set for customizing this
+		frame.currentmaxhealthtext:SetTextColor(1, 1, 1, 1)
+		frame.currentmaxmanatext:SetTextColor(1, 1, 1, 1)
+		frame.percenthealthtext:SetTextColor(1, 1, 1, 1)
+		frame.percentmanatext:SetTextColor(1, 1, 1, 1)
+		frame.deficithealthtext:SetTextColor(1, 1, 1, 1)
+		frame.deficitmanatext:SetTextColor(1, 1, 1, 1)
+		-- remove this once we have a full option set for customizing this
+
+		self:LayoutBuffs(frame, nil, "buffs")			-- move this to someplace else later
+		self:LayoutBuffs(frame, nil, "debuffs")			-- move this to someplace else later
+
+		self:SetupOverlays(frame)						-- Set up the overlay buttons so clicking works (can move this most liekly too)
+
+		frame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", self.db.profile[frame.unit][L["Position"]].x, self.db.profile[frame.unit][L["Position"]].y)
+		frame:Show()									-- Remove this once we have a few frames ready to go, it's handled by the frame's secureheader unit stuff anyway
+	elseif (frametemplate == "target") then
+		frame = self:CreateBaseOfTargetFrameObject(framename, unit)
 
 		-- remove this once we have a full option set for customizing this
 		frame.currentmaxhealthtext:SetTextColor(1, 1, 1, 1)
@@ -1148,11 +1178,19 @@ end
 
 function gUF:GetInitialBuffAndDebuffAnchorPoint(frame, buffType, buffIndex)
 	if (self.db.profile[frame.unit][buffType][L["Position"]] == 1) then
-		frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+		if (frame.unit == "player") then
+			frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+		elseif (frame.unit == "target") then
+			frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.statsframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+		end
 	elseif (self.db.profile[frame.unit][buffType][L["Position"]] == 2) then
 		frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.statsframe, "BOTTOMRIGHT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
 	elseif (self.db.profile[frame.unit][buffType][L["Position"]] == 3) then
-		frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+		if (frame.unit == "player") then
+			frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+		elseif (frame.unit == "target") then
+			frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.statsframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+		end
 	elseif (self.db.profile[frame.unit][buffType][L["Position"]] == 4) then
 		frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.statsframe, "BOTTOMRIGHT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
 	elseif (self.db.profile[frame.unit][buffType][L["Position"]] == 5) then
