@@ -60,20 +60,21 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 				[L["Health Bar Color"]] = {r = 0, g = 0.8, b = 0, a = 1},
 				[L["Mana Bar Color"]] = {r = 0, g = 0, b = 1, a = 1},
 				[L["Rage Bar Color"]] = {r = 1, g = 0, b = 0, a = 1},
-				[L["Focus Bar Color"]] = {r = 1, g = 0.5, b = 0, a = 1},
+				[L["Focus Bar Color"]] = {r = 1, g = 0.5, b = 0.25, a = 1},
 				[L["Energy Bar Color"]] = {r = 1, g = 1, b = 0, a = 1},
 				[L["Combo Points Bar Color"]] = {r = 1, g = 0.96, b = 0.41, a = 1},
 				[L["Runes Bar Color"]] = {r = 0.5, g = 0.5, b = 0.5, a = 1},
 				[L["Runic Power Bar Color"]] = {r = 0, g = 0.82, b = 1, a = 1},
 				[L["Soul Shards Bar Color"]] = {r = 0.5, g = 0.32, b = 0.55, a = 1},
-				[L["Lunar Power Bar Color"]] = {r = 0.3, g = 0.52, b = 0.9, a = 1},
+				[L["Astral Power Bar Color"]] = {r = 0.3, g = 0.52, b = 0.9, a = 1},
 				[L["Holy Power Bar Color"]] = {r = 0.95, g = 0.9, b = 0.6, a = 1},
 				[L["Maelstrom Bar Color"]] = {r = 0, g = 0.5, b = 1, a = 1},
-				[L["Insanity Bar Color"]] = {r = 0.4, g = 0, b = 0.8, a = 1},
 				[L["Chi Bar Color"]] = {r = 0.71, g = 1, b = 0.92, a = 1},
+				[L["Insanity Bar Color"]] = {r = 0.4, g = 0, b = 0.8, a = 1},
 				[L["Arcane Charges Bar Color"]] = {r = 0.1, g = 0.1, b = 0.98, a = 1},
 				[L["Fury Bar Color"]] = {r = 0.788, g = 0.259, b = 0.992, a = 1},
-				[L["Pain Bar Color"]] = {r = 1, g = 0, b = 0, a = 1},
+				[L["Pain Bar Color"]] = {r = 1, g = 0.61, b = 0, a = 1},
+				[L["Essence Bar Color"]] = {r = 0.392, g = 0.678, b = 0.808, a = 1},	-- No official color, taken from oUF
 			},
 			module = {
 				castbar = {
@@ -162,31 +163,33 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 	}
 
 	self.ClassIcon = {	--Right, Left, Top, Bottom
-		["WARRIOR"]		= {0, 0.25, 0, 0.25},
-		["MAGE"]		= {0.25, 0.49609375, 0, 0.25},
-		["ROGUE"]		= {0.49609375, 0.7421875, 0, 0.25},
-		["DRUID"]		= {0.7421875, 0.98828125, 0, 0.25},
-		["HUNTER"]		= {0, 0.25, 0.25, 0.5},
-		["SHAMAN"]	 	= {0.25, 0.49609375, 0.25, 0.5},
-		["PRIEST"]		= {0.49609375, 0.7421875, 0.25, 0.5},
-		["WARLOCK"]		= {0.7421875, 0.98828125, 0.25, 0.5},
-		["PALADIN"]		= {0, 0.25, 0.5, 0.75},
-		["DEATHKNIGHT"]	= {0.25, .5, 0.5, .75},
-		["MONK"]		= {0.5, 0.73828125, 0.5, .75},
+		["DEATHKNIGHT"]	= {0.25, 0.5, 0.5, 0.75},
 		["DEMONHUNTER"]	= {0.7421875, 0.98828125, 0.5, 0.75},
+		["DRUID"]		= {0.7421875, 0.98828125, 0, 0.25},
+		["EVOKER"]		= {0, 0.25, 0.75, 1},
+		["HUNTER"]		= {0, 0.25, 0.25, 0.5},
+		["MAGE"]		= {0.25, 0.49609375, 0, 0.25},
+		["MONK"]		= {0.5, 0.73828125, 0.5, .75},
+		["PALADIN"]		= {0, 0.25, 0.5, 0.75},
+		["PRIEST"]		= {0.49609375, 0.7421875, 0.25, 0.5},
+		["ROGUE"]		= {0.49609375, 0.7421875, 0, 0.25},
+		["SHAMAN"]	 	= {0.25, 0.49609375, 0.25, 0.5},
+		["WARLOCK"]		= {0.7421875, 0.98828125, 0.25, 0.5},
+		["WARRIOR"]		= {0, 0.25, 0, 0.25},
 	}
 
-	self.CurableDebuff = {
+	self.CurableDebuff = {	-- Debuffs that can be cured regardless of specialization
 		["DEATHKNIGHT"]	= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 		["DEMONHUNTER"]	= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 		["DRUID"]		= {[L["Curse"]] = 1, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 1},
+		["EVOKER"]		= {[L["Curse"]] = 1, [L["Disease"]] = 1, [L["Magic"]] = 0, [L["Poison"]] = 1},
 		["HUNTER"]		= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 		["MAGE"]		= {[L["Curse"]] = 1, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
-		["MONK"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 1, [L["Poison"]] = 1},
-		["PALADIN"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 1, [L["Poison"]] = 1},
+		["MONK"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 0, [L["Poison"]] = 1},
+		["PALADIN"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 0, [L["Poison"]] = 1},
 		["PRIEST"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 1, [L["Poison"]] = 0},
 		["ROGUE"]		= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
-		["SHAMAN"]		= {[L["Curse"]] = 0, [L["Disease"]] = 1, [L["Magic"]] = 0, [L["Poison"]] = 1},
+		["SHAMAN"]		= {[L["Curse"]] = 1, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 		["WARLOCK"]		= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 1, [L["Poison"]] = 0},
 		["WARRIOR"]		= {[L["Curse"]] = 0, [L["Disease"]] = 0, [L["Magic"]] = 0, [L["Poison"]] = 0},
 	}
@@ -212,26 +215,20 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 	}
 
 	self.RaidClassColors = {
-		["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
-		["WARLOCK"] = { r = 0.53, g = 0.53, b = 0.93, colorStr = "ff8788ee" },
-		["PRIEST"] = { r = 1.0, g = 1.0, b = 1.0, colorStr = "ffffffff" },
-		["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
-		["MAGE"] = { r = 0.25, g = 0.78, b = 0.92, colorStr = "ff3fc7eb" },
-		["ROGUE"] = { r = 1.0, g = 0.96, b = 0.41, colorStr = "fffff569" },
-		["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
-		["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070de" },
-		["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
-		["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
-		["MONK"] = { r = 0.0, g = 1.00 , b = 0.59, colorStr = "ff00ff96" },
+		["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41e3a" },
 		["DEMONHUNTER"] = { r = 0.64, g = 0.19, b = 0.79, colorStr = "ffa330c9" },
+		["DRUID"] = { r = 1.0, g = 0.49, b = 0.04, colorStr = "ffff7c0a" },
+		["EVOKER"] = { r = 0.20, g = 0.58, b = 0.50, colorStr = "ff33937f" },
+		["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffaad372" },
+		["MAGE"] = { r = 0.25, g = 0.78, b = 0.92, colorStr = "ff3fc7eb" },
+		["MONK"] = { r = 0.0, g = 1.00 , b = 0.60, colorStr = "ff00ff98" },
+		["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff48cba" },
+		["PRIEST"] = { r = 1.0, g = 1.0, b = 1.0, colorStr = "ffffffff" },
+		["ROGUE"] = { r = 1.0, g = 0.96, b = 0.41, colorStr = "fffff468" },
+		["SHAMAN"] = { r = 0.0, g = 0.44, b = 0.87, colorStr = "ff0070dd" },
+		["WARLOCK"] = { r = 0.53, g = 0.53, b = 0.93, colorStr = "ff8788ee" },
+		["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc69b6d" },
 	}
-
-	-- self.abbrevTablePercent = {
-	-- 	breakpointData = {
-	-- 		{ breakpoint = 100, fractionDivisor = 1, significandDivisor = 1, abbreviation = "", abbreviationIsGlobal = false },
-	-- 		{ breakpoint = 0, fractionDivisor = 1, significandDivisor = 1, abbreviation = "", abbreviationIsGlobal = false },
-	-- 	}
-	-- }
 
 	self.abbrevTablePercent = {
 		breakpointData = {
@@ -1347,16 +1344,19 @@ function gUF:InitializeBarColorArray()
 		[1] = self.db.profile.global[L["Rage Bar Color"]],
 		[2] = self.db.profile.global[L["Focus Bar Color"]],
 		[3] = self.db.profile.global[L["Energy Bar Color"]],
-		[4] = self.db.profile.global[L["Chi Bar Color"]],
+		[4] = self.db.profile.global[L["Combo Points Bar Color"]],
 		[5] = self.db.profile.global[L["Runes Bar Color"]],
 		[6] = self.db.profile.global[L["Runic Power Bar Color"]],
 		[7] = self.db.profile.global[L["Soul Shards Bar Color"]],
-		[8] = self.db.profile.global[L["Lunar Power Bar Color"]],
+		[8] = self.db.profile.global[L["Astral Power Bar Color"]],
 		[9] = self.db.profile.global[L["Holy Power Bar Color"]],
 		[11] = self.db.profile.global[L["Maelstrom Bar Color"]],
+		[12] = self.db.profile.global[L["Chi Bar Color"]],
 		[13] = self.db.profile.global[L["Insanity Bar Color"]],
+		[16] = self.db.profile.global[L["Arcane Charges Bar Color"]],
 		[17] = self.db.profile.global[L["Fury Bar Color"]],
 		[18] = self.db.profile.global[L["Pain Bar Color"]],
+		[19] = self.db.profile.global[L["Essence Bar Color"]],
 	}
 end
 

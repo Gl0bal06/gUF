@@ -58,6 +58,7 @@ if (L) then
 	L["Config Mode"] = true
 	L["Enabled"] = true
 	L["Energy Bar Color"] = true
+	L["Essence Bar Color"] = true
 	L["Expand Left"] = true
 	L["Focus Bar Color"] = true
 	L["Friendly PvE Color"] = true
@@ -74,7 +75,7 @@ if (L) then
 	L["Insanity Bar Color"] = true
 	L["Invert Bar Values"] = true
 	L["Lock Frames"] = true
-	L["Lunar Power Bar Color"] = true
+	L["Astral Power Bar Color"] = true
 	L["Maelstrom Bar Color"] = true
 	L["Mana Bar Color"] = true
 	L["Number of Buffs"] = true
