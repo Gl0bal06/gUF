@@ -1006,6 +1006,14 @@ function gUF:UpdateFrameInfo(unit)
 				end
 			end
 
+			if (unit == "target") then
+				if (UnitIsQuestBoss(unit)) then
+					frame.questicon:Show();
+				else
+					frame.questicon:Hide();
+				end
+			end
+
 			-- if (UnitIsTalking(UnitName(unit))) then
 			-- 	self:VOICE_START(nil, unit)
 			-- else

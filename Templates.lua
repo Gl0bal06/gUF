@@ -108,7 +108,7 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 
 	frame.deathicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.deathicon:SetTexture("Interface\\TargetingFrame\\TargetDead")
-	frame.deathicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -25, -4)			-- remove this once we have a full option set for customizing this
+	frame.deathicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -9, -3)			-- remove this once we have a full option set for customizing this
 	frame.deathicon:SetHeight(16)														-- remove this once we have a full option set for customizing this
 	frame.deathicon:SetWidth(16)														-- remove this once we have a full option set for customizing this
 
@@ -117,18 +117,6 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.disconnectedicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -35, 3)	-- remove this once we have a full option set for customizing this
 	frame.disconnectedicon:SetHeight(32)												-- remove this once we have a full option set for customizing this
 	frame.disconnectedicon:SetWidth(32)													-- remove this once we have a full option set for customizing this
-
-	frame.pvpicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
-	frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
-	frame.pvpicon:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 2, -3)				-- remove this once we have a full option set for customizing this
-	frame.pvpicon:SetHeight(32)															-- remove this once we have a full option set for customizing this
-	frame.pvpicon:SetWidth(32)															-- remove this once we have a full option set for customizing this
-
-	frame.raidicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
-	frame.raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
-	frame.raidicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", 12, -10)				-- remove this once we have a full option set for customizing this
-	frame.raidicon:SetHeight(26)														-- remove this once we have a full option set for customizing this
-	frame.raidicon:SetWidth(26)															-- remove this once we have a full option set for customizing this
 
 	frame.portrait2d = frame.portraitframe:CreateTexture(nil, "ARTWORK", nil)
 	frame.portrait2d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
@@ -139,6 +127,18 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.portrait3d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
 	frame.portrait3d:SetHeight(52)														-- remove this once we have a full option set for customizing this
 	frame.portrait3d:SetWidth(52)														-- remove this once we have a full option set for customizing this
+
+	frame.pvpicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+	frame.pvpicon:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 2, -3)				-- remove this once we have a full option set for customizing this
+	frame.pvpicon:SetHeight(32)															-- remove this once we have a full option set for customizing this
+	frame.pvpicon:SetWidth(32)															-- remove this once we have a full option set for customizing this
+
+	frame.raidicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+	frame.raidicon:SetPoint("CENTER", frame.nameframe, "TOPLEFT", 0, -10)				-- remove this once we have a full option set for customizing this
+	frame.raidicon:SetHeight(26)														-- remove this once we have a full option set for customizing this
+	frame.raidicon:SetWidth(26)															-- remove this once we have a full option set for customizing this
 
 	-- frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
@@ -295,18 +295,6 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.disconnectedicon:SetHeight(32)												-- remove this once we have a full option set for customizing this
 	frame.disconnectedicon:SetWidth(32)													-- remove this once we have a full option set for customizing this
 
-	frame.pvpicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
-	frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
-	frame.pvpicon:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 2, -3)				-- remove this once we have a full option set for customizing this
-	frame.pvpicon:SetHeight(32)															-- remove this once we have a full option set for customizing this
-	frame.pvpicon:SetWidth(32)															-- remove this once we have a full option set for customizing this
-
-	frame.raidicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
-	frame.raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
-	frame.raidicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", 12, -10)				-- remove this once we have a full option set for customizing this
-	frame.raidicon:SetHeight(26)														-- remove this once we have a full option set for customizing this
-	frame.raidicon:SetWidth(26)															-- remove this once we have a full option set for customizing this
-
 	frame.portrait2d = frame.portraitframe:CreateTexture(nil, "ARTWORK", nil)
 	frame.portrait2d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
 	frame.portrait2d:SetHeight(52)														-- remove this once we have a full option set for customizing this
@@ -316,6 +304,24 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.portrait3d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
 	frame.portrait3d:SetHeight(52)														-- remove this once we have a full option set for customizing this
 	frame.portrait3d:SetWidth(52)														-- remove this once we have a full option set for customizing this
+
+	frame.pvpicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.pvpicon:SetTexture("Interface\\TargetingFrame\\UI-PVP-FFA")
+	frame.pvpicon:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 2, -3)				-- remove this once we have a full option set for customizing this
+	frame.pvpicon:SetHeight(32)															-- remove this once we have a full option set for customizing this
+	frame.pvpicon:SetWidth(32)															-- remove this once we have a full option set for customizing this
+
+	frame.questicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.questicon:SetTexture("Interface\\TargetingFrame\\PortraitQuestBadge")
+	frame.questicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -5, -4)			-- remove this once we have a full option set for customizing this
+	frame.questicon:SetHeight(16)														-- remove this once we have a full option set for customizing this
+	frame.questicon:SetWidth(16)														-- remove this once we have a full option set for customizing this
+
+	frame.raidicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+	frame.raidicon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", 45, -10)				-- remove this once we have a full option set for customizing this
+	frame.raidicon:SetHeight(26)														-- remove this once we have a full option set for customizing this
+	frame.raidicon:SetWidth(26)															-- remove this once we have a full option set for customizing this
 
 	-- frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
