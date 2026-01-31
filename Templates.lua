@@ -28,6 +28,11 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.statsframe:SetHeight(42)														-- remove this once we have a full option set for customizing this
 	frame.statsframe:SetWidth(280)														-- remove this once we have a full option set for customizing this
 
+	frame.portraitframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.portraitframe:SetPoint("TOPRIGHT", frame.nameframe, "TOPLEFT", 2, 0)					-- remove this once we have a full option set for customizing this
+	frame.portraitframe:SetHeight(64)													-- remove this once we have a full option set for customizing this
+	frame.portraitframe:SetWidth(64)													-- remove this once we have a full option set for customizing this
+
 	-- Bars
 	frame.healthbar = CreateFrame("StatusBar", nil, frame, nil)
 	frame.healthbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -10)			-- remove this once we have a full option set for customizing this
@@ -125,6 +130,16 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.raidicon:SetHeight(26)														-- remove this once we have a full option set for customizing this
 	frame.raidicon:SetWidth(26)															-- remove this once we have a full option set for customizing this
 
+	frame.portrait2d = frame.portraitframe:CreateTexture(nil, "ARTWORK", nil)
+	frame.portrait2d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
+	frame.portrait2d:SetHeight(52)														-- remove this once we have a full option set for customizing this
+	frame.portrait2d:SetWidth(52)														-- remove this once we have a full option set for customizing this
+
+	frame.portrait3d = CreateFrame("PlayerModel", nil, frame)							-- remove this final and if classic ever gets this API
+	frame.portrait3d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
+	frame.portrait3d:SetHeight(52)														-- remove this once we have a full option set for customizing this
+	frame.portrait3d:SetWidth(52)														-- remove this once we have a full option set for customizing this
+
 	-- frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
 	-- frame.speakericon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)		-- remove this once we have a full option set for customizing this
@@ -151,12 +166,12 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	end
 
 	-- Groups
-	frame.frames = {frame.nameframe, frame.levelframe, frame.statsframe}
+	frame.frames = {frame.nameframe, frame.levelframe, frame.statsframe, frame.portraitframe}
 	frame.bars = {frame.healthbar, frame.manabar}
 	frame.barbackgrounds = {frame.healthbarbg, frame.manabarbg}
 	frame.healthtexts = {frame.currentmaxhealthtext, frame.percenthealthtext, frame.deficithealthtext}
 	frame.manatexts = {frame.currentmaxmanatext, frame.percentmanatext, frame.deficitmanatext}
-	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay}
+	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay, frame.portraitframeoverlay}
 	frame.baroverlays = {frame.healthbaroverlay, frame.manabaroverlay}
 
 	return frame
@@ -174,23 +189,28 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.unit = unit
 
 	-- Frames
-	frame.nameframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.nameframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")		--remove this final and if classic ever gets this API
 	frame.nameframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)							-- remove this once we have a full option set for customizing this
 	frame.nameframe:SetHeight(24)														-- remove this once we have a full option set for customizing this
 	frame.nameframe:SetWidth(176)														-- remove this once we have a full option set for customizing this
 
-	frame.levelframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.levelframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")		--remove this final and if classic ever gets this API
 	frame.levelframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 174, 0)						-- remove this once we have a full option set for customizing this
 	frame.levelframe:SetHeight(24)														-- remove this once we have a full option set for customizing this
 	frame.levelframe:SetWidth(46)														-- remove this once we have a full option set for customizing this
 
-	frame.statsframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.statsframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")		--remove this final and if classic ever gets this API
 	frame.statsframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -22)						-- remove this once we have a full option set for customizing this
 	frame.statsframe:SetHeight(42)														-- remove this once we have a full option set for customizing this
 	frame.statsframe:SetWidth(220)														-- remove this once we have a full option set for customizing this
 
+	frame.portraitframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
+	frame.portraitframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 217, 0)					-- remove this once we have a full option set for customizing this
+	frame.portraitframe:SetHeight(64)													-- remove this once we have a full option set for customizing this
+	frame.portraitframe:SetWidth(64)													-- remove this once we have a full option set for customizing this
+
 	-- Bars
-	frame.healthbar = CreateFrame("StatusBar", nil, frame, nil)				-- getwidth then subtract 20?
+	frame.healthbar = CreateFrame("StatusBar", nil, frame, nil)							-- getwidth then subtract 20?
 	frame.healthbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -10)			-- remove this once we have a full option set for customizing this
 	frame.healthbar:SetHeight(10)														-- remove this once we have a full option set for customizing this
 	frame.healthbar:SetWidth(frame.statsframe:GetWidth() - 20)							-- remove this once we have a full option set for customizing this
@@ -214,6 +234,7 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.nameframeoverlay = self:CreateOverlay(frame, frame.nameframe, "_NameFrameOverlay")
 	frame.levelframeoverlay = self:CreateOverlay(frame, frame.levelframe, "_LevelFrameOverlay")
 	frame.statsframeoverlay = self:CreateOverlay(frame, frame.statsframe, "_StatsFrameOverlay")
+	frame.portraitframeoverlay = self:CreateOverlay(frame, frame.portraitframe, "_PortraitFrameOverlay")
 	frame.healthbaroverlay = self:CreateOverlay(frame, frame.healthbar, "_HealthBarOverlay")
 	frame.manabaroverlay = self:CreateOverlay(frame, frame.manabar, "_ManabarOverlay")
 
@@ -232,10 +253,10 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.nametext:SetPoint("CENTER", frame.nameframe, "CENTER", 0, 0)					-- remove this once we have a full option set for customizing this
 
 	frame.currentmaxhealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.currentmaxhealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)		-- remove this once we have a full option set for customizing this
+	frame.currentmaxhealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)			-- remove this once we have a full option set for customizing this
 
 	frame.currentmaxmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.currentmaxmanatext:SetPoint("TOP", frame.manabar, "TOP", 0, 1)			-- remove this once we have a full option set for customizing this
+	frame.currentmaxmanatext:SetPoint("TOP", frame.manabar, "TOP", 0, 1)				-- remove this once we have a full option set for customizing this
 
 	frame.percenthealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.percenthealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)				-- remove this once we have a full option set for customizing this
@@ -252,15 +273,15 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	-- Art Pieces
 	-- frame.classicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.classicon:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
-	-- frame.classicon:SetPoint("TOPLEFT", frame.levelframe, "TOPLEFT", 5, -5)				-- remove this once we have a full option set for customizing this
-	-- frame.classicon:SetHeight(24)														-- remove this once we have a full option set for customizing this
+	-- frame.classicon:SetPoint("TOPLEFT", frame.levelframe, "TOPLEFT", 5, -5)			-- remove this once we have a full option set for customizing this
+	-- frame.classicon:SetHeight(24)													-- remove this once we have a full option set for customizing this
 	-- frame.classicon:SetWidth(24)														-- remove this once we have a full option set for customizing this
 
 	-- frame.combatresticon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.combatresticon:SetTexture("Interface\\CharacterFrame\\UI-StateIcon")
-	-- frame.combatresticon:SetPoint("RIGHT", frame.nameframe, "RIGHT", 0, 0)				-- remove this once we have a full option set for customizing this
-	-- frame.combatresticon:SetHeight(32)													-- remove this once we have a full option set for customizing this
-	-- frame.combatresticon:SetWidth(31)													-- remove this once we have a full option set for customizing this
+	-- frame.combatresticon:SetPoint("RIGHT", frame.nameframe, "RIGHT", 0, 0)			-- remove this once we have a full option set for customizing this
+	-- frame.combatresticon:SetHeight(32)												-- remove this once we have a full option set for customizing this
+	-- frame.combatresticon:SetWidth(31)												-- remove this once we have a full option set for customizing this
 
 	frame.deathicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	frame.deathicon:SetTexture("Interface\\TargetingFrame\\TargetDead")
@@ -286,6 +307,16 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.raidicon:SetHeight(26)														-- remove this once we have a full option set for customizing this
 	frame.raidicon:SetWidth(26)															-- remove this once we have a full option set for customizing this
 
+	frame.portrait2d = frame.portraitframe:CreateTexture(nil, "ARTWORK", nil)
+	frame.portrait2d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
+	frame.portrait2d:SetHeight(52)														-- remove this once we have a full option set for customizing this
+	frame.portrait2d:SetWidth(52)														-- remove this once we have a full option set for customizing this
+
+	frame.portrait3d = CreateFrame("PlayerModel", nil, frame)							-- remove this final and if classic ever gets this API
+	frame.portrait3d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
+	frame.portrait3d:SetHeight(52)														-- remove this once we have a full option set for customizing this
+	frame.portrait3d:SetWidth(52)														-- remove this once we have a full option set for customizing this
+
 	-- frame.speakericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
 	-- frame.speakericon:SetTexture("Interface\\Common\\VoiceChat-Speaker")
 	-- frame.speakericon:SetPoint("CENTER", frame.nameframe, "TOPRIGHT", -35, -12)		-- remove this once we have a full option set for customizing this
@@ -312,12 +343,12 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	end
 
 	-- Groups
-	frame.frames = {frame.nameframe, frame.levelframe, frame.statsframe}
+	frame.frames = {frame.nameframe, frame.levelframe, frame.statsframe, frame.portraitframe}
 	frame.bars = {frame.healthbar, frame.manabar}
 	frame.barbackgrounds = {frame.healthbarbg, frame.manabarbg}
 	frame.healthtexts = {frame.currentmaxhealthtext, frame.percenthealthtext, frame.deficithealthtext}
 	frame.manatexts = {frame.currentmaxmanatext, frame.percentmanatext, frame.deficitmanatext}
-	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay}
+	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay, frame.portraitframeoverlay}
 	frame.baroverlays = {frame.healthbaroverlay, frame.manabaroverlay}
 
 	return frame

@@ -263,6 +263,7 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	self:RegisterEvent("UNIT_MAXHEALTH")
 	self:RegisterEvent("UNIT_MAXPOWER")
 	self:RegisterEvent("UNIT_NAME_UPDATE")
+	self:RegisterEvent("UNIT_PORTRAIT_UPDATE")
 	-- self:RegisterEvent("UNIT_POWER")
 	self:RegisterEvent("UNIT_POWER_FREQUENT")
 	-- self:RegisterEvent("VOICE_START")
@@ -500,6 +501,25 @@ function gUF:UNIT_NAME_UPDATE(event, unit)
 			frame.nametext:SetText(UnitName(unit))
 		end
 		self:UNIT_LEVEL(nil, unit)
+	end
+end
+
+function gUF:UNIT_PORTRAIT_UPDATE(event, unit)
+	if not frames[unit] then return end
+
+	for frame in pairs(frames[unit]) do
+		if (frame.portraitframe) then								-- Add a toggle option here eventually
+			if (UnitIsVisible(unit)) then
+				frame.portrait3d:SetUnit(unit)					-- Load the correct 3d graphic
+				frame.portrait3d:SetPortraitZoom(1)
+				frame.portrait2d:Hide()								-- Hide the 2d graphic
+				frame.portrait3d:Show()								-- Show the 3d graphic
+			else
+				SetPortraitTexture(frame.portrait2d, unit)		-- Load the correct 2d graphic
+				frame.portrait3d:Hide()								-- Hide the 3d graphic
+				frame.portrait2d:Show()								-- Show the 2d graphic
+			end
+		end
 	end
 end
 
@@ -941,19 +961,7 @@ end
 function gUF:UpdateRaidIcon(frame)
 	local raidTargetIconIndex = GetRaidTargetIndex(frame.unit)
 	if (raidTargetIconIndex) then
-		local RAID_TARGET_ICON_DIMENSION = 64
-		local RAID_TARGET_TEXTURE_DIMENSION = 256
-		local RAID_TARGET_TEXTURE_COLUMNS = 4
-		local RAID_TARGET_TEXTURE_ROWS = 4
-
-		raidTargetIconIndex = raidTargetIconIndex - 1
-		local coordIncrement = RAID_TARGET_ICON_DIMENSION / RAID_TARGET_TEXTURE_DIMENSION
-		local left = mod(raidTargetIconIndex, RAID_TARGET_TEXTURE_COLUMNS) * coordIncrement
-		local right = left + coordIncrement
-		local top = floor(raidTargetIconIndex / RAID_TARGET_TEXTURE_ROWS) * coordIncrement
-		local bottom = top + coordIncrement
-		frame.raidicon:SetTexCoord(left, right, top, bottom)
-
+		SetRaidTargetIconTexture(frame.raidicon, raidTargetIconIndex)
 		frame.raidicon:Show()
 	else
 		frame.raidicon:Hide()
@@ -986,6 +994,7 @@ function gUF:UpdateFrameInfo(unit)
 			self:UNIT_MAXHEALTH(nil, unit)
 			self:UNIT_DISPLAYPOWER(nil, unit)
 			self:UNIT_FACTION(nil, unit)
+			self:UNIT_PORTRAIT_UPDATE(nil, unit)
 			self:UNIT_AURA(nil, unit)
 			self:UpdateRaidIcon(frame)
 
