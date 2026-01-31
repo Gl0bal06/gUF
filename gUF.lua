@@ -397,20 +397,20 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
-		local unitmana = UnitPower(unit)
-		local unitmanamax = UnitPowerMax(unit)
-		local rawunitmanapercent = UnitPowerPercent(unit, UnitPowerType(unit), false, CurveConstants.ScaleTo100)
-		local unitmanapercent = AbbreviateNumbers(rawunitmanapercent, self.abbrevTablePercent)
+		local unitpower = UnitPower(unit)
+		local unitpowermax = UnitPowerMax(unit)
+		local rawunitpowerpercent = UnitPowerPercent(unit, UnitPowerType(unit), false, CurveConstants.ScaleTo100)
+		local unitpowerpercent = AbbreviateNumbers(rawunitpowerpercent, self.abbrevTablePercent)
 
-		frame.powerbar:SetValue(unitmana)
+		frame.powerbar:SetValue(unitpower)
 
-		frame.currentmaxmanatext:SetText(unitmana.."/"..unitmanamax)
-		frame.percentmanatext:SetText(unitmanapercent.."%")
-		--frame.deficitmanatext:SetText("-"..unitmanamax - unitmana)
+		frame.currentmaxpowertext:SetText(unitpower.."/"..unitpowermax)
+		frame.percentpowertext:SetText(unitpowerpercent.."%")
+		--frame.deficitpowertext:SetText("-"..unitpowermax - unitpower)
 
 		if (unit == "target") then
-			--frame.currentmaxmanatext:SetText(unitmana.."/"..unitmanamax.." | "..unitmanapercent.."%")
-			frame.percentmanatext:Hide()
+			--frame.currentmaxpowertext:SetText(unitpower.."/"..unitpowermax.." | "..unitpowerpercent.."%")
+			frame.percentpowertext:Hide()
 		end
 	end
 end
@@ -436,9 +436,9 @@ function gUF:UNIT_DISPLAYPOWER(event, unit)
 		if (unitpowerinfo == 0) then					-- No Power Bar
 			frame.powerbar:SetStatusBarColor(0, 0, 0, 0)
 			frame.powerbarbg:SetStatusBarColor(0, 0, 0, 0)
-			frame.currentmaxmanatext:SetText()				-- these text field blanks will probably change later once text options are added
-			frame.percentmanatext:SetText()
-			frame.deficitmanatext:SetText()
+			frame.currentmaxpowertext:SetText()				-- these text field blanks will probably change later once text options are added
+			frame.percentpowertext:SetText()
+			frame.deficitpowertext:SetText()
 		elseif (unitpower) then
 			frame.powerbar:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a)
 			frame.powerbarbg:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a * 0.25)
@@ -1037,10 +1037,10 @@ function gUF:SetStyle(frame, unit)
 			frame.fkeytext:Hide()
 			if (self.db.profile.player[L["Healer Mode"]] == true) then
 				frame.deficithealthtext:Show()
-				frame.deficitmanatext:Show()
+				frame.deficitpowertext:Show()
 			else
 				frame.deficithealthtext:Hide()
-				frame.deficitmanatext:Hide()
+				frame.deficitpowertext:Hide()
 			end
 		end
 
@@ -1048,10 +1048,10 @@ function gUF:SetStyle(frame, unit)
 			frame.fkeytext:Hide()
 			if (self.db.profile.target[L["Healer Mode"]] == true) then
 				frame.deficithealthtext:Show()
-				frame.deficitmanatext:Show()
+				frame.deficitpowertext:Show()
 			else
 				frame.deficithealthtext:Hide()
-				frame.deficitmanatext:Hide()
+				frame.deficitpowertext:Hide()
 			end
 		end
 
@@ -1108,11 +1108,11 @@ function gUF:CreateFrame(frametemplate, framename, unit)
 
 		-- remove this once we have a full option set for customizing this
 		frame.currentmaxhealthtext:SetTextColor(1, 1, 1, 1)
-		frame.currentmaxmanatext:SetTextColor(1, 1, 1, 1)
+		frame.currentmaxpowertext:SetTextColor(1, 1, 1, 1)
 		frame.percenthealthtext:SetTextColor(1, 1, 1, 1)
-		frame.percentmanatext:SetTextColor(1, 1, 1, 1)
+		frame.percentpowertext:SetTextColor(1, 1, 1, 1)
 		frame.deficithealthtext:SetTextColor(1, 1, 1, 1)
-		frame.deficitmanatext:SetTextColor(1, 1, 1, 1)
+		frame.deficitpowertext:SetTextColor(1, 1, 1, 1)
 		-- remove this once we have a full option set for customizing this
 
 		self:LayoutBuffs(frame, nil, "buffs")			-- move this to someplace else later
@@ -1127,11 +1127,11 @@ function gUF:CreateFrame(frametemplate, framename, unit)
 
 		-- remove this once we have a full option set for customizing this
 		frame.currentmaxhealthtext:SetTextColor(1, 1, 1, 1)
-		frame.currentmaxmanatext:SetTextColor(1, 1, 1, 1)
+		frame.currentmaxpowertext:SetTextColor(1, 1, 1, 1)
 		frame.percenthealthtext:SetTextColor(1, 1, 1, 1)
-		frame.percentmanatext:SetTextColor(1, 1, 1, 1)
+		frame.percentpowertext:SetTextColor(1, 1, 1, 1)
 		frame.deficithealthtext:SetTextColor(1, 1, 1, 1)
-		frame.deficitmanatext:SetTextColor(1, 1, 1, 1)
+		frame.deficitpowertext:SetTextColor(1, 1, 1, 1)
 		-- remove this once we have a full option set for customizing this
 
 		self:LayoutBuffs(frame, nil, "buffs")			-- move this to someplace else later

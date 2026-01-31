@@ -78,20 +78,20 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.currentmaxhealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.currentmaxhealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
 
-	frame.currentmaxmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.currentmaxmanatext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 110, 0)			-- remove this once we have a full option set for customizing this
+	frame.currentmaxpowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	frame.currentmaxpowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
 
 	frame.percenthealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.percenthealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)				-- remove this once we have a full option set for customizing this
 
-	frame.percentmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.percentmanatext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
+	frame.percentpowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	frame.percentpowertext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
 
 	frame.deficithealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.deficithealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
 
-	frame.deficitmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.deficitmanatext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
+	frame.deficitpowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	frame.deficitpowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
 
 	-- Art Pieces
 	frame.classicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
@@ -170,7 +170,7 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.bars = {frame.healthbar, frame.powerbar}
 	frame.barbackgrounds = {frame.healthbarbg, frame.powerbarbg}
 	frame.healthtexts = {frame.currentmaxhealthtext, frame.percenthealthtext, frame.deficithealthtext}
-	frame.manatexts = {frame.currentmaxmanatext, frame.percentmanatext, frame.deficitmanatext}
+	frame.powertexts = {frame.currentmaxpowertext, frame.percentpowertext, frame.deficitpowertext}
 	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay, frame.portraitframeoverlay}
 	frame.baroverlays = {frame.healthbaroverlay, frame.powerbaroverlay}
 
@@ -255,20 +255,20 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.currentmaxhealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.currentmaxhealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)			-- remove this once we have a full option set for customizing this
 
-	frame.currentmaxmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.currentmaxmanatext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)				-- remove this once we have a full option set for customizing this
+	frame.currentmaxpowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	frame.currentmaxpowertext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)				-- remove this once we have a full option set for customizing this
 
 	frame.percenthealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.percenthealthtext:SetPoint("TOP", frame.healthbar, "TOP", 0, 1)				-- remove this once we have a full option set for customizing this
 
-	frame.percentmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.percentmanatext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
+	frame.percentpowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	frame.percentpowertext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
 
 	frame.deficithealthtext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.deficithealthtext:SetPoint("RIGHT", frame.healthbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
 
-	frame.deficitmanatext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-	frame.deficitmanatext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
+	frame.deficitpowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	frame.deficitpowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
 
 	-- Art Pieces
 	-- frame.classicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
@@ -347,7 +347,7 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.bars = {frame.healthbar, frame.powerbar}
 	frame.barbackgrounds = {frame.healthbarbg, frame.powerbarbg}
 	frame.healthtexts = {frame.currentmaxhealthtext, frame.percenthealthtext, frame.deficithealthtext}
-	frame.manatexts = {frame.currentmaxmanatext, frame.percentmanatext, frame.deficitmanatext}
+	frame.powertexts = {frame.currentmaxpowertext, frame.percentpowertext, frame.deficitpowertext}
 	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay, frame.portraitframeoverlay}
 	frame.baroverlays = {frame.healthbaroverlay, frame.powerbaroverlay}
 
