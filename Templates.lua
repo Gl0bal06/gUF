@@ -192,7 +192,7 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.nameframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")		--remove this final and if classic ever gets this API
 	frame.nameframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)							-- remove this once we have a full option set for customizing this
 	frame.nameframe:SetHeight(24)														-- remove this once we have a full option set for customizing this
-	frame.nameframe:SetWidth(176)														-- remove this once we have a full option set for customizing this
+	frame.nameframe:SetWidth(177)														-- remove this once we have a full option set for customizing this
 
 	frame.levelframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")		--remove this final and if classic ever gets this API
 	frame.levelframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 174, 0)						-- remove this once we have a full option set for customizing this
@@ -205,7 +205,7 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.statsframe:SetWidth(220)														-- remove this once we have a full option set for customizing this
 
 	frame.portraitframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
-	frame.portraitframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 217, 0)					-- remove this once we have a full option set for customizing this
+	frame.portraitframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 218, 0)					-- remove this once we have a full option set for customizing this
 	frame.portraitframe:SetHeight(64)													-- remove this once we have a full option set for customizing this
 	frame.portraitframe:SetWidth(64)													-- remove this once we have a full option set for customizing this
 
