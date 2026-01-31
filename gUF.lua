@@ -402,7 +402,7 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 		local rawunitmanapercent = UnitPowerPercent(unit, UnitPowerType(unit), false, CurveConstants.ScaleTo100)
 		local unitmanapercent = AbbreviateNumbers(rawunitmanapercent, self.abbrevTablePercent)
 
-		frame.manabar:SetValue(unitmana)
+		frame.powerbar:SetValue(unitmana)
 
 		frame.currentmaxmanatext:SetText(unitmana.."/"..unitmanamax)
 		frame.percentmanatext:SetText(unitmanapercent.."%")
@@ -419,7 +419,7 @@ function gUF:UNIT_MAXPOWER(event, unit)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
-		frame.manabar:SetMinMaxValues(0, UnitPowerMax(unit))
+		frame.powerbar:SetMinMaxValues(0, UnitPowerMax(unit))
 		self:UNIT_POWER_FREQUENT(nil, unit)
 	end
 end
@@ -434,14 +434,14 @@ function gUF:UNIT_DISPLAYPOWER(event, unit)
 
 		--if (UnitPowerMax(unit) == 0) then					-- No Power Bar
 		if (unitpowerinfo == 0) then					-- No Power Bar
-			frame.manabar:SetStatusBarColor(0, 0, 0, 0)
-			frame.manabarbg:SetStatusBarColor(0, 0, 0, 0)
+			frame.powerbar:SetStatusBarColor(0, 0, 0, 0)
+			frame.powerbarbg:SetStatusBarColor(0, 0, 0, 0)
 			frame.currentmaxmanatext:SetText()				-- these text field blanks will probably change later once text options are added
 			frame.percentmanatext:SetText()
 			frame.deficitmanatext:SetText()
 		elseif (unitpower) then
-			frame.manabar:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a)
-			frame.manabarbg:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a * 0.25)
+			frame.powerbar:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a)
+			frame.powerbarbg:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a * 0.25)
 			self:UNIT_MAXPOWER(nil, unit)
 		end
 	end
