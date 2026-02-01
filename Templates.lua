@@ -26,6 +26,11 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.statsframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
 	frame.statsframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 32, -22)						-- remove this once we have a full option set for customizing this
 	frame.statsframe:SetHeight(42)														-- remove this once we have a full option set for customizing this
+	if (unit == "player") then															-- this needs to be changed to dynamically size the frame based on class and spec
+		frame.statsframe:SetHeight(66)													-- remove this once we have a full option set for customizing this
+	else
+		frame.statsframe:SetHeight(42)													-- remove this once we have a full option set for customizing this
+	end
 	frame.statsframe:SetWidth(280)														-- remove this once we have a full option set for customizing this
 
 	frame.portraitframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
@@ -54,12 +59,39 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.powerbarbg:SetHeight(10)														-- remove this once we have a full option set for customizing this
 	frame.powerbarbg:SetWidth(150)														-- remove this once we have a full option set for customizing this
 
+	if (unit == "player") then
+		frame.alternatepowerbar = CreateFrame("StatusBar", nil, frame, nil)
+		frame.alternatepowerbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -34)			-- remove this once we have a full option set for customizing this
+		frame.alternatepowerbar:SetHeight(10)														-- remove this once we have a full option set for customizing this
+		frame.alternatepowerbar:SetWidth(150)														-- remove this once we have a full option set for customizing this
+
+		frame.alternatepowerbarbg = CreateFrame("StatusBar", nil, frame, nil)
+		frame.alternatepowerbarbg:SetPoint("TOP", frame.alternatepowerbar, "TOP", 0, 0)
+		frame.alternatepowerbarbg:SetHeight(10)														-- remove this once we have a full option set for customizing this
+		frame.alternatepowerbarbg:SetWidth(150)														-- remove this once we have a full option set for customizing this
+
+		frame.secondarypowerbar = CreateFrame("StatusBar", nil, frame, nil)
+		frame.secondarypowerbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -46)			-- remove this once we have a full option set for customizing this
+		frame.secondarypowerbar:SetHeight(10)														-- remove this once we have a full option set for customizing this
+		frame.secondarypowerbar:SetWidth(150)														-- remove this once we have a full option set for customizing this
+
+		frame.secondarypowerbarbg = CreateFrame("StatusBar", nil, frame, nil)
+		frame.secondarypowerbarbg:SetPoint("TOP", frame.alternatepowerbar, "TOP", 0, 0)
+		frame.secondarypowerbarbg:SetHeight(10)														-- remove this once we have a full option set for customizing this
+		frame.secondarypowerbarbg:SetWidth(150)														-- remove this once we have a full option set for customizing this
+	end
+
 	-- Overlays
 	frame.nameframeoverlay = self:CreateOverlay(frame, frame.nameframe, "_NameFrameOverlay")
 	frame.levelframeoverlay = self:CreateOverlay(frame, frame.levelframe, "_LevelFrameOverlay")
 	frame.statsframeoverlay = self:CreateOverlay(frame, frame.statsframe, "_StatsFrameOverlay")
+	frame.portraitframeoverlay = self:CreateOverlay(frame, frame.portraitframe, "_PortraitFrameOverlay")
 	frame.healthbaroverlay = self:CreateOverlay(frame, frame.healthbar, "_HealthBarOverlay")
 	frame.powerbaroverlay = self:CreateOverlay(frame, frame.powerbar, "_PowerbarOverlay")
+	if (unit == "player") then
+		frame.alternatepowerbaroverlay = self:CreateOverlay(frame, frame.powerbar, "_AlternatePowerbarOverlay")
+		frame.secondarypowerbaroverlay = self:CreateOverlay(frame, frame.powerbar, "_SecondaryPowerbarOverlay")
+	end
 
 	-- Text Fields
 	frame.fkeytext = frame.nameframe:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -92,6 +124,26 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 
 	frame.deficitpowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 	frame.deficitpowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
+
+	if (unit == "player") then
+		frame.currentmaxalternatepowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+		frame.currentmaxalternatepowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
+
+		frame.percentalternatepowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+		frame.percentalternatepowertext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
+
+		frame.deficitalternatepowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+		frame.deficitalternatepowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
+
+		frame.currentmaxsecondarypowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+		frame.currentmaxsecondarypowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
+
+		frame.percentsecondarypowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+		frame.percentsecondarypowertext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
+
+		frame.deficitsecondarypowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+		frame.deficitsecondarypowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
+	end
 
 	-- Art Pieces
 	frame.classicon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
@@ -167,12 +219,20 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 
 	-- Groups
 	frame.frames = {frame.nameframe, frame.levelframe, frame.statsframe, frame.portraitframe}
-	frame.bars = {frame.healthbar, frame.powerbar}
-	frame.barbackgrounds = {frame.healthbarbg, frame.powerbarbg}
+	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay, frame.portraitframeoverlay}
 	frame.healthtexts = {frame.currentmaxhealthtext, frame.percenthealthtext, frame.deficithealthtext}
 	frame.powertexts = {frame.currentmaxpowertext, frame.percentpowertext, frame.deficitpowertext}
-	frame.frameoverlays = {frame.nameframeoverlay, frame.levelframeoverlay, frame.statsframeoverlay, frame.portraitframeoverlay}
-	frame.baroverlays = {frame.healthbaroverlay, frame.powerbaroverlay}
+	if (unit == "player") then
+		frame.bars = {frame.healthbar, frame.powerbar, frame.alternatepowerbar, frame.secondarypowerbar}
+		frame.barbackgrounds = {frame.healthbarbg, frame.powerbarbg, frame.alternatepowerbarbg, frame.secondarypowerbarbg}
+		frame.alternatepowertexts = {frame.currentmaxalternatepowertext, frame.percentalternatepowertext, frame.deficitalternatepowertext}
+		frame.secondarypowertexts = {frame.currentmaxsecondarypowertext, frame.percentsecondarypowertext, frame.deficitsecondarypowertext}
+		frame.baroverlays = {frame.healthbaroverlay, frame.powerbaroverlay, frame.alternatepowerbaroverlay, frame.secondarypowerbaroverlay}
+	else
+		frame.bars = {frame.healthbar, frame.powerbar}
+		frame.barbackgrounds = {frame.healthbarbg, frame.powerbarbg}
+		frame.baroverlays = {frame.healthbaroverlay, frame.powerbaroverlay}
+	end
 
 	return frame
 end
