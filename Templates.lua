@@ -76,7 +76,7 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 		frame.secondarypowerbar:SetWidth(150)														-- remove this once we have a full option set for customizing this
 
 		frame.secondarypowerbarbg = CreateFrame("StatusBar", nil, frame, nil)
-		frame.secondarypowerbarbg:SetPoint("TOP", frame.alternatepowerbar, "TOP", 0, 0)
+		frame.secondarypowerbarbg:SetPoint("TOP", frame.secondarypowerbar, "TOP", 0, 0)
 		frame.secondarypowerbarbg:SetHeight(10)														-- remove this once we have a full option set for customizing this
 		frame.secondarypowerbarbg:SetWidth(150)														-- remove this once we have a full option set for customizing this
 	end
@@ -127,22 +127,22 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 
 	if (unit == "player") then
 		frame.currentmaxalternatepowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-		frame.currentmaxalternatepowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
+		frame.currentmaxalternatepowertext:SetPoint("RIGHT", frame.alternatepowerbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
 
 		frame.percentalternatepowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-		frame.percentalternatepowertext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
+		frame.percentalternatepowertext:SetPoint("TOP", frame.alternatepowerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
 
 		frame.deficitalternatepowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-		frame.deficitalternatepowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
+		frame.deficitalternatepowertext:SetPoint("RIGHT", frame.alternatepowerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
 
 		frame.currentmaxsecondarypowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-		frame.currentmaxsecondarypowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
+		frame.currentmaxsecondarypowertext:SetPoint("RIGHT", frame.secondarypowerbar, "RIGHT", 110, 0)		-- remove this once we have a full option set for customizing this
 
 		frame.percentsecondarypowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-		frame.percentsecondarypowertext:SetPoint("TOP", frame.powerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
+		frame.percentsecondarypowertext:SetPoint("TOP", frame.secondarypowerbar, "TOP", 0, 1)					-- remove this once we have a full option set for customizing this
 
 		frame.deficitsecondarypowertext = frame.statsframe:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-		frame.deficitsecondarypowertext:SetPoint("RIGHT", frame.powerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
+		frame.deficitsecondarypowertext:SetPoint("RIGHT", frame.secondarypowerbar, "RIGHT", 100, 0)			-- remove this once we have a full option set for customizing this
 	end
 
 	-- Art Pieces

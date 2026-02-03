@@ -409,6 +409,32 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 			--frame.currentmaxpowertext:SetText(unitpower.."/"..unitpowermax.." | "..unitpowerpercent.."%")
 			frame.percentpowertext:Hide()
 		end
+
+		if (unit == "player") then								-- Alternate power bar stuff
+			local classFilename = UnitClassBase("player")
+			if (classFilename == "DRUID" or classFilename == "MONK" or classFilename == "PRIEST" or classFilename == "SHAMAN") then
+				if (UnitPowerType("player") > 0) then						-- Are we in a manaless form?
+					local unitalternatepower = UnitPower("player", 0)
+					local unitalternatepowermax = UnitPowerMax("player", 0)
+					local rawunitalternatepowerpercent = UnitPowerPercent("player", 0, false, CurveConstants.ScaleTo100)
+					local unitalternatepowerpercent = AbbreviateNumbers(rawunitalternatepowerpercent, self.abbrevTablePercent)
+
+					--frame.alternatepowerbar:SetMinMaxValues(0, unitalternatepowermax)
+					frame.alternatepowerbar:SetValue(unitalternatepower)
+
+					frame.currentmaxalternatepowertext:SetText(unitalternatepower.."/"..unitalternatepowermax)
+					frame.percentalternatepowertext:SetText(unitalternatepowerpercent.."%")
+					--frame.deficitalternatepowertext:SetText("-"..unitalternatepowermax - unitalternatepower)
+				else
+					-- Hide it all (bars and text)
+					frame.currentmaxalternatepowertext:SetText()
+					frame.percentalternatepowertext:SetText()
+					--frame.deficitalternatepowertext:SetText()
+					frame.alternatepowerbar:SetMinMaxValues(0, 1)
+					frame.alternatepowerbar:SetValue(0)
+				end
+			end
+		end
 	end
 end
 
@@ -418,6 +444,15 @@ function gUF:UNIT_MAXPOWER(event, unit)
 	for frame in pairs(frames[unit]) do
 		frame.powerbar:SetMinMaxValues(0, UnitPowerMax(unit))
 		self:UNIT_POWER_FREQUENT(nil, unit)
+
+		if (unit == "player") then								-- Alternate power bar stuff
+			local classFilename = UnitClassBase("player")
+			if (classFilename == "DRUID" or classFilename == "MONK" or classFilename == "PRIEST" or classFilename == "SHAMAN") then
+				if (UnitPowerType("player") > 0) then
+					frame.alternatepowerbar:SetMinMaxValues(0, UnitPowerMax("player", 0))
+				end
+			end
+		end
 	end
 end
 
@@ -427,10 +462,10 @@ function gUF:UNIT_DISPLAYPOWER(event, unit)
 	for frame in pairs(frames[unit]) do
 		local unitpower, unitpowertoken = UnitPowerType(unit)
 		--self:Print(unitpower)
-		local unitpowerinfo = PowerBarColor[unitpowertoken];
+		local unitpowerinfo = PowerBarColor[unitpowertoken]
 
 		--if (UnitPowerMax(unit) == 0) then					-- No Power Bar
-		if (unitpowerinfo == 0) then					-- No Power Bar
+		if (unitpowerinfo == 0) then						-- No Power Bar
 			frame.powerbar:SetStatusBarColor(0, 0, 0, 0)
 			frame.powerbarbg:SetStatusBarColor(0, 0, 0, 0)
 			frame.currentmaxpowertext:SetText()				-- these text field blanks will probably change later once text options are added
@@ -439,6 +474,15 @@ function gUF:UNIT_DISPLAYPOWER(event, unit)
 		elseif (unitpower) then
 			frame.powerbar:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a)
 			frame.powerbarbg:SetStatusBarColor(self.BarColor[unitpower].r, self.BarColor[unitpower].g, self.BarColor[unitpower].b, self.BarColor[unitpower].a * 0.25)
+			if (unit == "player") then
+				local classFilename = UnitClassBase("player")
+				if (classFilename == "DRUID" or classFilename == "MONK" or classFilename == "PRIEST" or classFilename == "SHAMAN") then
+					if (UnitPowerType("player") > 0) then
+						frame.alternatepowerbar:SetStatusBarColor(self.BarColor[0].r, self.BarColor[0].g, self.BarColor[0].b, self.BarColor[0].a)
+						frame.alternatepowerbarbg:SetStatusBarColor(self.BarColor[0].r, self.BarColor[0].g, self.BarColor[0].b, self.BarColor[0].a * 0.25)
+					end
+				end
+			end
 			self:UNIT_MAXPOWER(nil, unit)
 		end
 	end
@@ -1008,9 +1052,9 @@ function gUF:UpdateFrameInfo(unit)
 
 			if (unit == "target") then
 				if (UnitIsQuestBoss(unit)) then
-					frame.questicon:Show();
+					frame.questicon:Show()
 				else
-					frame.questicon:Hide();
+					frame.questicon:Hide()
 				end
 			end
 
@@ -1043,6 +1087,8 @@ function gUF:SetStyle(frame, unit)
 			if (self.db.profile.player[L["Healer Mode"]] == true) then
 				frame.deficithealthtext:Show()
 				frame.deficitpowertext:Show()
+				frame.deficitalternatepowertext:Show()
+				frame.deficitsecondarypowertext:Show()
 			else
 				frame.deficithealthtext:Hide()
 				frame.deficitpowertext:Hide()
@@ -1118,6 +1164,14 @@ function gUF:CreateFrame(frametemplate, framename, unit)
 		frame.percentpowertext:SetTextColor(1, 1, 1, 1)
 		frame.deficithealthtext:SetTextColor(1, 1, 1, 1)
 		frame.deficitpowertext:SetTextColor(1, 1, 1, 1)
+		if (unit == "player") then
+			frame.currentmaxalternatepowertext:SetTextColor(1, 1, 1, 1)
+			frame.percentalternatepowertext:SetTextColor(1, 1, 1, 1)
+			frame.deficitalternatepowertext:SetTextColor(1, 1, 1, 1)
+			frame.currentmaxsecondarypowertext:SetTextColor(1, 1, 1, 1)
+			frame.percentsecondarypowertext:SetTextColor(1, 1, 1, 1)
+			frame.deficitsecondarypowertext:SetTextColor(1, 1, 1, 1)
+		end
 		-- remove this once we have a full option set for customizing this
 
 		self:LayoutBuffs(frame, nil, "buffs")			-- move this to someplace else later
@@ -1381,6 +1435,10 @@ end
 function gUF:SetupBarColors(frame)
 	frame.healthbar:SetStatusBarColor(self.db.profile.global[L["Health Bar Color"]].r, self.db.profile.global[L["Health Bar Color"]].g, self.db.profile.global[L["Health Bar Color"]].b, self.db.profile.global[L["Health Bar Color"]].a)
 	frame.healthbarbg:SetStatusBarColor(self.db.profile.global[L["Health Bar Color"]].r, self.db.profile.global[L["Health Bar Color"]].g, self.db.profile.global[L["Health Bar Color"]].b, self.db.profile.global[L["Health Bar Color"]].a * 0.25)
+	if (frame.unit == "player") then
+		frame.alternatepowerbar:SetStatusBarColor(self.db.profile.global[L["Mana Bar Color"]].r, self.db.profile.global[L["Mana Bar Color"]].g, self.db.profile.global[L["Mana Bar Color"]].b, self.db.profile.global[L["Mana Bar Color"]].a)
+		frame.alternatepowerbarbg:SetStatusBarColor(self.db.profile.global[L["Mana Bar Color"]].r, self.db.profile.global[L["Mana Bar Color"]].g, self.db.profile.global[L["Mana Bar Color"]].b, self.db.profile.global[L["Mana Bar Color"]].a * 0.25)
+	end
 	self:UNIT_DISPLAYPOWER(nil, frame.unit)
 end
 
