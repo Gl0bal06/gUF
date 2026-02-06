@@ -410,13 +410,15 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 			frame.percentpowertext:Hide()
 		end
 
-		if (unit == "player") then								-- Alternate power bar stuff
+		if (unit == "player") then
+			local unitpowertype = UnitPowerType("player")
 			local classFilename = UnitClassBase("player")
-			if (classFilename == "DRUID" or classFilename == "MONK" or classFilename == "PRIEST" or classFilename == "SHAMAN") then
-				if (UnitPowerType("player") > 0) then						-- Are we in a manaless form?
-					local unitalternatepower = UnitPower("player", 0)
-					local unitalternatepowermax = UnitPowerMax("player", 0)
-					local rawunitalternatepowerpercent = UnitPowerPercent("player", 0, false, CurveConstants.ScaleTo100)
+
+			if (classFilename == "DRUID" or classFilename == "MONK" or classFilename == "PRIEST" or classFilename == "SHAMAN") then			-- Alternate power bar stuff
+				if (unitpowertype > 0) then								-- Are we in a manaless form?
+					local unitalternatepower = UnitPower(unit, 0)
+					local unitalternatepowermax = UnitPowerMax(unit, 0)
+					local rawunitalternatepowerpercent = UnitPowerPercent(unit, 0, false, CurveConstants.ScaleTo100)
 					local unitalternatepowerpercent = AbbreviateNumbers(rawunitalternatepowerpercent, self.abbrevTablePercent)
 
 					--frame.alternatepowerbar:SetMinMaxValues(0, unitalternatepowermax)
@@ -433,6 +435,62 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 					frame.alternatepowerbar:SetMinMaxValues(0, 1)
 					frame.alternatepowerbar:SetValue(0)
 				end
+			end
+
+			if (classFilename == "DRUID" or classFilename == "ROGUE") then
+				local unitsecondarypower = UnitPower(unit, 4)
+				local unitsecondarypowermax = UnitPowerMax(unit, 4)
+
+				frame.secondarypowerbar:SetValue(unitsecondarypower)
+
+				frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
+				frame.percentsecondarypowertext:SetText(unitsecondarypower)
+				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+			elseif (classFilename == "EVOKER") then
+				local unitsecondarypower = UnitPower(unit, 19)
+				local unitsecondarypowermax = UnitPowerMax(unit, 19)
+
+				frame.secondarypowerbar:SetValue(unitsecondarypower)
+
+				frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
+				frame.percentsecondarypowertext:SetText(unitsecondarypower)
+				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+			elseif (classFilename == "MAGE") then
+				local unitsecondarypower = UnitPower(unit, 16)
+				local unitsecondarypowermax = UnitPowerMax(unit, 16)
+
+				frame.secondarypowerbar:SetValue(unitsecondarypower)
+
+				frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
+				frame.percentsecondarypowertext:SetText(unitsecondarypower)
+				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+			elseif (classFilename == "MONK") then
+				local unitsecondarypower = UnitPower(unit, 12)
+				local unitsecondarypowermax = UnitPowerMax(unit, 12)
+
+				frame.secondarypowerbar:SetValue(unitsecondarypower)
+
+				frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
+				frame.percentsecondarypowertext:SetText(unitsecondarypower)
+				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+			elseif (classFilename == "PALADIN") then
+				local unitsecondarypower = UnitPower(unit, 9)
+				local unitsecondarypowermax = UnitPowerMax(unit, 9)
+
+				frame.secondarypowerbar:SetValue(unitsecondarypower)
+
+				frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
+				frame.percentsecondarypowertext:SetText(unitsecondarypower)
+				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+			elseif (classFilename == "WARLOCK") then
+				local unitsecondarypower = UnitPower(unit, 7)
+				local unitsecondarypowermax = UnitPowerMax(unit, 7)
+
+				frame.secondarypowerbar:SetValue(unitsecondarypower)
+
+				frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
+				frame.percentsecondarypowertext:SetText(unitsecondarypower)
+				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
 			end
 		end
 	end
@@ -451,6 +509,20 @@ function gUF:UNIT_MAXPOWER(event, unit)
 				if (UnitPowerType("player") > 0) then
 					frame.alternatepowerbar:SetMinMaxValues(0, UnitPowerMax("player", 0))
 				end
+			end
+
+			if (classFilename == "DRUID" or classFilename == "ROGUE") then
+				frame.secondarypowerbar:SetMinMaxValues(0, UnitPowerMax("player", 4))
+			elseif (classFilename == "EVOKER") then
+				frame.secondarypowerbar:SetMinMaxValues(0, UnitPowerMax("player", 19))
+			elseif (classFilename == "MAGE") then
+				frame.secondarypowerbar:SetMinMaxValues(0, UnitPowerMax("player", 16))
+			elseif (classFilename == "MONK") then
+				frame.secondarypowerbar:SetMinMaxValues(0, UnitPowerMax("player", 12))
+			elseif (classFilename == "PALADIN") then
+				frame.secondarypowerbar:SetMinMaxValues(0, UnitPowerMax("player", 9))
+			elseif (classFilename == "WARLOCK") then
+				frame.secondarypowerbar:SetMinMaxValues(0, UnitPowerMax("player", 7))
 			end
 		end
 	end
@@ -1438,6 +1510,31 @@ function gUF:SetupBarColors(frame)
 	if (frame.unit == "player") then
 		frame.alternatepowerbar:SetStatusBarColor(self.db.profile.global[L["Mana Bar Color"]].r, self.db.profile.global[L["Mana Bar Color"]].g, self.db.profile.global[L["Mana Bar Color"]].b, self.db.profile.global[L["Mana Bar Color"]].a)
 		frame.alternatepowerbarbg:SetStatusBarColor(self.db.profile.global[L["Mana Bar Color"]].r, self.db.profile.global[L["Mana Bar Color"]].g, self.db.profile.global[L["Mana Bar Color"]].b, self.db.profile.global[L["Mana Bar Color"]].a * 0.25)
+
+		if (UnitClassBase("player") == "DRUID" or UnitClassBase("player") == "ROGUE") then
+			frame.secondarypowerbar:SetStatusBarColor(self.db.profile.global[L["Combo Points Bar Color"]].r, self.db.profile.global[L["Combo Points Bar Color"]].g, self.db.profile.global[L["Combo Points Bar Color"]].b, self.db.profile.global[L["Combo Points Bar Color"]].a)
+			frame.secondarypowerbarbg:SetStatusBarColor(self.db.profile.global[L["Combo Points Bar Color"]].r, self.db.profile.global[L["Combo Points Bar Color"]].g, self.db.profile.global[L["Combo Points Bar Color"]].b, self.db.profile.global[L["Combo Points Bar Color"]].a * 0.25)
+		end
+		if (UnitClassBase("player") == "EVOKER") then
+			frame.secondarypowerbar:SetStatusBarColor(self.db.profile.global[L["Essence Bar Color"]].r, self.db.profile.global[L["Essence Bar Color"]].g, self.db.profile.global[L["Essence Bar Color"]].b, self.db.profile.global[L["Essence Bar Color"]].a)
+			frame.secondarypowerbarbg:SetStatusBarColor(self.db.profile.global[L["Essence Bar Color"]].r, self.db.profile.global[L["Essence Bar Color"]].g, self.db.profile.global[L["Essence Bar Color"]].b, self.db.profile.global[L["Essence Bar Color"]].a * 0.25)
+		end
+		if (UnitClassBase("player") == "MAGE") then
+			frame.secondarypowerbar:SetStatusBarColor(self.db.profile.global[L["Arcane Charges Bar Color"]].r, self.db.profile.global[L["Arcane Charges Bar Color"]].g, self.db.profile.global[L["Arcane Charges Bar Color"]].b, self.db.profile.global[L["Arcane Charges Bar Color"]].a)
+			frame.secondarypowerbarbg:SetStatusBarColor(self.db.profile.global[L["Arcane Charges Bar Color"]].r, self.db.profile.global[L["Arcane Charges Bar Color"]].g, self.db.profile.global[L["Arcane Charges Bar Color"]].b, self.db.profile.global[L["Arcane Charges Bar Color"]].a * 0.25)
+		end
+		if (UnitClassBase("player") == "MONK") then
+			frame.secondarypowerbar:SetStatusBarColor(self.db.profile.global[L["Chi Bar Color"]].r, self.db.profile.global[L["Chi Bar Color"]].g, self.db.profile.global[L["Chi Bar Color"]].b, self.db.profile.global[L["Chi Bar Color"]].a)
+			frame.secondarypowerbarbg:SetStatusBarColor(self.db.profile.global[L["Chi Bar Color"]].r, self.db.profile.global[L["Chi Bar Color"]].g, self.db.profile.global[L["Chi Bar Color"]].b, self.db.profile.global[L["Chi Bar Color"]].a * 0.25)
+		end
+		if (UnitClassBase("player") == "PALADIN") then
+			frame.secondarypowerbar:SetStatusBarColor(self.db.profile.global[L["Holy Power Bar Color"]].r, self.db.profile.global[L["Holy Power Bar Color"]].g, self.db.profile.global[L["Holy Power Bar Color"]].b, self.db.profile.global[L["Holy Power Bar Color"]].a)
+			frame.secondarypowerbarbg:SetStatusBarColor(self.db.profile.global[L["Holy Power Bar Color"]].r, self.db.profile.global[L["Holy Power Bar Color"]].g, self.db.profile.global[L["Holy Power Bar Color"]].b, self.db.profile.global[L["Holy Power Bar Color"]].a * 0.25)
+		end
+		if (UnitClassBase("player") == "WARLOCK") then
+			frame.secondarypowerbar:SetStatusBarColor(self.db.profile.global[L["Soul Shards Bar Color"]].r, self.db.profile.global[L["Soul Shards Bar Color"]].g, self.db.profile.global[L["Soul Shards Bar Color"]].b, self.db.profile.global[L["Soul Shards Bar Color"]].a)
+			frame.secondarypowerbarbg:SetStatusBarColor(self.db.profile.global[L["Soul Shards Bar Color"]].r, self.db.profile.global[L["Soul Shards Bar Color"]].g, self.db.profile.global[L["Soul Shards Bar Color"]].b, self.db.profile.global[L["Soul Shards Bar Color"]].a * 0.25)
+		end
 	end
 	self:UNIT_DISPLAYPOWER(nil, frame.unit)
 end
