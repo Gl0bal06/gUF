@@ -1399,10 +1399,10 @@ function gUF:RemoveFrame(frame)
 end
 
 function gUF:SetupOverlays(frame)
-	for i=1,table.getn(frame.frameoverlays),1 do
+	for i=1,#frame.frameoverlays,1 do
 		frame.frameoverlays[i]:SetFrameLevel(frame.frameoverlays[i]:GetParent():GetFrameLevel() + 2)
 	end
-	for i=1,table.getn(frame.baroverlays),1 do
+	for i=1,#frame.baroverlays,1 do
 		frame.baroverlays[i]:SetFrameLevel(frame.baroverlays[i]:GetParent():GetFrameLevel() + 3)
 	end
 end
@@ -1416,7 +1416,7 @@ function gUF:SetupAllBorderBackground()
 end
 
 function gUF:SetupBorderBackground(frame)
-	for i=1,table.getn(frame.frames),1 do
+	for i=1,#frame.frames,1 do
 		frame.frames[i]:SetBackdrop({bgFile = "Interface\\AddOns\\gUF\\Images\\gUF_FrameBack", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = {left = 3, right = 3, top = 3, bottom = 3}})	-- Thanks Zek for the background file help
 		frame.frames[i]:SetBackdropColor(self.db.profile.global[L["Background Color"]].r, self.db.profile.global[L["Background Color"]].g, self.db.profile.global[L["Background Color"]].b, self.db.profile.global[L["Background Color"]].a)
 		frame.frames[i]:SetBackdropBorderColor(self.db.profile.global[L["Border Color"]].r, self.db.profile.global[L["Border Color"]].g, self.db.profile.global[L["Border Color"]].b, self.db.profile.global[L["Border Color"]].a)
@@ -1439,7 +1439,7 @@ function gUF:SetupStatusBarTextures(frame)
 	--texture:SetHeight(10)
 	--texture:SetWidth(150)
 	--frame.bartextures[1] = self.LSM:Fetch("statusbar", self.db.profile.global[L["Status Bar Texture"]])
-	for i=1,table.getn(frame.bars),1 do
+	for i=1,#frame.bars,1 do
 		--frame.bars[i]:SetMinMaxValues(0, 1)
 		frame.bars[i]:SetStatusBarTexture(texture)
 		--frame.bars[i]:SetStatusBarTexture(frame.bartextures[1])
@@ -1464,7 +1464,7 @@ function gUF:SetupStatusBarBackgroundTextures(frame)
 	local texture = self.LSM:Fetch("statusbar", self.db.profile.global[L["Status Bar Background Texture"]])
 	--texture:SetHeight(10)
 	--texture:SetWidth(150)
-	for i=1,table.getn(frame.barbackgrounds),1 do
+	for i=1,#frame.barbackgrounds,1 do
 		--frame.barbackgrounds[i]:SetMinMaxValues(0, 1)
 		--frame.barbackgrounds[i]:SetStatusBarTexture(texture)
 		frame.barbackgrounds[i]:SetStatusBarTexture(texture)
