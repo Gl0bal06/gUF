@@ -1319,7 +1319,8 @@ end
 function gUF:GetInitialBuffAndDebuffAnchorPoint(frame, buffType, buffIndex)
 	if (self.db.profile[frame.unit][buffType][L["Position"]] == 1) then
 		if (frame.unit == "player") then
-			frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+			--frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+			frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.statsframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
 		elseif (frame.unit == "target") then
 			frame[buffType][buffIndex]:SetPoint("TOPLEFT", frame.statsframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
 		end
@@ -1327,7 +1328,8 @@ function gUF:GetInitialBuffAndDebuffAnchorPoint(frame, buffType, buffIndex)
 		frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.statsframe, "BOTTOMRIGHT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 0 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
 	elseif (self.db.profile[frame.unit][buffType][L["Position"]] == 3) then
 		if (frame.unit == "player") then
-			frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+			--frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.levelframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
+			frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.statsframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
 		elseif (frame.unit == "target") then
 			frame[buffType][buffIndex]:SetPoint("TOPRIGHT", frame.statsframe, "BOTTOMLEFT", 0 + self.db.profile[frame.unit][buffType][L["X Offset"]], 33 + self.db.profile[frame.unit][buffType][L["Y Offset"]])
 		end
