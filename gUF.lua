@@ -1227,7 +1227,7 @@ function gUF:SetStyle(frame, unit)
 				frame.deficitalternatepowertext:Hide()
 			end
 
-			if (classFilename == "DRUID" or classFilename == "EVOKER" or (classFilename == "MAGE" and specializationInfo == 62) or (classFilename == "MONK" and (specializationInfo == 268 or specializationInfo == 269)) or classFilename == "PALADIN" or (classFilename == "PRIEST" and specializationInfo == 258) or (classFilename == "SHAMAN" and specializationInfo == 262) or classFilename == "WARLOCK") then		-- Do we need to display the class resource bar and make the stats frame bigger?
+			if (classFilename == "DRUID" or classFilename == "EVOKER" or (classFilename == "MAGE" and specializationInfo == 62) or (classFilename == "MONK" and (specializationInfo == 268 or specializationInfo == 269)) or classFilename == "PALADIN" or (classFilename == "PRIEST" and specializationInfo == 258) or classFilename == "ROGUE" or (classFilename == "SHAMAN" and specializationInfo == 262) or classFilename == "WARLOCK") then		-- Do we need to display the class resource bar and make the stats frame bigger?
 				frame.statsframe:SetHeight(frame.statsframe:GetHeight() + 12)
 				if (frame.alternatepowerbar:IsVisible() == false) then
 					frame.secondarypowerbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -34)
