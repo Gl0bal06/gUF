@@ -1,5 +1,5 @@
 --[[-------------------------------------------------------------------------
-  Copyright (c) 2005-2020, Mark T Dragon
+  Copyright (c) 2005-2026, Mark T Dragon
   All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -243,6 +243,7 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 end
 
 function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
+	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_FLAGS_CHANGED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -1042,6 +1043,10 @@ function gUF:PLAYER_UPDATE_RESTING(event)
 	self:UpdateCombatRestIcon(event)
 end
 
+function gUF:ACTIVE_TALENT_GROUP_CHANGED(event)
+	self:SetStyle(gUF_player, "player")
+end
+
 function gUF:FormatHealthPowerText(number)
 	if (number < 9999) then
 		return number
@@ -1164,6 +1169,51 @@ function gUF:SetStyle(frame, unit)
 			else
 				frame.deficithealthtext:Hide()
 				frame.deficitpowertext:Hide()
+			end
+
+			frame.statsframe:SetHeight(42)
+
+			local classFilename = UnitClassBase("player")
+			local specializationInfo = C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization())
+			if (classFilename == "DRUID" or (classFilename == "PRIEST" and specializationInfo == 258) or (classFilename == "SHAMAN" and specializationInfo == 262)) then		-- Do we need to display the extra mana bar and make the stats frame bigger?
+				frame.statsframe:SetHeight(frame.statsframe:GetHeight() + 12)
+
+				frame.alternatepowerbar:Show()
+				frame.alternatepowerbarbg:Show()
+				frame.alternatepowerbaroverlay:Show()
+				frame.currentmaxalternatepowertext:Show()
+				frame.percentalternatepowertext:Show()
+				--frame.deficitalternatepowertext:Show()
+
+				--self:UNIT_POWER_FREQUENT(nil, unit)
+			else
+				frame.alternatepowerbar:Hide()
+				frame.alternatepowerbarbg:Hide()
+				frame.alternatepowerbaroverlay:Hide()
+				frame.currentmaxalternatepowertext:Hide()
+				frame.percentalternatepowertext:Hide()
+				frame.deficitalternatepowertext:Hide()
+			end
+
+			if (classFilename == "DRUID" or classFilename == "EVOKER" or (classFilename == "MAGE" and specializationInfo == 62) or (classFilename == "MONK" and specializationInfo == 269) or classFilename == "PALADIN" or (classFilename == "PRIEST" and specializationInfo == 258) or (classFilename == "SHAMAN" and specializationInfo == 262) or classFilename == "WARLOCK") then		-- Do we need to display the class resource bar and make the stats frame bigger?
+				frame.statsframe:SetHeight(frame.statsframe:GetHeight() + 12)
+				if (frame.alternatepowerbar:IsVisible() == false) then
+					frame.secondarypowerbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -34)
+
+					frame.secondarypowerbar:Show()
+					frame.secondarypowerbarbg:Show()
+					frame.secondarypowerbaroverlay:Show()
+					frame.currentmaxsecondarypowertext:Show()
+					frame.percentsecondarypowertext:Show()
+					--frame.deficitsecondarypowertext:Show()
+				end
+			else
+				frame.secondarypowerbar:Hide()
+				frame.secondarypowerbarbg:Hide()
+				frame.secondarypowerbaroverlay:Hide()
+				frame.currentmaxsecondarypowertext:Hide()
+				frame.percentsecondarypowertext:Hide()
+				frame.deficitsecondarypowertext:Hide()
 			end
 		end
 

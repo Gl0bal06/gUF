@@ -26,11 +26,6 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.statsframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
 	frame.statsframe:SetPoint("TOPLEFT", frame, "TOPLEFT", 32, -22)						-- remove this once we have a full option set for customizing this
 	frame.statsframe:SetHeight(42)														-- remove this once we have a full option set for customizing this
-	if (unit == "player") then															-- this needs to be changed to dynamically size the frame based on class and spec
-		frame.statsframe:SetHeight(66)													-- remove this once we have a full option set for customizing this
-	else
-		frame.statsframe:SetHeight(42)													-- remove this once we have a full option set for customizing this
-	end
 	frame.statsframe:SetWidth(280)														-- remove this once we have a full option set for customizing this
 
 	frame.portraitframe = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")	--remove this final and if classic ever gets this API
@@ -89,8 +84,8 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.healthbaroverlay = self:CreateOverlay(frame, frame.healthbar, "_HealthBarOverlay")
 	frame.powerbaroverlay = self:CreateOverlay(frame, frame.powerbar, "_PowerbarOverlay")
 	if (unit == "player") then
-		frame.alternatepowerbaroverlay = self:CreateOverlay(frame, frame.powerbar, "_AlternatePowerbarOverlay")
-		frame.secondarypowerbaroverlay = self:CreateOverlay(frame, frame.powerbar, "_SecondaryPowerbarOverlay")
+		frame.alternatepowerbaroverlay = self:CreateOverlay(frame, frame.alternatepowerbar, "_AlternatePowerbarOverlay")
+		frame.secondarypowerbaroverlay = self:CreateOverlay(frame, frame.secondarypowerbar, "_SecondaryPowerbarOverlay")
 	end
 
 	-- Text Fields
