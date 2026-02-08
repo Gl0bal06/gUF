@@ -466,14 +466,16 @@ function gUF:UNIT_POWER_FREQUENT(event, unit)
 				frame.percentsecondarypowertext:SetText(unitsecondarypower)
 				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
 			elseif (classFilename == "MONK") then
-				local unitsecondarypower = UnitPower(unit, 12)
-				local unitsecondarypowermax = UnitPowerMax(unit, 12)
+				if (C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization()) == 269) then
+					local unitsecondarypower = UnitPower(unit, 12)
+					local unitsecondarypowermax = UnitPowerMax(unit, 12)
 
-				frame.secondarypowerbar:SetValue(unitsecondarypower)
+					frame.secondarypowerbar:SetValue(unitsecondarypower)
 
-				frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
-				frame.percentsecondarypowertext:SetText(unitsecondarypower)
-				--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+					frame.currentmaxsecondarypowertext:SetText(unitsecondarypower.."/"..unitsecondarypowermax)
+					frame.percentsecondarypowertext:SetText(unitsecondarypower)
+					--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+				end
 			elseif (classFilename == "PALADIN") then
 				local unitsecondarypower = UnitPower(unit, 9)
 				local unitsecondarypowermax = UnitPowerMax(unit, 9)
@@ -991,6 +993,35 @@ function gUF:UNIT_AURA(event, unit)
 				end
 			end
 		end
+
+		if (unit == "player") then
+			if (UnitClassBase("player") == "MONK") then
+				if (C_SpecializationInfo.GetSpecializationInfo(C_SpecializationInfo.GetSpecialization()) == 268) then
+					local unitsecondarypower = UnitStagger(unit)
+					local unitsecondarypowermax = UnitHealthMax(unit)
+
+					local roundedStagger = tonumber(string.format("%.0f", math.ceil(unitsecondarypower/unitsecondarypowermax)))
+
+					frame.secondarypowerbar:SetMinMaxValues(0, 100)
+					frame.secondarypowerbar:SetValue(roundedStagger)
+
+					frame.currentmaxsecondarypowertext:SetText(roundedStagger.."/"..100)
+					frame.percentsecondarypowertext:SetText(roundedStagger.."%")
+					--frame.deficitsecondarypowertext:SetText("-"..unitpowermax - unitpower)
+
+					if (roundedStagger < 30) then
+						frame.secondarypowerbar:SetStatusBarColor(0, 1, 0, 1)
+						frame.secondarypowerbarbg:SetStatusBarColor(0, 1, 0, 0.25)
+					elseif (roundedStagger > 29 and roundedStagger < 60) then
+						frame.secondarypowerbar:SetStatusBarColor(1, 1, 0, 1)
+						frame.secondarypowerbarbg:SetStatusBarColor(1, 1, 0, 0.25)
+					else
+						frame.secondarypowerbar:SetStatusBarColor(1, 0, 0, 1)
+						frame.secondarypowerbarbg:SetStatusBarColor(1, 0, 0, 0.25)
+					end
+				end
+			end
+		end
 	end
 end
 
@@ -1045,6 +1076,7 @@ end
 
 function gUF:ACTIVE_TALENT_GROUP_CHANGED(event)
 	self:SetStyle(gUF_player, "player")
+	self:UNIT_AURA(nil, "player")
 end
 
 function gUF:FormatHealthPowerText(number)
@@ -1195,7 +1227,7 @@ function gUF:SetStyle(frame, unit)
 				frame.deficitalternatepowertext:Hide()
 			end
 
-			if (classFilename == "DRUID" or classFilename == "EVOKER" or (classFilename == "MAGE" and specializationInfo == 62) or (classFilename == "MONK" and specializationInfo == 269) or classFilename == "PALADIN" or (classFilename == "PRIEST" and specializationInfo == 258) or (classFilename == "SHAMAN" and specializationInfo == 262) or classFilename == "WARLOCK") then		-- Do we need to display the class resource bar and make the stats frame bigger?
+			if (classFilename == "DRUID" or classFilename == "EVOKER" or (classFilename == "MAGE" and specializationInfo == 62) or (classFilename == "MONK" and (specializationInfo == 268 or specializationInfo == 269)) or classFilename == "PALADIN" or (classFilename == "PRIEST" and specializationInfo == 258) or (classFilename == "SHAMAN" and specializationInfo == 262) or classFilename == "WARLOCK") then		-- Do we need to display the class resource bar and make the stats frame bigger?
 				frame.statsframe:SetHeight(frame.statsframe:GetHeight() + 12)
 				if (frame.alternatepowerbar:IsVisible() == false) then
 					frame.secondarypowerbar:SetPoint("TOPLEFT", frame.statsframe, "TOPLEFT", 10, -34)
