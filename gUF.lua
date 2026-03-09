@@ -74,7 +74,7 @@ function gUF:OnInitialize()												-- ADDON_LOADED event for gUF
 				[L["Arcane Charges Bar Color"]] = {r = 0.1, g = 0.1, b = 0.98, a = 1},
 				[L["Fury Bar Color"]] = {r = 0.788, g = 0.259, b = 0.992, a = 1},
 				[L["Pain Bar Color"]] = {r = 1, g = 0.61, b = 0, a = 1},
-				[L["Essence Bar Color"]] = {r = 0.392, g = 0.678, b = 0.808, a = 1},	-- No official color, taken from oUF
+				[L["Essence Bar Color"]] = {r = 0.392, g = 0.678, b = 0.808, a = 1}, -- No official color, taken from oUF
 			},
 			module = {
 				castbar = {
@@ -244,6 +244,9 @@ end
 
 function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	self:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+	self:RegisterEvent("GROUP_ROSTER_UPDATE")
+	self:RegisterEvent("PARTY_LEADER_CHANGED")
+	self:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterEvent("PLAYER_FLAGS_CHANGED")
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -298,6 +301,9 @@ function gUF:OnEnable()																	-- PLAYER_LOGIN event for gUF
 	self:CreateRemoveFrames()															-- Create any frames that are enabled
 
 	self:EnableDisableModules()															-- Enable or disable any modules that should be enabled or disabled
+
+	-- One time function calls that will be properly managed once events are active
+	self:UpdateLootMethod()
 end
 
 function gUF:Print(msg)
@@ -609,7 +615,9 @@ function gUF:UNIT_NAME_UPDATE(event, unit)
 	if not frames[unit] then return end
 
 	for frame in pairs(frames[unit]) do
-		if (UnitIsAFK(unit)) then
+		if (not canaccessvalue(UnitIsAFK(unit))) then
+			frame.nametext:SetText(UnitName(unit))
+		elseif (UnitIsAFK(unit)) then
 			frame.nametext:SetText(UnitName(unit).." (AFK)")
 		elseif (UnitIsDND(unit)) then
 			frame.nametext:SetText(UnitName(unit).." (DND)")
@@ -626,12 +634,12 @@ function gUF:UNIT_PORTRAIT_UPDATE(event, unit)
 	for frame in pairs(frames[unit]) do
 		if (frame.portraitframe) then								-- Add a toggle option here eventually
 			if (UnitIsVisible(unit)) then
-				frame.portrait3d:SetUnit(unit)					-- Load the correct 3d graphic
+				frame.portrait3d:SetUnit(unit)						-- Load the correct 3d graphic
 				frame.portrait3d:SetPortraitZoom(1)
 				frame.portrait2d:Hide()								-- Hide the 2d graphic
 				frame.portrait3d:Show()								-- Show the 3d graphic
 			else
-				SetPortraitTexture(frame.portrait2d, unit)		-- Load the correct 2d graphic
+				SetPortraitTexture(frame.portrait2d, unit)			-- Load the correct 2d graphic
 				frame.portrait3d:Hide()								-- Hide the 3d graphic
 				frame.portrait2d:Show()								-- Show the 2d graphic
 			end
@@ -1079,6 +1087,86 @@ function gUF:ACTIVE_TALENT_GROUP_CHANGED(event)
 	self:UNIT_AURA(nil, "player")
 end
 
+function gUF:GROUP_ROSTER_UPDATE(event)
+	self:UpdateLeader(nil)
+	self:UpdateLootMethod()
+end
+
+function gUF:PARTY_LEADER_CHANGED(event)
+	self:UpdateLeader(nil)
+	self:UpdateLootMethod()
+end
+
+function gUF:PARTY_LOOT_METHOD_CHANGED(event)
+	self:UpdateLootMethod()
+end
+
+function gUF:UpdateLeader(unit)
+	if (unit == nil) then
+		for i,v in pairs(frames) do
+			for frame in pairs(v) do
+				if (UnitIsGroupLeader(frame.unit)) then
+					frame.leadericon:Show()
+				else
+					frame.leadericon:Hide()
+				end
+			end
+		end
+	else
+		if not frames[unit] then return end
+
+		for frame in pairs(frames[unit]) do
+			if (UnitIsGroupLeader(frame.unit)) then
+				frame.leadericon:Show()
+			else
+				frame.leadericon:Hide()
+			end
+		end
+	end
+end
+
+function gUF:UpdateLootMethod()
+	local _, masterLootPartyID = C_PartyInfo.GetLootMethod()
+
+	if (masterLootPartyID == 0) then
+		gUF_player.masterlootericon:Show()
+		-- gUF_party1.masterlootericon:Hide()
+		-- gUF_party2.masterlootericon:Hide()
+		-- gUF_party3.masterlootericon:Hide()
+		-- gUF_party4.masterlootericon:Hide()
+	elseif (masterLootPartyID == 1) then
+		gUF_player.masterlootericon:Hide()
+		-- gUF_party1.masterlootericon:Show()
+		-- gUF_party2.masterlootericon:Hide()
+		-- gUF_party3.masterlootericon:Hide()
+		-- gUF_party4.masterlootericon:Hide()
+	elseif (masterLootPartyID == 2) then
+		gUF_player.masterlootericon:Hide()
+		-- gUF_party1.masterlootericon:Hide()
+		-- gUF_party2.masterlootericon:Show()
+		-- gUF_party3.masterlootericon:Hide()
+		-- gUF_party4.masterlootericon:Hide()
+	elseif (masterLootPartyID == 3) then
+		gUF_player.masterlootericon:Hide()
+		-- gUF_party1.masterlootericon:Hide()
+		-- gUF_party2.masterlootericon:Hide()
+		-- gUF_party3.masterlootericon:Show()
+		-- gUF_party4.masterlootericon:Hide()
+	elseif (masterLootPartyID == 4) then
+		gUF_player.masterlootericon:Hide()
+		-- gUF_party1.masterlootericon:Hide()
+		-- gUF_party2.masterlootericon:Hide()
+		-- gUF_party3.masterlootericon:Show()
+		-- gUF_party4.masterlootericon:Hide()
+	else
+		gUF_player.masterlootericon:Hide()
+		-- gUF_party1.masterlootericon:Hide()
+		-- gUF_party2.masterlootericon:Hide()
+		-- gUF_party3.masterlootericon:Hide()
+		-- gUF_party4.masterlootericon:Hide()
+	end
+end
+
 function gUF:FormatHealthPowerText(number)
 	if (number < 9999) then
 		return number
@@ -1146,6 +1234,7 @@ function gUF:UpdateFrameInfo(unit)
 			self:UNIT_FACTION(nil, unit)
 			self:UNIT_PORTRAIT_UPDATE(nil, unit)
 			self:UNIT_AURA(nil, unit)
+			self:UpdateLeader(unit)
 			self:UpdateRaidIcon(frame)
 
 			local _, englishClass = UnitClass(unit)

@@ -165,6 +165,18 @@ function gUF:CreateBaseFrameObject(framename, unit)										-- Player and Party
 	frame.disconnectedicon:SetHeight(32)												-- remove this once we have a full option set for customizing this
 	frame.disconnectedicon:SetWidth(32)													-- remove this once we have a full option set for customizing this
 
+	frame.leadericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.leadericon:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")
+	frame.leadericon:SetPoint("TOP", frame.nameframe, "TOP", 0, 7)						-- remove this once we have a full option set for customizing this
+	frame.leadericon:SetHeight(16)														-- remove this once we have a full option set for customizing this
+	frame.leadericon:SetWidth(16)														-- remove this once we have a full option set for customizing this
+
+	frame.masterlootericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.masterlootericon:SetTexture("Interface\\GroupFrame\\UI-Group-MasterLooter")
+	frame.masterlootericon:SetPoint("TOPLEFT", frame.nameframe, "TOPLEFT", 65, 7)		-- remove this once we have a full option set for customizing this
+	frame.masterlootericon:SetHeight(16)												-- remove this once we have a full option set for customizing this
+	frame.masterlootericon:SetWidth(16)													-- remove this once we have a full option set for customizing this
+
 	frame.portrait2d = frame.portraitframe:CreateTexture(nil, "ARTWORK", nil)
 	frame.portrait2d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
 	frame.portrait2d:SetHeight(52)														-- remove this once we have a full option set for customizing this
@@ -349,6 +361,12 @@ function gUF:CreateBaseOfTargetFrameObject(framename, unit)								-- Target and
 	frame.disconnectedicon:SetPoint("TOPRIGHT", frame.nameframe, "TOPRIGHT", -35, 3)	-- remove this once we have a full option set for customizing this
 	frame.disconnectedicon:SetHeight(32)												-- remove this once we have a full option set for customizing this
 	frame.disconnectedicon:SetWidth(32)													-- remove this once we have a full option set for customizing this
+
+	frame.leadericon = frame.nameframe:CreateTexture(nil, "OVERLAY", nil)
+	frame.leadericon:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")
+	frame.leadericon:SetPoint("TOP", frame.nameframe, "TOP", 0, 7)						-- remove this once we have a full option set for customizing this
+	frame.leadericon:SetHeight(16)														-- remove this once we have a full option set for customizing this
+	frame.leadericon:SetWidth(16)														-- remove this once we have a full option set for customizing this
 
 	frame.portrait2d = frame.portraitframe:CreateTexture(nil, "ARTWORK", nil)
 	frame.portrait2d:SetPoint("TOP", frame.portraitframe, "TOP", 0, -6)					-- remove this once we have a full option set for customizing this
